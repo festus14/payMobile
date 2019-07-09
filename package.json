@@ -2,11 +2,6 @@
   "name": "ipay",
   "version": "0.0.1",
   "private": true,
-  "rnpm": {
-    "assets": [
-      "./assets/fonts/"
-    ]
-  },
   "scripts": {
     "start": "react-native start",
     "test": "jest",

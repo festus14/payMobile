@@ -45,6 +45,12 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         justifyContent: 'space-around'
     },
+    error: {
+        color: '#f00',
+        fontSize: 12,
+        alignSelf: 'center',
+        fontFamily: 'Poppins-Regular'
+    },
     remember: {
         flexDirection: 'row',
         justifyContent: 'flex-start',

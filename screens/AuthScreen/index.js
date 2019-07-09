@@ -33,6 +33,7 @@ class AuthScreen extends Component {
                     minLength: 5
                 }
             },
+            error: ''
         }
     }
 
@@ -43,9 +44,6 @@ class AuthScreen extends Component {
     loginHandler = async () => {
         if (this.state.email.value !== '' && this.state.password.value !== '') {
             try {
-                if (this.state.authState !== 'login') {
-                    throw new Error('Not in login mode')
-                }
                 await this.setState(prevState => ({
                     email: {
                         ...prevState.email,
@@ -96,7 +94,7 @@ class AuthScreen extends Component {
         this.setState({ [type]: {
             ...this.state[type],
             value: input
-        } })
+        }})
     }
 
     render() {
@@ -108,6 +106,7 @@ class AuthScreen extends Component {
                     <Text style={styles.headText}>Sign in to account</Text>
                 </View>
                 <View style={styles.form}>
+                    <Text style={styles.error}>{this.state.error}</Text>
                     <InputText
                         icon="envelope"
                         placeholder="Email"
@@ -118,6 +117,8 @@ class AuthScreen extends Component {
                         onSubmitEditing={() => { this.password.focus() }}
                         onChangeText={input => this.onChangeText(input, 'email')}
                         autoCapitalize="none"
+                        returnKeyType="next"
+                        keyboardType="email-address"
                     />
                     <InputText
                         icon="lock"
@@ -125,6 +126,12 @@ class AuthScreen extends Component {
                         secureTextEntry
                         iconSize={16}
                         iconColor={GREY}
+                        value={this.state.password.value}
+                        getRef={input => { this.password = input }}
+                        onChangeText={input => this.onChangeText(input, 'password')}
+                        autoCapitalize="none"
+                        returnKeyTpe="go"
+                        onSubmitEditing={this.loginHandler}
                     />
                     <View style={styles.remember}>
                         <Checkbox
@@ -139,6 +146,7 @@ class AuthScreen extends Component {
                         style={styles.btn}
                         textStyle={styles.btnText}
                         isLoading={this.props.isLoading}
+                        onPress={this.loginHandler}
                     />
                     <TouchableOpacity style={styles.forgot}><Text style={styles.forgotText}>Forgot Password?</Text></TouchableOpacity>
                 </View>
