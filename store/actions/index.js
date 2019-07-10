@@ -5,4 +5,4 @@ export { uiStartLoading, uiStopLoading } from './ui'
 export { setUser, getUser, getUserId, logout } from './user'
 
 // auth actions
-export { authAutoSignIn, logIn, authRemoveToken, authRemoveAsyncData } from './auth'
+export { logIn, authRemoveToken, authError, getAuthToken } from './auth'

@@ -8,11 +8,9 @@ import {
     uiStopLoading,
     setUser
 } from './'
-import AsyncStorage from '@react-native-community/async-storage';
 import {
     API_URL
 } from "../../utility/constants";
-import { getUser } from "./";
 
 export const authError = (error) => {
     return {
@@ -35,30 +33,12 @@ export const authRemoveToken = () => {
     }
 }
 
-export const authStoreAsyncData = (token, userId, userData) => {
-    return dispatch => {
-        dispatch(authSetToken(token, userId))
-        AsyncStorage.setItem("userId", userId.toString())
-        AsyncStorage.setItem("auth-token", token);
-        AsyncStorage.setItem("user-data", JSON.stringify(userData))
-    }
-}
-
-export const authRemoveAsyncData = () => {
-    return dispatch => {
-        AsyncStorage.removeItem("userId")
-        AsyncStorage.removeItem("auth-token");
-        AsyncStorage.removeItem("user-data")
-    }
-}
-
 export const logIn = (authData) => {
     return async (dispatch) => {
         try {
             dispatch(uiStartLoading())
-            dispatch(authRemoveAsyncData())
 
-            let res = await fetch(`${API_URL}auth/login`, {
+            let res = await fetch(`${API_URL}login`, {
                 method: "POST",
                 body: JSON.stringify({
                     email: authData.email,
@@ -81,12 +61,12 @@ export const logIn = (authData) => {
             console.warn(resJson)
 
             await dispatch(uiStopLoading())
-            if (resJson.error && resJson.error.status) {
-                dispatch(authError(resJson.error.message))
+            if (resJson.error) {
+                dispatch(authError(resJson.error === "Unauthorized" ? "Email and password do not match" : "Authentication failed, please try again"))
             } else {
                 dispatch(authError(""));
-                dispatch(authStoreAsyncData(resJson.access_token, resJson.user.id, resJson.user))
-                dispatch(setUser(resJson.user))
+                authSetToken(resJson.success.token, resJson.success.user.id)
+                dispatch(setUser(resJson.success.user))
             }
         } catch (error) {
             dispatch(uiStopLoading())
@@ -103,13 +83,25 @@ export const getAuthToken = () => {
 
             if (!token) {
                 try {
-                    let storedToken = await AsyncStorage.getItem("auth-token")
-                    let userId = await AsyncStorage.getItem("userId")
+                    let res = await fetch(`${API_URL}login`, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            email: authData.email,
+                            password: authData.password,
+                        }),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        }
+                    })
+
+                    let resJson = res.json()
+
+                    console.warn(resJson)
 
                     dispatch(authSetToken(storedToken, userId))
                     await resolve(storedToken)
                 } catch (error) {
-                    dispatch(authRemoveAsyncData())
                     reject(error)
                 }
             } else {
@@ -119,22 +111,45 @@ export const getAuthToken = () => {
     }
 }
 
-export const authAutoSignIn = () => {
-    return async (dispatch, getState) => {
+export const logout = (userId) => {
+    return async (dispatch) => {
         try {
-            let token = await dispatch(getAuthToken())
+            dispatch(uiStartLoading())
 
-            if (!token) {
-                reject()
+            let res = await fetch(`${API_URL}logout`, {
+                method: "POST",
+                body: JSON.stringify({
+                    id: userId
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+
+            setTimeout(() => {
+                if (!res) {
+                    dispatch(uiStopLoading())
+                    dispatch(authError("Please check your internet connection"))
+                }
+            }, 15000);
+
+            let resJson = await res.json()
+            console.warn(resJson)
+
+            if (resJson.error) {
+                alert("Logout failed, please try again")
             } else {
-                await dispatch(getUser())
-                dispatch(authError(""));
+                dispatch(authRemoveToken())
+                dispatch(setUser({}))
+                dispatch(uiStopLoading())
             }
 
-            return token
-        } catch (e) {
-            dispatch(authRemoveAsyncData())
-            return false
+            return "done"
+        } catch (error) {
+            alert("Logout failed, please try again")
+            dispatch(uiStopLoading())
+            return null
         }
     }
 }

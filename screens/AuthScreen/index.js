@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Text, View, Image, TouchableOpacity } from 'react-native'
+import { Text, View, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import { connect } from 'react-redux'
-import { logIn, authError, authAutoSignIn } from '../../store/actions';
+import { logIn, authError } from '../../store/actions';
 import { GREY } from '../../utility/colors'
 import validate from '../../utility/validation'
 import { styles } from './style';
@@ -9,6 +9,7 @@ import InputText from '../../components/InputText'
 import Checkbox from '../../components/Checkbox'
 import Button from '../../components/Button'
 import DismissKeyboard from '../../components/DismissKeyboard'
+import logo from '../../assets/images/logo.jpg'
 
 class AuthScreen extends Component {
     constructor(props) {
@@ -45,6 +46,7 @@ class AuthScreen extends Component {
         if (this.state.email.value !== '' && this.state.password.value !== '') {
             try {
                 await this.setState(prevState => ({
+                    ...prevState,
                     email: {
                         ...prevState.email,
                         error: validate(prevState.email.value, prevState.email.validationRules, prevState.email.field)
@@ -54,6 +56,8 @@ class AuthScreen extends Component {
                         error: validate(prevState.password.value, prevState.password.validationRules, prevState.password.field)
                     },
                 }))
+
+                console.warn(this.state.email);
 
                 if (this.state.email.error !== undefined) {
                     await this.props.authError(this.state.email.error)
@@ -79,8 +83,8 @@ class AuthScreen extends Component {
                 if (this.props.error !== '') {
                     this.showError(this.props.error);
                 }
-                if (this.props.isDoneLoading && this.props.user.first_name && this.props.error === '') {
-                    this.props.navigation.navigate('ExploreScreen')
+                if (this.props.isDoneLoading && this.props.user.email && this.props.user.employee_id && this.props.error === '') {
+                    this.props.navigation.navigate('DashboardScreen')
                 }
             }
         }
@@ -91,66 +95,68 @@ class AuthScreen extends Component {
     }
 
     onChangeText = (input, type) => {
-        this.setState({ [type]: {
-            ...this.state[type],
-            value: input
-        }})
+        this.setState({
+            [type]: {
+                ...this.state[type],
+                value: input
+            }
+        })
     }
 
     render() {
         return (
             <DismissKeyboard>
-            <View style={styles.container}>
-                <View style={styles.image}>
-                    <Image style={{ width: '40%', height: '40%' }} resizeMode="contain" source={{ uri: "https://portal.ipaysuite.com/assets/media/logos/logo.jpg" }} />
-                    <Text style={styles.headText}>Sign in to account</Text>
-                </View>
-                <View style={styles.form}>
-                    <Text style={styles.error}>{this.state.error}</Text>
-                    <InputText
-                        icon="envelope"
-                        placeholder="Email"
-                        autoCorrect={false}
-                        iconSize={16}
-                        iconColor={GREY}
-                        value={this.state.email.value}
-                        onSubmitEditing={() => { this.password.focus() }}
-                        onChangeText={input => this.onChangeText(input, 'email')}
-                        autoCapitalize="none"
-                        returnKeyType="next"
-                        keyboardType="email-address"
-                    />
-                    <InputText
-                        icon="lock"
-                        placeholder="Password"
-                        secureTextEntry
-                        iconSize={16}
-                        iconColor={GREY}
-                        value={this.state.password.value}
-                        getRef={input => { this.password = input }}
-                        onChangeText={input => this.onChangeText(input, 'password')}
-                        autoCapitalize="none"
-                        returnKeyTpe="go"
-                        onSubmitEditing={this.loginHandler}
-                    />
-                    <View style={styles.remember}>
-                        <Checkbox
-                            isChecked={this.state.isChecked}
-                            onPress={this.toggleCheck}
-                            containerStyle={{ marginRight: 8, width: 14, height: 14 }}
-                        />
-                        <Text style={styles.rememberText}>Remember Me?</Text>
+                <View style={styles.container}>
+                    <View style={styles.image}>
+                        <Image style={{ width: '40%', height: '40%' }} resizeMode="contain" source={logo} />
+                        <Text style={styles.headText}>Sign in to account</Text>
                     </View>
-                    <Button
-                        text="Sign In"
-                        style={styles.btn}
-                        textStyle={styles.btnText}
-                        isLoading={this.props.isLoading}
-                        onPress={this.loginHandler}
-                    />
-                    <TouchableOpacity style={styles.forgot}><Text style={styles.forgotText}>Forgot Password?</Text></TouchableOpacity>
+                    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={styles.form}>
+                        <Text style={styles.error}>{this.state.error}</Text>
+                        <InputText
+                            icon="envelope"
+                            placeholder="Email"
+                            autoCorrect={false}
+                            iconSize={16}
+                            iconColor={GREY}
+                            value={this.state.email.value}
+                            onSubmitEditing={() => { this.password.focus() }}
+                            onChangeText={input => this.onChangeText(input, 'email')}
+                            autoCapitalize="none"
+                            returnKeyType="next"
+                            keyboardType="email-address"
+                        />
+                        <InputText
+                            icon="lock"
+                            placeholder="Password"
+                            secureTextEntry
+                            iconSize={16}
+                            iconColor={GREY}
+                            value={this.state.password.value}
+                            getRef={input => { this.password = input }}
+                            onChangeText={input => this.onChangeText(input, 'password')}
+                            autoCapitalize="none"
+                            returnKeyTpe="go"
+                            onSubmitEditing={this.loginHandler}
+                        />
+                        <View style={styles.remember}>
+                            <Checkbox
+                                isChecked={this.state.isChecked}
+                                onPress={this.toggleCheck}
+                                containerStyle={{ marginRight: 8, width: 14, height: 14 }}
+                            />
+                            <Text style={styles.rememberText}>Remember Me?</Text>
+                        </View>
+                        <Button
+                            text="Sign In"
+                            style={styles.btn}
+                            textStyle={styles.btnText}
+                            isLoading={this.props.isLoading}
+                            onPress={this.loginHandler}
+                        />
+                        <TouchableOpacity style={styles.forgot}><Text style={styles.forgotText}>Forgot Password?</Text></TouchableOpacity>
+                    </KeyboardAvoidingView>
                 </View>
-            </View>
             </DismissKeyboard>
         )
     }
@@ -165,8 +171,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onLogIn: (authData) => dispatch(logIn(authData)),
-    authError: (error) => dispatch(authError(error)),
-    onAutoSignIn: () => dispatch(authAutoSignIn())
+    authError: (error) => dispatch(authError(error))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthScreen)
