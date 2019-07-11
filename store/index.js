@@ -8,12 +8,14 @@ import thunk from 'redux-thunk';
 import uiReducer from './reducers/ui'
 import authReducer from './reducers/auth'
 import userReducer from './reducers/user'
+import employeesReducer from './reducers/employees'
 
 // This combines the reducers into one root reducer
 const rootReducer = combineReducers({
     ui: uiReducer,
     user: userReducer,
-    auth: authReducer
+    auth: authReducer,
+    employees: employeesReducer
 })
 
 let composeEnhancers = compose;

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../utility/constants';
-import { ALMOST_BLACK, GREY, DARK_GREEN } from '../../utility/colors';
+import { ALMOST_BLACK, GREY, DARK_GREEN, SECONDARY_COLOR } from '../../utility/colors';
 
 export const styles = StyleSheet.create({
     container: {
@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         width: SCREEN_WIDTH,
         height: SCREEN_HEIGHT * 0.3,
-        backgroundColor: DARK_GREEN
+        backgroundColor: SECONDARY_COLOR
     },
     imageContainer: {
         width: '100%',

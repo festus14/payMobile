@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, Platform, StatusBar } from 'react-native'
-import { GREY } from '../utility/colors';
+import { DARK_GREEN, SECONDARY_COLOR } from '../utility/colors';
 import Icon from 'react-native-vector-icons/Ionicons'
 import { STATUS_BAR_HEIGHT } from '../utility/constants';
 
 export default class Header extends Component {
     render() {
         const { style = {},
-            leftColor = GREY,
+            leftColor = '#fff',
             leftSize = 30,
             titleStyle = {},
-            rightColor = GREY,
+            rightColor = DARK_GREEN,
             rightSize = 30,
             rightIcon,
             leftIcon,
@@ -46,7 +46,7 @@ export default class Header extends Component {
 
 const styles = StyleSheet.create({
     header: {
-        backgroundColor: '#fff',
+        backgroundColor: SECONDARY_COLOR,
         ...Platform.select({
             ios: {
                 shadowColor: 'rgb(190, 190, 190)',
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     text: {
-        color: GREY,
+        color: '#fff',
         fontSize: 20,
         fontWeight: 'bold',
     },

@@ -1,13 +1,14 @@
 import {
-    SET_USER
+    SET_USER,
+    RESET_USER,
+    SET_EMPLOYEE
 } from './actionTypes'
 import {
     API_URL
 } from '../../utility/constants'
 import {
-    authRemoveToken,
-    uiStartLoading,
-    uiStopLoading,
+    userUiStartLoading,
+    userUiStopLoading,
     getAuthToken
 } from './';
 
@@ -18,10 +19,23 @@ export const setUser = (user) => {
     }
 }
 
+export const setEmployee = (employee) => {
+    return {
+        type: SET_EMPLOYEE,
+        employee
+    }
+}
+
+export const resetUser = (user) => {
+    return {
+        type: RESET_USER
+    }
+}
+
 export const getUserId = () => {
     return async (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            const userId = await getState().auth.userId
+            let userId = await getState().auth.userId
 
             if (!userId) {
                 try {
@@ -41,12 +55,12 @@ export const getUserId = () => {
 
 export const getUser = () => {
     return async (dispatch, getState) => {
-        dispatch(uiStartLoading())
+        dispatch(userUiStartLoading())
         try {
             let userData = await getState().user.user
 
             if (!userData.email) {
-                let token = await dispatch(getAuthToken())
+                let token = getState().auth.token
                 let userId = await dispatch(getUserId());
 
                 let res = await fetch(`${API_URL}users/${userId}`, {
@@ -61,20 +75,64 @@ export const getUser = () => {
 
                 console.warn(resJson)
 
-                await dispatch(uiStopLoading())
-                if (resJson.errors) {
-                    alert(resJson.errors[0] || "Something went wrong, pls try again")
+                await dispatch(userUiStopLoading())
+                if (resJson.error) {
+                    alert(resJson.error || "Something went wrong, pls try again")
                     return false;
                 } else {
-                    dispatch(setUser(resJson.user))
+                    dispatch(setUser(resJson))
                     return resJson.user
                 }
             } else {
-                await dispatch(uiStopLoading())
+                await dispatch(userUiStopLoading())
                 return userData
             }
         } catch (e) {
-            dispatch(uiStopLoading())
+            dispatch(userUiStopLoading())
+            console.warn(e);
+            alert('Something went wrong, please try again. If this persists then you are not logged in')
+            return false
+        }
+    }
+}
+
+export const getEmployee = () => {
+    return async (dispatch, getState) => {
+        dispatch(userUiStartLoading())
+        try {
+            let userData = await getState().user.employee
+
+            if (!userData.first_name) {
+                let token = getState().auth.token
+                let userId = await dispatch(getUserId());
+
+                let res = await fetch(`${API_URL}employees/${userId}`, {
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token,
+                        "Accept": "application/json"
+                    }
+                })
+                let resJson = await res.json()
+
+                console.warn(resJson)
+
+                await dispatch(userUiStopLoading())
+                if (resJson.error) {
+                    alert(resJson.error || "Something went wrong, pls try again")
+                    return false;
+                } else {
+                    dispatch(setEmployee(resJson))
+                    return resJson
+                }
+            } else {
+                await dispatch(userUiStopLoading())
+                return userData
+            }
+        } catch (e) {
+            dispatch(userUiStopLoading())
+            console.warn(e);
             alert('Something went wrong, please try again. If this persists then you are not logged in')
             return false
         }

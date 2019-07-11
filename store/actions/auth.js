@@ -3,10 +3,13 @@ import {
     AUTH_REMOVE_TOKEN,
     AUTH_SET_TOKEN
 } from "./actionTypes";
+import AsyncStorage from '@react-native-community/async-storage'
 import {
     uiStartLoading,
     uiStopLoading,
-    setUser
+    setUser,
+    setEmployees,
+    resetUser
 } from './'
 import {
     API_URL
@@ -62,10 +65,12 @@ export const logIn = (authData) => {
 
             await dispatch(uiStopLoading())
             if (resJson.error) {
-                dispatch(authError(resJson.error === "Unauthorized" ? "Email and password do not match" : "Authentication failed, please try again"))
+                dispatch(authError(resJson.error === "Unauthorised" ? "Email and password do not match" : "Authentication failed, please try again"))
             } else {
                 dispatch(authError(""));
                 authSetToken(resJson.success.token, resJson.success.user.id)
+                await AsyncStorage.setItem('token', resJson.success.token)
+                await AsyncStorage.setItem('user-id', `${resJson.success.user.id}`)
                 dispatch(setUser(resJson.success.user))
             }
         } catch (error) {
@@ -73,41 +78,6 @@ export const logIn = (authData) => {
             console.warn(error)
             dispatch(authError("Authentication failed, please try again"));
         }
-    }
-}
-
-export const getAuthToken = () => {
-    return async (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
-            const token = await getState().auth.token
-
-            if (!token) {
-                try {
-                    let res = await fetch(`${API_URL}login`, {
-                        method: "POST",
-                        body: JSON.stringify({
-                            email: authData.email,
-                            password: authData.password,
-                        }),
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json"
-                        }
-                    })
-
-                    let resJson = res.json()
-
-                    console.warn(resJson)
-
-                    dispatch(authSetToken(storedToken, userId))
-                    await resolve(storedToken)
-                } catch (error) {
-                    reject(error)
-                }
-            } else {
-                resolve(token)
-            }
-        })
     }
 }
 
@@ -141,7 +111,8 @@ export const logout = (userId) => {
                 alert("Logout failed, please try again")
             } else {
                 dispatch(authRemoveToken())
-                dispatch(setUser({}))
+                dispatch(resetUser())
+                dispatch(setEmployees([]))
                 dispatch(uiStopLoading())
             }
 

@@ -1,7 +1,8 @@
-import { SET_USER, AUTH_REMOVE_TOKEN } from "../actions/actionTypes";
+import { SET_USER, RESET_USER, SET_EMPLOYEE } from "../actions/actionTypes";
 
 const initialState = {
-    user: {}
+    user: {},
+    employee: {}
 }
 
 const reducer = (state = initialState, action) => {
@@ -11,7 +12,12 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 user: action.user
             }
-        case AUTH_REMOVE_TOKEN:
+        case SET_EMPLOYEE:
+            return {
+                ...state,
+                employee: action.employee
+            }
+        case RESET_USER:
             return initialState
         default:
             return state
