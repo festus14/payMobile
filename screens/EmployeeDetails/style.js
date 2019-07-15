@@ -1,27 +1,27 @@
-import { StyleSheet, Platform } from 'react-native'
-import { GREY, DARK_BLUE, SECONDARY_COLOR, LIGHT_BLUE, DARK_GREEN } from '../../utility/colors';
+import { StyleSheet, Platform } from 'react-native';
+import { GREY, DARK_BLUE, SECONDARY_COLOR, DARK_GREEN } from '../../utility/colors';
 import { SCREEN_HEIGHT } from '../../utility/constants';
 
 export const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
     data: {
         flex: 1,
-        margin: 15
+        margin: 15,
     },
     personal: {
-        height: SCREEN_HEIGHT * 0.12,
+        minHeight: SCREEN_HEIGHT * 0.14,
         justifyContent: 'flex-start',
         width: '100%',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     image: {
         height: 60,
         width: 60,
         borderRadius: 90,
-        marginRight: 25
+        marginRight: 25,
     },
     name: {
         color: DARK_BLUE,
@@ -31,27 +31,27 @@ export const styles = StyleSheet.create({
     email: {
         color: GREY,
         fontFamily: 'Poppins-Regular',
-        fontSize: 12
+        fontSize: 12,
     },
     staffId: {
         color: GREY,
         fontFamily: 'Poppins-Regular',
-        fontSize: 12
+        fontSize: 12,
     },
     line: {
         backgroundColor: SECONDARY_COLOR,
         height: 0.5,
         width: '100%',
-        marginVertical: 10
+        marginVertical: 10,
     },
     section: {
         width: '100%',
-        padding: 15
+        padding: 15,
     },
     sectionTitle: {
         fontFamily: 'Poppins-Bold',
         fontSize: 25,
-        color: DARK_GREEN
+        color: DARK_GREEN,
     },
     sectionDetails: {
         backgroundColor: '#fff',
@@ -61,17 +61,17 @@ export const styles = StyleSheet.create({
                 shadowOpacity: 0.09,
                 shadowOffset: {
                     width: 0,
-                    height: 2
+                    height: 2,
                 },
             },
             android: {
-                elevation: 4
-            }
+                elevation: 4,
+            },
         }),
         padding: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        flexWrap: 'wrap'
-    }
-})
+        flexWrap: 'wrap',
+    },
+});

@@ -1,140 +1,139 @@
 import {
     SET_USER,
     RESET_USER,
-    SET_EMPLOYEE
-} from './actionTypes'
+    SET_EMPLOYEE,
+} from './actionTypes';
 import {
-    API_URL
-} from '../../utility/constants'
+    API_URL,
+} from '../../utility/constants';
 import {
     userUiStartLoading,
     userUiStopLoading,
-    getAuthToken
 } from './';
 
 export const setUser = (user) => {
     return {
         type: SET_USER,
-        user
-    }
-}
+        user,
+    };
+};
 
 export const setEmployee = (employee) => {
     return {
         type: SET_EMPLOYEE,
-        employee
-    }
-}
+        employee,
+    };
+};
 
 export const resetUser = (user) => {
     return {
-        type: RESET_USER
-    }
-}
+        type: RESET_USER,
+    };
+};
 
 export const getUserId = () => {
     return async (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            let userId = await getState().auth.userId
+            let userId = await getState().auth.userId;
 
             if (!userId) {
                 try {
-                    dispatch(getAuthToken())
-                    userId = await getState().auth.userId
+                    userId = await getState().auth.userId;
 
-                    resolve(parseInt(userId))
+                    resolve(parseInt(userId));
                 } catch (error) {
-                    reject(error)
+                    reject(error);
                 }
             } else {
-                resolve(userId)
+                resolve(userId);
             }
-        })
-    }
-}
+        });
+    };
+};
 
 export const getUser = () => {
     return async (dispatch, getState) => {
-        dispatch(userUiStartLoading())
+        dispatch(userUiStartLoading());
         try {
-            let userData = await getState().user.user
+            let userData = await getState().user.user;
 
             if (!userData.email) {
-                let token = getState().auth.token
+                let token = getState().auth.token;
                 let userId = await dispatch(getUserId());
 
                 let res = await fetch(`${API_URL}users/${userId}`, {
                     method: 'GET',
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + token,
-                        "Accept": "application/json"
-                    }
-                })
-                let resJson = await res.json()
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token,
+                        'Accept': 'application/json',
+                    },
+                });
+                let resJson = await res.json();
 
-                console.warn(resJson)
+                console.warn(resJson);
 
-                await dispatch(userUiStopLoading())
+                await dispatch(userUiStopLoading());
                 if (resJson.error) {
-                    alert(resJson.error || "Something went wrong, pls try again")
+                    alert(resJson.error || 'Something went wrong, pls try again');
                     return false;
                 } else {
-                    dispatch(setUser(resJson))
-                    return resJson.user
+                    dispatch(setUser(resJson));
+                    return resJson.user;
                 }
             } else {
-                await dispatch(userUiStopLoading())
-                return userData
+                await dispatch(userUiStopLoading());
+                return userData;
             }
         } catch (e) {
-            dispatch(userUiStopLoading())
+            dispatch(userUiStopLoading());
             console.warn(e);
-            alert('Something went wrong, please try again. If this persists then you are not logged in')
-            return false
+            alert('Something went wrong, please try again. If this persists then you are not logged in');
+            return false;
         }
-    }
-}
+    };
+};
 
 export const getEmployee = () => {
     return async (dispatch, getState) => {
-        dispatch(userUiStartLoading())
+        dispatch(userUiStartLoading());
         try {
-            let userData = await getState().user.employee
+            let userData = await getState().user.employee;
 
             if (!userData.first_name) {
-                let token = getState().auth.token
+                let token = getState().auth.token;
                 let userId = await dispatch(getUserId());
 
                 let res = await fetch(`${API_URL}employees/${userId}`, {
                     method: 'GET',
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + token,
-                        "Accept": "application/json"
-                    }
-                })
-                let resJson = await res.json()
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token,
+                        'Accept': 'application/json',
+                    },
+                });
+                let resJson = await res.json();
 
-                console.warn(resJson)
+                console.warn(resJson);
 
-                await dispatch(userUiStopLoading())
+                await dispatch(userUiStopLoading());
                 if (resJson.error) {
-                    alert(resJson.error || "Something went wrong, pls try again")
+                    // alert error
+                    alert(resJson.error || 'Something went wrong, pls try again');
                     return false;
                 } else {
-                    dispatch(setEmployee(resJson))
-                    return resJson
+                    dispatch(setEmployee(resJson.success.employees));
+                    return resJson;
                 }
             } else {
-                await dispatch(userUiStopLoading())
-                return userData
+                await dispatch(userUiStopLoading());
+                return userData;
             }
         } catch (e) {
-            dispatch(userUiStopLoading())
+            dispatch(userUiStopLoading());
             console.warn(e);
-            alert('Something went wrong, please try again. If this persists then you are not logged in')
-            return false
+            alert('Something went wrong, please try again. If this persists then you are not logged in');
+            return false;
         }
-    }
-}
+    };
+};

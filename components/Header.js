@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Platform, StatusBar } from 'react-native'
+import React, { Component } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, Platform, StatusBar } from 'react-native';
 import { DARK_GREEN, SECONDARY_COLOR } from '../utility/colors';
-import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/Ionicons';
 import { STATUS_BAR_HEIGHT } from '../utility/constants';
 
 export default class Header extends Component {
@@ -10,37 +10,37 @@ export default class Header extends Component {
             leftColor = '#fff',
             leftSize = 30,
             titleStyle = {},
-            rightColor = DARK_GREEN,
+            rightColor = '#fff',
             rightSize = 30,
             rightIcon,
             leftIcon,
-            title = "",
+            title = '',
             onLeftPress,
-            onRightPress
-        } = this.props
+            onRightPress,
+        } = this.props;
         return (
             <View style={[styles.header, style]}>
                 <StatusBar
-                    barStyle={Platform.OS === "ios" ? "dark-content" : "light-content"}
+                    barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
                 />
                 {Platform.OS !== 'android' && <View style={styles.status} />}
                 <View style={styles.details}>
                     <View style={styles.iconContainer}>
-                        {leftIcon && <TouchableOpacity style={{ flex: 1 }} onPress={onLeftPress} style={styles.icon}>
+                        {leftIcon && <TouchableOpacity onPress={onLeftPress} style={styles.icon}>
                             <Icon name={leftIcon} color={leftColor} size={leftSize} />
                         </TouchableOpacity>}
                     </View>
                     <View style={[styles.textContainer, titleStyle]}>
-                        <Text style={styles.text}>{title || ""}</Text>
+                        <Text style={styles.text}>{title || ''}</Text>
                     </View>
                     <View style={styles.iconContainer}>
-                        {rightIcon && <TouchableOpacity style={{ flex: 1 }} onPress={onRightPress} style={styles.icon}>
+                        {rightIcon && <TouchableOpacity  onPress={onRightPress} style={styles.icon}>
                             <Icon name={rightIcon} color={rightColor} size={rightSize} />
                         </TouchableOpacity>}
                     </View>
                 </View>
             </View>
-        )
+        );
     }
 }
 
@@ -53,23 +53,23 @@ const styles = StyleSheet.create({
                 shadowOpacity: 0.6,
                 shadowOffset: {
                     width: 0,
-                    height: 2
+                    height: 2,
                 },
             },
             android: {
-                elevation: 5
-            }
+                elevation: 5,
+            },
         }),
         width: '100%',
         height: '13%',
         ...Platform.select({
             android: {
-                height: '10%'
-            }
-        })
+                height: '10%',
+            },
+        }),
     },
     status: {
-        height: STATUS_BAR_HEIGHT
+        height: STATUS_BAR_HEIGHT,
     },
     details: {
         flex: 1,
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     iconContainer: {
-        width: '10%'
-    }
+        width: '10%',
+    },
 })
+;

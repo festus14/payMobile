@@ -1,28 +1,28 @@
 import {
-    SET_EMPLOYEES,
+    SET_PAYSLIPS,
 } from './actionTypes';
 import {
     API_URL,
 } from '../../utility/constants';
 import {
-    employeesUiStartLoading,
-    employeesUiStopLoading,
+    payslipsUiStartLoading,
+    payslipsUiStopLoading,
 } from './';
 
-export const setEmployees = employees => {
+export const setPayslips = payslips => {
     return {
-        type: SET_EMPLOYEES,
-        employees,
+        type: SET_PAYSLIPS,
+        payslips,
     };
 };
 
-export const getEmployees = () => {
+export const getPayslips = () => {
     return async (dispatch, getState) => {
-        dispatch(employeesUiStartLoading());
+        dispatch(payslipsUiStartLoading());
         try {
             let token = getState().auth.token;
 
-            let res = await fetch(`${API_URL}employees`, {
+            let res = await fetch(`${API_URL}payrolls`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,16 +34,16 @@ export const getEmployees = () => {
 
             console.warn(resJson);
 
-            await dispatch(employeesUiStopLoading());
+            await dispatch(payslipsUiStopLoading());
             if (resJson.error) {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setEmployees(resJson.success.employees));
+                dispatch(setPayslips(resJson.success));
                 return resJson;
             }
         } catch (e) {
-            dispatch(employeesUiStopLoading());
+            dispatch(payslipsUiStopLoading());
             alert('Something went wrong, please try again. If this persists then you are not logged in');
             return false;
         }

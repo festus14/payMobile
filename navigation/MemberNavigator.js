@@ -1,17 +1,16 @@
-import React from 'react'
+import React from 'react';
 import {
-    createBottomTabNavigator
+    createBottomTabNavigator,
 } from 'react-navigation';
 import DashboardNavigator from './DashboardNavigator';
 import ReportsNavigator from './ReportsNavigator';
 import EmployeesNavigator from './EmployeesNavigator';
 import SettingsNavigator from './SettingsNavigator';
-import PayrollNavigator from './PayrollNavigator'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import PayrollNavigator from './PayrollNavigator';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {
-    LIGHT_BLUE,
     DARK_BLUE,
-    DARK_GREEN
+    DARK_GREEN,
 } from '../utility/colors';
 import { SCREEN_HEIGHT } from '../utility/constants';
 
@@ -26,33 +25,33 @@ const MemberNavigator = createBottomTabNavigator({
 }, {
         initialRouteName: 'Dashboard',
         defaultNavigationOptions: ({
-            navigation
+            navigation,
         }) => ({
             tabBarIcon: ({
                 focused,
                 horizontal,
-                tintColor
+                tintColor,
             }) => {
                 const {
-                    routeName
+                    routeName,
                 } = navigation.state;
                 let iconName;
 
                 switch (routeName) {
                     case 'Settings':
-                        iconName = 'cog'
+                        iconName = 'cog';
                         break;
                     case 'Dashboard':
-                        iconName = 'tachometer'
+                        iconName = 'tachometer';
                         break;
                     case 'Employees':
-                        iconName = 'users'
+                        iconName = 'users';
                         break;
                     case 'Payroll':
-                        iconName = 'money'
+                        iconName = 'money';
                         break;
                     case 'Reports':
-                        iconName = 'file'
+                        iconName = 'file';
                         break;
                     default:
                         break;
@@ -70,10 +69,10 @@ const MemberNavigator = createBottomTabNavigator({
             },
             style: {
                 backgroundColor: DARK_BLUE,
-                height: SCREEN_HEIGHT * 0.1
+                height: SCREEN_HEIGHT * 0.1,
 
-            }
-        }
-    })
+            },
+        },
+    });
 
 export default MemberNavigator;

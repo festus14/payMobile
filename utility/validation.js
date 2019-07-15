@@ -1,5 +1,5 @@
 const validate = (val, rules, field) => {
-    let isValid = true
+    let isValid = true;
     for (let rule in rules) {
         switch (rule) {
             case 'isEmail':
@@ -7,33 +7,33 @@ const validate = (val, rules, field) => {
                 if (!isValid) {
                     return `${field} is not valid`
                 }
-                break
+                break;
             case 'minLength':
                 isValid = isValid && minLengthValidator(val, rules[rule])
                 if (!isValid) {
                     return `${field} length must be a minimum of ${rules[rule]}`
                 }
-                break
+                break;
             case 'maxLength':
                 isValid = isValid && maxLengthValidator(val, rules[rule])
                 if (!isValid) {
                     return `${field} length must be a maximum of ${rules[rule]}`
                 }
-                break
+                break;
             case 'isString':
                 isValid = isValid && stringValidator(val)
                 if (!isValid) {
                     return `${field} is not valid`
                 }
-                break
+                break;
             case 'isDate':
                 isValid = isValid && dateValidator(val)
                 if (!isValid) {
                     return `${field} is not valid`
                 }
-                break
+                break;
             default:
-                return null
+                return null;
         }
     }
 }
@@ -44,23 +44,23 @@ const emailValidator = (val) => {
 }
 
 const minLengthValidator = (val, minLength) => {
-    return val.length >= minLength
+    return val.length >= minLength;
 }
 
 const maxLengthValidator = (val, maxLength) => {
-    return val.length <= maxLength
+    return val.length <= maxLength;
 }
 
 const stringValidator = (val) => {
-    return typeof val === 'string'
-}
+    return typeof val === 'string';
+};
 
 const dateValidator = (val) => {
-    let date = new Date(val)
+    let date = new Date(val);
     if (!date) {
-        return false
+        return false;
     }
-    return date instanceof Date
-}
+    return date instanceof Date;
+};
 
-export default validate
+export default validate;

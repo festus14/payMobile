@@ -1,40 +1,53 @@
-import React, { Component } from 'react'
-import { Text, View, ScrollView } from 'react-native'
-import Header from '../../components/Header'
+import React, { Component } from 'react';
+import { Text, View, ScrollView } from 'react-native';
+import Header from '../../components/Header';
 import { styles } from './style';
-import defaultImage from '../../assets/images/myAvatar.png'
+import defaultImage from '../../assets/images/myAvatar.png';
 import { PHOTO_URL } from '../../utility/constants';
-import MyImage from '../../components/MyImage'
+import MyImage from '../../components/MyImage';
 import EmployeeItem from '../../components/EmployeeItem';
 import { moneyFormatter, getPercentage } from '../../utility/helpers';
 import { DARK_GREEN, GREY } from '../../utility/colors';
 
 export default class EmployeeDetails extends Component {
     static navigationOptions = {
-        header: null
+        header: null,
+        drawerLabel: 'Employee Info',
+    }
+
+    goBack = () => {
+        this.props.navigation.navigate('EmployeesScreen');
+    }
+
+    openDrawer = () => {
+        this.props.navigation.openDrawer();
     }
 
     render() {
-        const { employee, onGoBack } = this.props
+        const { navigation } = this.props;
+
+        const employee = navigation.getParam('employee', {});
         return (
             <View style={styles.container}>
                 <Header
-                    title={employee.users.name || "Unknown Unknown"}
+                    title={`${employee.firstname} ${employee.lastname}` || 'Unknown Unknown'}
                     leftIcon="md-arrow-back"
-                    onLeftPress={onGoBack}
+                    onLeftPress={this.goBack}
+                    rightIcon="ios-menu"
+                    onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
                     <ScrollView>
                         <View style={styles.personal}>
                             <MyImage resizeMode="contain" style={styles.image} source={employee.users ? [{ uri: PHOTO_URL + employee.users.picture }, defaultImage] : [defaultImage]} />
                             <View style={styles.personalText}>
-                                <Text style={styles.name}>{employee.users.name || "Unknown Unknown"}</Text>
-                                <Text style={styles.email}>{employee.users.email || "mail@domain.com"}</Text>
+                                <Text style={styles.name}>{`${employee.firstname} ${employee.middlename || ''} ${employee.lastname}` || 'Unknown Unknown'}</Text>
+                                <Text style={styles.email}>{employee.email || 'mail@domain.com'}</Text>
                                 {employee.staff_no && <Text style={styles.staffId}>{employee.staff_no}</Text>}
                                 {employee.phone && <Text style={styles.staffId}>{employee.phone}</Text>}
                             </View>
                         </View>
-                        <View style={styles.line}></View>
+                        <View style={styles.line} />
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>Payroll Data</Text>
                             <View style={styles.sectionDetails}>
@@ -42,7 +55,7 @@ export default class EmployeeDetails extends Component {
                                     <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 20, textAlign: 'center', color: DARK_GREEN }}>Gross Salary ({employee.currency ? employee.currency.name : 'NGN'})</Text>
                                     <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 20, color: GREY, textAlign: 'center' }}>{moneyFormatter(employee.gross)}</Text>
                                 </View>
-                                {employee.pay_elements.map(elem => (
+                                {employee.pay_elements && employee.pay_elements.map(elem => (
                                     <View style={{ width: '100%', marginBottom: 5, marginLeft: 10 }} key={elem.id}>
                                         <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 17, color: DARK_GREEN }}>{elem.name}</Text>
                                         <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 17, color: GREY }}>{getPercentage(parseFloat(employee.gross), parseFloat(elem.percentage))}</Text>
@@ -56,18 +69,18 @@ export default class EmployeeDetails extends Component {
                                 <EmployeeItem title="Gender" value={employee.gender} />
                                 <EmployeeItem title="DOB" value={employee.dob} />
                                 <EmployeeItem title="DOE" value={employee.date_of_employment} />
-                                <EmployeeItem title="Country" value={employee.country.name} />
-                                <EmployeeItem title="Residence State" value={employee.state.name} />
-                                <EmployeeItem title="State of Origin" value={employee.origin.name} />
+                                {employee.country && <EmployeeItem title="Country" value={employee.country.name} />}
+                                {employee.state && <EmployeeItem title="Residence State" value={employee.state.name} />}
+                                {employee.origin && <EmployeeItem title="State of Origin" value={employee.origin.name} />}
                                 <EmployeeItem title="Position" value={employee.position} />
-                                <EmployeeItem title="Department" value={employee.department.name} />
-                                <EmployeeItem title="Staff Type" value={employee.stafftype && employee.stafftype.name} />
+                                {employee.department && <EmployeeItem title="Department" value={employee.department.name} />}
+                                {employee.stafftype && <EmployeeItem title="Staff Type" value={employee.stafftype && employee.stafftype.name} />}
                             </View>
                         </View>
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>Account Info</Text>
                             <View style={styles.sectionDetails}>
-                                <EmployeeItem title="Employee Bank" value={employee.employee_bank.name} />
+                                {employee.employee_bank && <EmployeeItem title="Employee Bank" value={employee.employee_bank.name} />}
                                 <EmployeeItem title="Account Number" value={employee.account_number} />
                             </View>
                         </View>
@@ -79,7 +92,7 @@ export default class EmployeeDetails extends Component {
                                 <EmployeeItem title="Tax Aauthority" value={employee.tax_authority} />
                                 <EmployeeItem title="PFA" value={employee.pfa} />
                                 <EmployeeItem title="RSA PIN" value={employee.rsa_pin} />
-                                <EmployeeItem title="Pension Bank" value={employee.p_bank.name} />
+                                {employee.p_bank && <EmployeeItem title="Pension Bank" value={employee.p_bank.name} />}
                                 <EmployeeItem title="Pension Account Number" value={employee.p_acc_number} />
                             </View>
                         </View>
@@ -105,6 +118,6 @@ export default class EmployeeDetails extends Component {
                     </ScrollView>
                 </View>
             </View>
-        )
+        );
     }
 }

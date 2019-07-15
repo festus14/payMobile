@@ -4,8 +4,10 @@ import {
     USER_UI_START_LOADING,
     USER_UI_STOP_LOADING,
     EMPLOYEES_UI_START_LOADING,
-    EMPLOYEES_UI_STOP_LOADING
-} from "../actions/actionTypes";
+    EMPLOYEES_UI_STOP_LOADING,
+    PAYSLIPS_UI_START_LOADING,
+    PAYSLIPS_UI_STOP_LOADING,
+} from '../actions/actionTypes';
 
 const initialState = {
     isLoading: false,
@@ -13,8 +15,10 @@ const initialState = {
     isUserLoading: false,
     isUserDoneLoading: null,
     isEmployeesLoading: false,
-    isEmployeesDoneLoading: null
-}
+    isEmployeesDoneLoading: null,
+    isPayslipsLoading: false,
+    isPayslipsDoneLoading: null,
+};
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -22,41 +26,54 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: true,
-                isDoneLoading: false
-            }
+                isDoneLoading: false,
+            };
         case UI_STOP_LOADING:
             return {
                 ...state,
                 isLoading: false,
-                isDoneLoading: true
-            }
+                isDoneLoading: true,
+            };
         case USER_UI_START_LOADING:
             return {
                 ...state,
                 isUserLoading: true,
-                isUserDoneLoading: false
-            }
+                isUserDoneLoading: false,
+            };
         case USER_UI_STOP_LOADING:
             return {
                 ...state,
                 isUserLoading: false,
-                isUserDoneLoading: true
-            }
+                isUserDoneLoading: true,
+            };
         case EMPLOYEES_UI_START_LOADING:
             return {
                 ...state,
                 isEmployeesLoading: true,
-                isEmployeesDoneLoading: false
-            }
+                isEmployeesDoneLoading: false,
+            };
         case EMPLOYEES_UI_STOP_LOADING:
             return {
                 ...state,
                 isEmployeesLoading: false,
-                isEmployeesDoneLoading: true
-            }
+                isEmployeesDoneLoading: true,
+            };
+        case PAYSLIPS_UI_START_LOADING:
+            return {
+                ...state,
+                isPayslipsLoading: true,
+                isPayslipsDoneLoading: false,
+            };
+        case PAYSLIPS_UI_STOP_LOADING:
+            return {
+                ...state,
+                isPayslipsLoading: false,
+                isPayslipsDoneLoading: true,
+            };
         default:
-            return state
+            return state;
     }
-}
+};
 
 export default reducer
+;

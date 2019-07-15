@@ -4,4 +4,7 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    data: {
+        flex: 1,
+    },
 });

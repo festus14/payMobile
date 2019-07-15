@@ -1,126 +1,126 @@
 import {
     AUTH_ERROR,
     AUTH_REMOVE_TOKEN,
-    AUTH_SET_TOKEN
-} from "./actionTypes";
-import AsyncStorage from '@react-native-community/async-storage'
+    AUTH_SET_TOKEN,
+} from './actionTypes';
+import AsyncStorage from '@react-native-community/async-storage';
 import {
     uiStartLoading,
     uiStopLoading,
     setUser,
     setEmployees,
-    resetUser
-} from './'
+    resetUser,
+} from './';
 import {
-    API_URL
-} from "../../utility/constants";
+    API_URL,
+} from '../../utility/constants';
 
 export const authError = (error) => {
     return {
         type: AUTH_ERROR,
-        error
-    }
-}
+        error,
+    };
+};
 
 export const authSetToken = (token, userId) => {
     return {
         type: AUTH_SET_TOKEN,
         token,
-        userId
-    }
-}
+        userId,
+    };
+};
 
 export const authRemoveToken = () => {
     return {
-        type: AUTH_REMOVE_TOKEN
-    }
-}
+        type: AUTH_REMOVE_TOKEN,
+    };
+};
 
 export const logIn = (authData) => {
     return async (dispatch) => {
         try {
-            dispatch(uiStartLoading())
+            dispatch(uiStartLoading());
 
             let res = await fetch(`${API_URL}login`, {
-                method: "POST",
+                method: 'POST',
                 body: JSON.stringify({
                     email: authData.email,
                     password: authData.password,
                 }),
                 headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                }
-            })
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+            });
 
             setTimeout(() => {
                 if (!res) {
-                    dispatch(uiStopLoading())
-                    dispatch(authError("Please check your internet connection"))
+                    dispatch(uiStopLoading());
+                    dispatch(authError('Please check your internet connection'));
                 }
             }, 15000);
 
-            let resJson = await res.json()
-            console.warn(resJson)
+            let resJson = await res.json();
+            console.warn(resJson);
 
-            await dispatch(uiStopLoading())
+            await dispatch(uiStopLoading());
             if (resJson.error) {
-                dispatch(authError(resJson.error === "Unauthorised" ? "Email and password do not match" : "Authentication failed, please try again"))
+                dispatch(authError(resJson.error === 'Unauthorised' ? 'Email and password do not match' : 'Authentication failed, please try again'));
             } else {
-                dispatch(authError(""));
-                authSetToken(resJson.success.token, resJson.success.user.id)
-                await AsyncStorage.setItem('token', resJson.success.token)
-                await AsyncStorage.setItem('user-id', `${resJson.success.user.id}`)
-                dispatch(setUser(resJson.success.user))
+                dispatch(authError(''));
+                authSetToken(resJson.success.token, resJson.success.user.id);
+                await AsyncStorage.setItem('token', resJson.success.token);
+                await AsyncStorage.setItem('user-id', `${resJson.success.user.id}`);
+                dispatch(setUser(resJson.success.user));
             }
         } catch (error) {
-            dispatch(uiStopLoading())
-            console.warn(error)
-            dispatch(authError("Authentication failed, please try again"));
+            dispatch(uiStopLoading());
+            console.warn(error);
+            dispatch(authError('Authentication failed, please try again'));
         }
-    }
-}
+    };
+};
 
-export const logout = (userId) => {
-    return async (dispatch) => {
+export const logout = () => {
+    return async (dispatch, getState) => {
         try {
-            dispatch(uiStartLoading())
+            dispatch(uiStartLoading());
 
-            let res = await fetch(`${API_URL}logout`, {
-                method: "POST",
-                body: JSON.stringify({
-                    id: userId
-                }),
+            let token = getState().auth.token;
+
+            let res = await fetch(`${API_URL}api_logout`, {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                }
-            })
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+            });
 
             setTimeout(() => {
                 if (!res) {
-                    dispatch(uiStopLoading())
-                    dispatch(authError("Please check your internet connection"))
+                    dispatch(uiStopLoading());
+                    dispatch(authError('Please check your internet connection'));
                 }
             }, 15000);
 
-            let resJson = await res.json()
-            console.warn(resJson)
+            let resJson = await res.json();
+            console.warn(resJson);
 
             if (resJson.error) {
-                alert("Logout failed, please try again")
+                alert('Logout failed, please try again');
+                return null;
             } else {
-                dispatch(authRemoveToken())
-                dispatch(resetUser())
-                dispatch(setEmployees([]))
-                dispatch(uiStopLoading())
+                dispatch(authRemoveToken());
+                dispatch(resetUser());
+                dispatch(setEmployees([]));
+                dispatch(uiStopLoading());
+                return 'done';
             }
-
-            return "done"
         } catch (error) {
-            alert("Logout failed, please try again")
-            dispatch(uiStopLoading())
-            return null
+            alert('Logout failed, please try again');
+            dispatch(uiStopLoading());
+            return null;
         }
-    }
-}
+    };
+};
