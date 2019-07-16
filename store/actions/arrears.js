@@ -1,29 +1,29 @@
 import {
-    SET_EMPLOYEES,
+    SET_ARREARS,
 } from './actionTypes';
 import {
     API_URL,
 } from '../../utility/constants';
 import {
-    employeesUiStartLoading,
-    employeesUiStopLoading,
+    arrearsUiStartLoading,
+    arrearsUiStopLoading,
     resetApp,
 } from './';
 
-export const setEmployees = employees => {
+export const setArrears = arrears => {
     return {
-        type: SET_EMPLOYEES,
-        employees,
+        type: SET_ARREARS,
+        arrears,
     };
 };
 
-export const getEmployees = () => {
+export const getArrears = () => {
     return async (dispatch, getState) => {
-        dispatch(employeesUiStartLoading());
+        dispatch(arrearsUiStartLoading());
         try {
             let token = getState().auth.token;
 
-            let res = await fetch(`${API_URL}employees`, {
+            let res = await fetch(`${API_URL}employeeareas`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export const getEmployees = () => {
 
             console.warn(resJson);
 
-            await dispatch(employeesUiStopLoading());
+            await dispatch(arrearsUiStopLoading());
             if (resJson.error || resJson.message) {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
@@ -43,11 +43,11 @@ export const getEmployees = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setEmployees(resJson.success.employees));
+                dispatch(setArrears(resJson.success));
                 return resJson;
             }
         } catch (e) {
-            dispatch(employeesUiStopLoading());
+            dispatch(arrearsUiStopLoading());
             alert('Something went wrong, please try again. If this persists then you are not logged in');
             return false;
         }

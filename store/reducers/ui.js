@@ -5,6 +5,10 @@ import {
     USER_UI_STOP_LOADING,
     EMPLOYEES_UI_START_LOADING,
     EMPLOYEES_UI_STOP_LOADING,
+    ABSENTEEISM_UI_START_LOADING,
+    ABSENTEEISM_UI_STOP_LOADING,
+    ARREARS_UI_START_LOADING,
+    ARREARS_UI_STOP_LOADING,
     PAYSLIPS_UI_START_LOADING,
     PAYSLIPS_UI_STOP_LOADING,
 } from '../actions/actionTypes';
@@ -16,6 +20,10 @@ const initialState = {
     isUserDoneLoading: null,
     isEmployeesLoading: false,
     isEmployeesDoneLoading: null,
+    isAbsenteeismLoading: false,
+    isAbsenteeismDoneLoading: null,
+    isArrearsLoading: false,
+    isArrearsDoneLoading: null,
     isPayslipsLoading: false,
     isPayslipsDoneLoading: null,
 };
@@ -69,6 +77,30 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 isPayslipsLoading: false,
                 isPayslipsDoneLoading: true,
+            };
+        case ABSENTEEISM_UI_START_LOADING:
+            return {
+                ...state,
+                isAbsenteeismLoading: true,
+                isAbsenteeismDoneLoading: false,
+            };
+        case ABSENTEEISM_UI_STOP_LOADING:
+            return {
+                ...state,
+                isAbsenteeismLoading: false,
+                isAbsenteeismDoneLoading: true,
+            };
+        case ARREARS_UI_START_LOADING:
+            return {
+                ...state,
+                isArrearsLoading: true,
+                isArrearsDoneLoading: false,
+            };
+        case ARREARS_UI_STOP_LOADING:
+            return {
+                ...state,
+                isArrearsLoading: false,
+                isArrearsDoneLoading: true,
             };
         default:
             return state;

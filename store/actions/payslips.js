@@ -7,6 +7,7 @@ import {
 import {
     payslipsUiStartLoading,
     payslipsUiStopLoading,
+    resetApp,
 } from './';
 
 export const setPayslips = payslips => {
@@ -22,7 +23,7 @@ export const getPayslips = () => {
         try {
             let token = getState().auth.token;
 
-            let res = await fetch(`${API_URL}payrolls`, {
+            let res = await fetch(`${API_URL}payrolls?id=26`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,7 +36,10 @@ export const getPayslips = () => {
             console.warn(resJson);
 
             await dispatch(payslipsUiStopLoading());
-            if (resJson.error) {
+            if (resJson.error || resJson.message) {
+                if (resJson.message === 'Unauthenticated.') {
+                    dispatch(resetApp());
+                }
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {

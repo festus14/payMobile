@@ -1,29 +1,29 @@
 import {
-    SET_EMPLOYEES,
+    SET_ABSENTEEISM,
 } from './actionTypes';
 import {
     API_URL,
 } from '../../utility/constants';
 import {
-    employeesUiStartLoading,
-    employeesUiStopLoading,
+    absenteeismUiStartLoading,
+    absenteeismUiStopLoading,
     resetApp,
 } from './';
 
-export const setEmployees = employees => {
+export const setAbsenteeism = absenteeism => {
     return {
-        type: SET_EMPLOYEES,
-        employees,
+        type: SET_ABSENTEEISM,
+        absenteeism,
     };
 };
 
-export const getEmployees = () => {
+export const getAbsenteeism = () => {
     return async (dispatch, getState) => {
-        dispatch(employeesUiStartLoading());
+        dispatch(absenteeismUiStartLoading());
         try {
             let token = getState().auth.token;
 
-            let res = await fetch(`${API_URL}employees`, {
+            let res = await fetch(`${API_URL}employeeabsents`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export const getEmployees = () => {
 
             console.warn(resJson);
 
-            await dispatch(employeesUiStopLoading());
+            await dispatch(absenteeismUiStopLoading());
             if (resJson.error || resJson.message) {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
@@ -43,11 +43,11 @@ export const getEmployees = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setEmployees(resJson.success.employees));
+                dispatch(setAbsenteeism(resJson.success));
                 return resJson;
             }
         } catch (e) {
-            dispatch(employeesUiStopLoading());
+            dispatch(absenteeismUiStopLoading());
             alert('Something went wrong, please try again. If this persists then you are not logged in');
             return false;
         }

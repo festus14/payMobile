@@ -10,15 +10,26 @@ import authReducer from './reducers/auth';
 import userReducer from './reducers/user';
 import employeesReducer from './reducers/employees';
 import payslipsReducer from './reducers/payslips';
+import absenteeismReducer from './reducers/absenteeism';
+import arrearsReducer from './reducers/arrears';
 
 // This combines the reducers into one root reducer
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     ui: uiReducer,
     user: userReducer,
     auth: authReducer,
     employees: employeesReducer,
     payslips: payslipsReducer,
+    absenteeism: absenteeismReducer,
+    arrears: arrearsReducer,
 });
+
+const rootReducer = (state, action) => {
+    if (action.type === 'RESET_APP') {
+        state = undefined;
+    }
+    return appReducer(state, action);
+};
 
 let composeEnhancers = compose;
 

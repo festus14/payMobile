@@ -5,6 +5,10 @@ import {
     USER_UI_STOP_LOADING,
     EMPLOYEES_UI_STOP_LOADING,
     EMPLOYEES_UI_START_LOADING,
+    ABSENTEEISM_UI_STOP_LOADING,
+    ABSENTEEISM_UI_START_LOADING,
+    ARREARS_UI_STOP_LOADING,
+    ARREARS_UI_START_LOADING,
     PAYSLIPS_UI_STOP_LOADING,
     PAYSLIPS_UI_START_LOADING,
 } from './actionTypes';
@@ -54,5 +58,29 @@ export const payslipsUiStartLoading = () =>  {
 export const payslipsUiStopLoading = () => {
     return {
         type: PAYSLIPS_UI_STOP_LOADING,
+    };
+};
+
+export const absenteeismUiStartLoading = () =>  {
+    return {
+        type: ABSENTEEISM_UI_START_LOADING,
+    };
+};
+
+export const absenteeismUiStopLoading = () => {
+    return {
+        type: ABSENTEEISM_UI_STOP_LOADING,
+    };
+};
+
+export const arrearsUiStartLoading = () =>  {
+    return {
+        type: ARREARS_UI_START_LOADING,
+    };
+};
+
+export const arrearsUiStopLoading = () => {
+    return {
+        type: ARREARS_UI_STOP_LOADING,
     };
 };

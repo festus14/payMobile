@@ -8,8 +8,7 @@ import {
     uiStartLoading,
     uiStopLoading,
     setUser,
-    setEmployees,
-    resetUser,
+    resetApp,
 } from './';
 import {
     API_URL,
@@ -107,13 +106,12 @@ export const logout = () => {
             let resJson = await res.json();
             console.warn(resJson);
 
-            if (resJson.error) {
+            if (resJson.message || resJson.error) {
                 alert('Logout failed, please try again');
+                dispatch(uiStopLoading());
                 return null;
             } else {
-                dispatch(authRemoveToken());
-                dispatch(resetUser());
-                dispatch(setEmployees([]));
+                dispatch(resetApp());
                 dispatch(uiStopLoading());
                 return 'done';
             }

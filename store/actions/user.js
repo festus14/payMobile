@@ -9,6 +9,7 @@ import {
 import {
     userUiStartLoading,
     userUiStopLoading,
+    resetApp,
 } from './';
 
 export const setUser = (user) => {
@@ -74,7 +75,10 @@ export const getUser = () => {
                 console.warn(resJson);
 
                 await dispatch(userUiStopLoading());
-                if (resJson.error) {
+                if (resJson.error || resJson.message) {
+                    if (resJson.message === 'Unauthenticated.') {
+                        dispatch(resetApp());
+                    }
                     alert(resJson.error || 'Something went wrong, pls try again');
                     return false;
                 } else {
@@ -117,8 +121,10 @@ export const getEmployee = () => {
                 console.warn(resJson);
 
                 await dispatch(userUiStopLoading());
-                if (resJson.error) {
-                    // alert error
+                if (resJson.error || resJson.message) {
+                    if (resJson.message === 'Unauthenticated.') {
+                        dispatch(resetApp());
+                    }
                     alert(resJson.error || 'Something went wrong, pls try again');
                     return false;
                 } else {
