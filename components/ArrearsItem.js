@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Platform } from 'react-native';
-import { GREY, DARK_GREEN } from '../utility/colors';
+import { ALMOST_BLACK, GREY } from '../utility/colors';
 import { getMonth, reformatDate } from '../utility/helpers';
 
 export default class ArrearsItem extends Component {
@@ -11,17 +11,13 @@ export default class ArrearsItem extends Component {
 
         return (
             <View style={styles.item}>
-                <View style={styles.option}>
-                    <Text style={styles.dept}>Arrear Date</Text>
+                <View style={styles.top}>
                     <Text style={styles.date}>{`${getMonth(date.getMonth() + 1)} ${date.getFullYear()}`}</Text>
+                    <Text style={styles.days}>{item.days} day(s)</Text>
                 </View>
-                <View style={styles.option}>
-                    <Text style={styles.dept}>Payment Date</Text>
-                    <Text style={styles.date}>{`${getMonth(payment_date.getMonth() + 1)} ${payment_date.getFullYear()}`}</Text>
-                </View>
-                <View style={styles.option}>
-                    <Text style={styles.dept}>Days</Text>
-                    <Text style={styles.date}>{item.days}</Text>
+                <View style={styles.top}>
+                    <Text style={styles.date}>Payment Date</Text>
+                    <Text style={[styles.days, { fontSize: 15 }]}>{`${getMonth(payment_date.getMonth() + 1)} ${payment_date.getFullYear()}`}</Text>
                 </View>
             </View>
         );
@@ -44,23 +40,31 @@ const styles = StyleSheet.create({
             },
         }),
         margin: 10,
-        padding: 10,
         justifyContent: 'space-between',
-        minHeight: 100,
-        backgroundColor: '#fff',
+        minHeight: 50,
+        backgroundColor: '#f9f9f9',
+        borderRadius: 3
     },
-    option: {
-        justifyContent: 'space-between',
+    top: {
+        margin: 10,
         flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flex: 1
     },
     date: {
-        fontFamily: 'Poppins-Regular',
-        fontSize: 13,
+        fontWeight: 'bold',
+        color: ALMOST_BLACK,
+        fontSize: 15,
+    },
+    days: {
         color: GREY,
-    },
-    dept: {
-        fontFamily: 'Poppins-Bold',
         fontSize: 14,
-        color: DARK_GREEN,
     },
+    description: {
+        margin: 10,
+        marginTop: 0,
+        color: ALMOST_BLACK,
+        fontSize: 13,
+    }
 });

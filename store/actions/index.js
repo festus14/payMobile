@@ -13,7 +13,7 @@ export { logIn, authRemoveToken, authError, authSetToken, logout } from './auth'
 export { setEmployees, getEmployees } from './employees';
 
 // payslips actions
-export { getPayslips } from './payslips';
+export { getPayslips, getDeductions, getPayments, getRecurrentDeductions, getRecurrentPayments } from './payslips';
 
 // absenteeism actions
 export { getAbsenteeism } from './absenteeism';

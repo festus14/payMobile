@@ -6,7 +6,6 @@ import {
     GREY,
     DARK_BLUE,
     SECONDARY_COLOR,
-    DARK_GREEN,
     ALMOST_BLACK
 } from '../../utility/colors';
 import {
@@ -27,6 +26,7 @@ export const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
+        padding: 3
     },
     image: {
         height: 60,
@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
     line: {
         backgroundColor: SECONDARY_COLOR,
         height: 0.5,
-        width: '100%',
+        marginHorizontal: 3,
         marginVertical: 10,
     },
     section: {

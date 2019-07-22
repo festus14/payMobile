@@ -2,23 +2,23 @@ import React, { Component } from 'react';
 import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
-import PayslipItem from '../../components/PayslipItem';
+import PaymentsItem from '../../components/PaymentsItem';
 import { connect } from 'react-redux';
-import { getPayslips } from '../../store/actions';
+import { getDeductions } from '../../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
-class EmployeePayslips extends Component {
+class EmployeeDeductions extends Component {
     static navigationOptions = {
         header: null,
-        drawerLabel: 'Payslips',
+        drawerLabel: 'Deductions',
         drawerIcon: ({tintColor}) => (
             <Icon name="print" color={tintColor} size={20} />
         )
     }
 
     componentDidMount() {
-        this.props.getPayslips();
+        this.props.getDeductions();
     }
 
     goBack = () => {
@@ -30,11 +30,11 @@ class EmployeePayslips extends Component {
     }
 
     render() {
-        const { payslips, isLoading } = this.props;
+        const { deductions, isLoading } = this.props;
         return (
             <View style={styles.container}>
                 <Header
-                    title="Payslips"
+                    title="Deductions"
                     leftIcon="md-arrow-back"
                     onLeftPress={this.goBack}
                     rightIcon="ios-menu"
@@ -42,9 +42,9 @@ class EmployeePayslips extends Component {
                 />
                 <View style={styles.data}>
                     <ScrollView>
-                    {payslips.length > 0 && !isLoading ? payslips.map((item, id) => (
-                        <PayslipItem item={item} key={id}/>
-                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No payslips found</Text>}
+                    {deductions.length > 0 && !isLoading ? deductions.map((item, id) => (
+                        <PaymentsItem item={item} key={id}/>
+                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No deductions found</Text>}
                     </ScrollView>
                 </View>
             </View>
@@ -53,13 +53,13 @@ class EmployeePayslips extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    payslips: state.payslips.payslips,
+    deductions: state.payslips.deductions,
     isLoading: state.ui.isPayslipsLoading,
 });
 
 const mapDispatchToProps = dispatch => ({
-    getPayslips: () => dispatch(getPayslips()),
+    getDeductions: () => dispatch(getDeductions()),
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmployeePayslips);
+export default connect(mapStateToProps, mapDispatchToProps)(EmployeeDeductions);

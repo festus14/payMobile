@@ -48,7 +48,7 @@ export const getArrears = () => {
             }
         } catch (e) {
             dispatch(arrearsUiStopLoading());
-            alert('Something went wrong, please try again. If this persists then you are not logged in');
+            alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
             return false;
         }
     };

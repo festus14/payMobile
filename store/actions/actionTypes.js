@@ -27,6 +27,10 @@ export const SET_EMPLOYEES = 'SET_EMPLOYEES';
 
 // Payslips action types
 export const SET_PAYSLIPS = 'SET_PAYSLIPS';
+export const SET_RECURRENT_PAYMENTS = 'SET_RECURRENT_PAYMENTS';
+export const SET_PAYMENTS = 'SET_PAYMENTS';
+export const SET_RECURRENT_DEDUCTIONS = 'SET_RECURRENT_DEDUCTIONS';
+export const SET_DEDUCTIONS = 'SET_DEDUCTIONS';
 
 // Absenteeism action types
 export const SET_ABSENTEEISM = 'SET_ABSENTEEISM';

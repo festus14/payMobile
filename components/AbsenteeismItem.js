@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Platform } from 'react-native';
-import { GREY, DARK_GREEN } from '../utility/colors';
+import { ALMOST_BLACK, GREY } from '../utility/colors';
 import { getMonth, reformatDate } from '../utility/helpers';
 
 export default class AbsenteeismItem extends Component {
@@ -10,14 +10,11 @@ export default class AbsenteeismItem extends Component {
 
         return (
             <View style={styles.item}>
-                <View style={styles.option}>
-                    <Text style={styles.dept}>Arrear Date</Text>
+                <View style={styles.top}>
                     <Text style={styles.date}>{`${getMonth(date.getMonth() + 1)} ${date.getFullYear()}`}</Text>
+                    <Text style={styles.days}>{item.days} day(s)</Text>
                 </View>
-                <View style={styles.option}>
-                    <Text style={styles.dept}>Days</Text>
-                    <Text style={styles.date}>{item.days}</Text>
-                </View>
+                <Text style={styles.description}>{item.description || `Employee was absent for ${item.days} day(s) in ${getMonth(date.getMonth() + 1)} ${date.getFullYear()}`}</Text>
             </View>
         );
     }
@@ -39,24 +36,31 @@ const styles = StyleSheet.create({
             },
         }),
         margin: 10,
-        padding: 10,
         justifyContent: 'space-between',
-        minHeight: 100,
-        backgroundColor: '#fff',
+        minHeight: 50,
+        backgroundColor: '#f9f9f9',
+        borderRadius: 3
     },
-    
-    option: {
+    top: {
+        margin: 10,
+        flexDirection: 'row',
         justifyContent: 'space-between',
-        flexDirection: 'row'
+        alignItems: 'center',
+        flex: 1
     },
     date: {
-        fontFamily: 'Poppins-Regular',
-        fontSize: 13,
-        color: GREY,
+        fontWeight: 'bold',
+        color: ALMOST_BLACK,
+        fontSize: 15,
     },
-    dept: {
-        fontFamily: 'Poppins-Bold',
+    days: {
+        color: GREY,
         fontSize: 14,
-        color: DARK_GREEN,
+    },
+    description: {
+        margin: 10,
+        marginTop: 0,
+        color: ALMOST_BLACK,
+        fontSize: 13,
     }
 });

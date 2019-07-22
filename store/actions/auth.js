@@ -75,7 +75,7 @@ export const logIn = (authData) => {
         } catch (error) {
             dispatch(uiStopLoading());
             console.warn(error);
-            dispatch(authError('Authentication failed, please try again'));
+            dispatch(authError('Authentication failed, please check your internet connection and try again'));
         }
     };
 };
@@ -116,7 +116,7 @@ export const logout = () => {
                 return 'done';
             }
         } catch (error) {
-            alert('Logout failed, please try again');
+            alert('Logout failed, please try check your internet connection and try again');
             dispatch(uiStopLoading());
             return null;
         }

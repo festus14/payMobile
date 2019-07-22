@@ -5,11 +5,15 @@ import { styles } from './style';
 import AbsenteeismItem from '../../components/AbsenteeismItem';
 import { connect } from 'react-redux';
 import { getAbsenteeism } from '../../store/actions';
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 class EmployeeAbsenteeism extends Component {
     static navigationOptions = {
         header: null,
         drawerLabel: 'Absenteeism',
+        drawerIcon: ({tintColor}) => (
+            <Icon name="ban" color={tintColor} size={20} />
+        )
     }
 
     componentDidMount() {

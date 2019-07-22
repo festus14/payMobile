@@ -5,11 +5,16 @@ import { styles } from './style';
 import ArrearsItem from '../../components/ArrearsItem';
 import { connect } from 'react-redux';
 import { getArrears } from '../../store/actions';
+import Icon from 'react-native-vector-icons/FontAwesome'
+
 
 class EmployeeArrears extends Component {
     static navigationOptions = {
         header: null,
         drawerLabel: 'Arrears',
+        drawerIcon: ({tintColor}) => (
+            <Icon name="user-plus" color={tintColor} size={20} />
+        )
     }
 
     componentDidMount() {

@@ -7,11 +7,16 @@ import { PHOTO_URL } from '../../utility/constants';
 import MyImage from '../../components/MyImage';
 import EmployeeItem from '../../components/EmployeeItem';
 import { getPercentage } from '../../utility/helpers';
+import Icon from 'react-native-vector-icons/FontAwesome'
+
 
 export default class EmployeeDetails extends Component {
     static navigationOptions = {
         header: null,
         drawerLabel: 'Employee Info',
+        drawerIcon: ({tintColor}) => (
+            <Icon name="user" color={tintColor} size={20} />
+        )
     }
 
     goBack = () => {
@@ -23,7 +28,9 @@ export default class EmployeeDetails extends Component {
     }
 
     openDrawer = () => {
-        this.props.navigation.openDrawer();
+        this.props.navigation.openDrawer({
+            employee: this.props.navigation ? this.props.navigation.getParam('employee', {}) : this.props.employee
+        });
     }
 
     render() {
