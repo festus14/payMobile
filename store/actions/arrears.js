@@ -43,7 +43,7 @@ export const getArrears = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setArrears(resJson.success));
+                dispatch(setArrears(resJson));
                 return resJson;
             }
         } catch (e) {

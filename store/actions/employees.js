@@ -43,7 +43,7 @@ export const getEmployees = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setEmployees(resJson.success.employees));
+                dispatch(setEmployees(resJson.success));
                 return resJson;
             }
         } catch (e) {

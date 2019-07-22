@@ -21,10 +21,12 @@ export { getAbsenteeism } from './absenteeism';
 // absenteeism actions
 export { getArrears } from './arrears';
 
-export const resetApp = async () => {
-    await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('userId');
-    return ({
-        type: 'RESET_APP',
-    });
+export const resetApp = () => {
+    return async (dispatch) => {
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('userId');
+        return ({
+            type: 'RESET_APP',
+        });
+    };
 };

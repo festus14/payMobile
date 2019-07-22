@@ -6,8 +6,7 @@ import defaultImage from '../../assets/images/myAvatar.png';
 import { PHOTO_URL } from '../../utility/constants';
 import MyImage from '../../components/MyImage';
 import EmployeeItem from '../../components/EmployeeItem';
-import { moneyFormatter, getPercentage } from '../../utility/helpers';
-import { DARK_GREEN, GREY } from '../../utility/colors';
+import { getPercentage } from '../../utility/helpers';
 
 export default class EmployeeDetails extends Component {
     static navigationOptions = {
@@ -16,7 +15,11 @@ export default class EmployeeDetails extends Component {
     }
 
     goBack = () => {
-        this.props.navigation.navigate('EmployeesScreen');
+        if (!this.props.navigation) {
+            this.props.onGoBack();
+        } else {
+            this.props.navigation.navigate('EmployeesScreen');
+        }
     }
 
     openDrawer = () => {
@@ -24,17 +27,17 @@ export default class EmployeeDetails extends Component {
     }
 
     render() {
-        const { navigation } = this.props;
+        let { navigation, employee } = this.props;
 
-        const employee = navigation.getParam('employee', {});
+        employee = navigation ? navigation.getParam('employee', {}) : employee;
         return (
             <View style={styles.container}>
                 <Header
                     title={`${employee.firstname} ${employee.lastname}` || 'Unknown Unknown'}
                     leftIcon="md-arrow-back"
                     onLeftPress={this.goBack}
-                    rightIcon="ios-menu"
-                    onRightPress={this.openDrawer}
+                    rightIcon={navigation ? "ios-menu" : undefined}
+                    onRightPress={navigation ? this.openDrawer : undefined}
                 />
                 <View style={styles.data}>
                     <ScrollView>
@@ -49,23 +52,23 @@ export default class EmployeeDetails extends Component {
                         </View>
                         <View style={styles.line} />
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>Payroll Data</Text>
                             <View style={styles.sectionDetails}>
-                                <View style={{ width: '100%', marginBottom: 15 }}>
-                                    <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 20, textAlign: 'center', color: DARK_GREEN }}>Gross Salary ({employee.currency ? employee.currency.name : 'NGN'})</Text>
-                                    <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 20, color: GREY, textAlign: 'center' }}>{moneyFormatter(employee.gross)}</Text>
+                                <Text style={styles.sectionTitle}>Payroll Data</Text>
+                                <View style={[styles.itemContainer, { marginVertical: 10 }]}>
+                                    <Text style={[styles.itemTextOne, { fontSize: 15 }]}>Gross Salary ({employee.currency ? employee.currency.name : 'NGN'})</Text>
+                                    <Text style={[styles.itemTextTwo, { fontSize: 17, fontWeight: 'bold' }]}>{getPercentage(parseFloat(employee.gross), 100)}</Text>
                                 </View>
                                 {employee.pay_elements && employee.pay_elements.map(elem => (
-                                    <View style={{ width: '100%', marginBottom: 5, marginLeft: 10 }} key={elem.id}>
-                                        <Text style={{ fontFamily: 'Poppins-SemiBold', fontSize: 17, color: DARK_GREEN }}>{elem.name}</Text>
-                                        <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 17, color: GREY }}>{getPercentage(parseFloat(employee.gross), parseFloat(elem.percentage))}</Text>
+                                    <View style={styles.itemContainer} key={elem.id}>
+                                        <Text style={styles.itemTextOne}>{elem.name}</Text>
+                                        <Text style={styles.itemTextTwo}>{getPercentage(parseFloat(employee.gross), parseFloat(elem.percentage))}</Text>
                                     </View>
                                 ))}
                             </View>
                         </View>
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>Personal Info</Text>
                             <View style={styles.sectionDetails}>
+                                <Text style={styles.sectionTitle}>Personal Info</Text>
                                 <EmployeeItem title="Gender" value={employee.gender} />
                                 <EmployeeItem title="DOB" value={employee.dob} />
                                 <EmployeeItem title="DOE" value={employee.date_of_employment} />
@@ -78,15 +81,15 @@ export default class EmployeeDetails extends Component {
                             </View>
                         </View>
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>Account Info</Text>
                             <View style={styles.sectionDetails}>
+                                <Text style={styles.sectionTitle}>Account Info</Text>
                                 {employee.employee_bank && <EmployeeItem title="Employee Bank" value={employee.employee_bank.name} />}
                                 <EmployeeItem title="Account Number" value={employee.account_number} />
                             </View>
                         </View>
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>Pension & Tax Info</Text>
                             <View style={styles.sectionDetails}>
+                                <Text style={styles.sectionTitle}>Pension & Tax Info</Text>
                                 <EmployeeItem title="TIN" value={employee.tin} />
                                 <EmployeeItem title="Payer ID" value={employee.taxpayer_id} />
                                 <EmployeeItem title="Tax Aauthority" value={employee.tax_authority} />
@@ -97,8 +100,8 @@ export default class EmployeeDetails extends Component {
                             </View>
                         </View>
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>Reliefs</Text>
                             <View style={styles.sectionDetails}>
+                                <Text style={styles.sectionTitle}>Reliefs</Text>
                                 <EmployeeItem title="CRA" value={employee.cra} />
                                 <EmployeeItem title="Fixed CRA" value={employee.fixed_cra} />
                                 <EmployeeItem title="Pension" value={employee.pension} />
@@ -109,8 +112,8 @@ export default class EmployeeDetails extends Component {
                             </View>
                         </View>
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>Deductions</Text>
                             <View style={styles.sectionDetails}>
+                                <Text style={styles.sectionTitle}>Deductions</Text>
                                 <EmployeeItem title="Pension Deduction" value={employee.pension_deduction} />
                                 <EmployeeItem title="NHF Deduction" value={employee.nhf_deduction} />
                             </View>

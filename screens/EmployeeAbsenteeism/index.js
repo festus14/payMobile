@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, ActivityIndicator } from 'react-native';
+import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import AbsenteeismItem from '../../components/AbsenteeismItem';
@@ -25,7 +25,7 @@ class EmployeeAbsenteeism extends Component {
     }
 
     render() {
-        const { absenteeism } = this.props;
+        const { absenteeism, isLoading } = this.props;
         return (
             <View style={styles.container}>
                 <Header
@@ -37,7 +37,9 @@ class EmployeeAbsenteeism extends Component {
                 />
                 <View style={styles.data}>
                     <ScrollView>
-                        <AbsenteeismItem absenteeism={absenteeism} />
+                        {absenteeism.length > 0 && !isLoading ? absenteeism.map((item, id) => (
+                            <AbsenteeismItem item={item} key={id} />
+                        )) : (isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No absenteeism found</Text>)}
                     </ScrollView>
                 </View>
             </View>

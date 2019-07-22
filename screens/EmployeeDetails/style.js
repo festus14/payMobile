@@ -1,6 +1,17 @@
-import { StyleSheet, Platform } from 'react-native';
-import { GREY, DARK_BLUE, SECONDARY_COLOR, DARK_GREEN } from '../../utility/colors';
-import { SCREEN_HEIGHT } from '../../utility/constants';
+import {
+    StyleSheet,
+    Platform
+} from 'react-native';
+import {
+    GREY,
+    DARK_BLUE,
+    SECONDARY_COLOR,
+    DARK_GREEN,
+    ALMOST_BLACK
+} from '../../utility/colors';
+import {
+    SCREEN_HEIGHT
+} from '../../utility/constants';
 
 export const styles = StyleSheet.create({
     container: {
@@ -20,22 +31,20 @@ export const styles = StyleSheet.create({
     image: {
         height: 60,
         width: 60,
-        borderRadius: 90,
+        borderRadius: 1000,
         marginRight: 25,
     },
     name: {
         color: DARK_BLUE,
-        fontFamily: 'Poppins-SemiBold',
         fontSize: 15,
+        fontWeight: 'bold',
     },
     email: {
         color: GREY,
-        fontFamily: 'Poppins-Regular',
         fontSize: 12,
     },
     staffId: {
         color: GREY,
-        fontFamily: 'Poppins-Regular',
         fontSize: 12,
     },
     line: {
@@ -46,12 +55,14 @@ export const styles = StyleSheet.create({
     },
     section: {
         width: '100%',
-        padding: 15,
+        padding: 3,
+        marginVertical: 5
     },
     sectionTitle: {
-        fontFamily: 'Poppins-Bold',
-        fontSize: 25,
-        color: DARK_GREEN,
+        fontSize: 17,
+        color: ALMOST_BLACK,
+        fontWeight: 'bold',
+        marginBottom: 10
     },
     sectionDetails: {
         backgroundColor: '#fff',
@@ -73,5 +84,21 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         flexWrap: 'wrap',
+        borderRadius: 5
     },
+    itemContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 3,
+        justifyContent: 'space-between'
+    },
+    itemTextOne: {
+        fontSize: 12,
+        color: GREY
+    },
+    itemTextTwo: {
+        fontSize: 14,
+        color: ALMOST_BLACK
+    }
 });

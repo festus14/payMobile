@@ -11,3 +11,8 @@ export const getMonth = (val) => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months[val - 1];
 };
+
+export const reformatDate = (date) => {
+    date = date.split('-');
+    return new Date(date[2], date[1] - 1, date[0]);
+}

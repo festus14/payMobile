@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, ActivityIndicator } from 'react-native';
+import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import ArrearsItem from '../../components/ArrearsItem';
@@ -25,7 +25,7 @@ class EmployeeArrears extends Component {
     }
 
     render() {
-        const { arrears } = this.props;
+        const { arrears, isLoading } = this.props;
         return (
             <View style={styles.container}>
                 <Header
@@ -37,7 +37,9 @@ class EmployeeArrears extends Component {
                 />
                 <View style={styles.data}>
                     <ScrollView>
-                        <ArrearsItem arrears={arrears} />
+                    {arrears.length > 0 && !isLoading ? arrears.map((item, id) => (
+                        <ArrearsItem item={item} key={id}/>
+                    )) : (isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No arrears found</Text>)}
                     </ScrollView>
                 </View>
             </View>

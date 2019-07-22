@@ -1,24 +1,29 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
-import { ALMOST_BLACK, GREY, DARK_GREEN, LIGHT_BLUE } from '../utility/colors';
+import { Text, View, StyleSheet, Platform } from 'react-native';
+import { GREY, DARK_GREEN } from '../utility/colors';
+import { getMonth, reformatDate } from '../utility/helpers';
 
 export default class ArrearsItem extends Component {
     render() {
+        const { item } = this.props;
+        const payment_date = reformatDate(item.payment_date);
+        const date = reformatDate(item.date);
+
         return (
             <View style={styles.item}>
-                            <View style={styles.upper}>
-                                <View>
-                                    <Text style={styles.date}>May, 2019</Text>
-                                    <Text style={styles.dept}>Finance</Text>
-                                    <Text style={styles.city}>Lagos</Text>
-                                </View>
-                                <TouchableOpacity><Text style={styles.btnText}>Download</Text></TouchableOpacity>
-                            </View>
-                            <View style={styles.net}>
-                                <Text style={styles.netText}>Net(USD): </Text>
-                                <Text style={styles.netMoney}> 19,000,000,000.00</Text>
-                            </View>
-                        </View>
+                <View style={styles.option}>
+                    <Text style={styles.dept}>Arrear Date</Text>
+                    <Text style={styles.date}>{`${getMonth(date.getMonth() + 1)} ${date.getFullYear()}`}</Text>
+                </View>
+                <View style={styles.option}>
+                    <Text style={styles.dept}>Payment Date</Text>
+                    <Text style={styles.date}>{`${getMonth(payment_date.getMonth() + 1)} ${payment_date.getFullYear()}`}</Text>
+                </View>
+                <View style={styles.option}>
+                    <Text style={styles.dept}>Days</Text>
+                    <Text style={styles.date}>{item.days}</Text>
+                </View>
+            </View>
         );
     }
 }
@@ -41,12 +46,12 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 10,
         justifyContent: 'space-between',
-        minHeight: 140,
+        minHeight: 100,
         backgroundColor: '#fff',
     },
-    upper: {
-        flexDirection: 'row',
+    option: {
         justifyContent: 'space-between',
+        flexDirection: 'row',
     },
     date: {
         fontFamily: 'Poppins-Regular',
@@ -57,29 +62,5 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-Bold',
         fontSize: 14,
         color: DARK_GREEN,
-    },
-    city: {
-        fontFamily: 'Poppins-Regular',
-        fontSize: 14,
-        color: ALMOST_BLACK,
-    },
-    btnText: {
-        color: LIGHT_BLUE,
-        fontFamily: 'Poppins-SemiBold',
-        fontSize: 13,
-    },
-    net: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    netText: {
-        color: DARK_GREEN,
-        fontSize: 18,
-        fontFamily: 'Poppins-Bold',
-    },
-    netMoney: {
-        fontFamily: 'Poppins-SemiBold',
-        fontSize: 15,
-        color: ALMOST_BLACK,
     },
 });

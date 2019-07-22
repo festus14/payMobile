@@ -43,7 +43,7 @@ export const getAbsenteeism = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setAbsenteeism(resJson.success));
+                dispatch(setAbsenteeism(resJson));
                 return resJson;
             }
         } catch (e) {

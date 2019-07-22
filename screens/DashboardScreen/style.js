@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     image: {
         height: 180,
         width: 180,
-        borderRadius: 90
+        borderRadius: 1000
     },
     name: {
         color: ALMOST_BLACK,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
-import { GREY, DARK_GREEN } from '../utility/colors';
+import { GREY, DARK_GREEN, ALMOST_BLACK } from '../utility/colors';
 
 export default class EmployeeItem extends Component {
     render() {
@@ -18,16 +18,18 @@ export default class EmployeeItem extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        width: '50%'
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 3,
+        justifyContent: 'space-between'
     },
     title: {
-        fontFamily: 'Poppins-SemiBold',
-        fontSize: 17,
-        color: DARK_GREEN
+        fontSize: 12,
+        color: GREY
     },
     value: {
-        fontFamily: 'Poppins-Regular',
         fontSize: 14,
-        color: GREY
+        color: ALMOST_BLACK
     }
 })

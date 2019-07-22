@@ -22,9 +22,10 @@ export const getPayslips = () => {
         dispatch(payslipsUiStartLoading());
         try {
             let token = getState().auth.token;
+            let userId = getState().user.employee.id;
 
-            let res = await fetch(`${API_URL}payrolls?id=26`, {
-                method: 'GET',
+            let res = await fetch(`${API_URL}payrolls/payslips/${userId}`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, ActivityIndicator } from 'react-native';
+import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import PayslipItem from '../../components/PayslipItem';
@@ -25,7 +25,7 @@ class EmployeePayslips extends Component {
     }
 
     render() {
-        const { payslips } = this.props;
+        const { payslips, isLoading } = this.props;
         return (
             <View style={styles.container}>
                 <Header
@@ -37,7 +37,9 @@ class EmployeePayslips extends Component {
                 />
                 <View style={styles.data}>
                     <ScrollView>
-                        <PayslipItem payslips={payslips} />
+                    {payslips.length > 0 && !isLoading ? payslips.map((item, id) => (
+                        <PayslipItem item={item} key={id}/>
+                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No arrears found</Text>}
                     </ScrollView>
                 </View>
             </View>

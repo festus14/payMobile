@@ -67,7 +67,7 @@ export const logIn = (authData) => {
                 dispatch(authError(resJson.error === 'Unauthorised' ? 'Email and password do not match' : 'Authentication failed, please try again'));
             } else {
                 dispatch(authError(''));
-                authSetToken(resJson.success.token, resJson.success.user.id);
+                dispatch(authSetToken(resJson.success.token, resJson.success.user.id));
                 await AsyncStorage.setItem('token', resJson.success.token);
                 await AsyncStorage.setItem('user-id', `${resJson.success.user.id}`);
                 dispatch(setUser(resJson.success.user));

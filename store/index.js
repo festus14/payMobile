@@ -41,5 +41,4 @@ const configStore = () => {
     return createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 };
 
-export default configStore
-;
+export default configStore;

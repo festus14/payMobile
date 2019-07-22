@@ -105,8 +105,10 @@ export const getEmployee = () => {
             let userData = await getState().user.employee;
 
             if (!userData.first_name) {
-                let token = getState().auth.token;
+                let token = await getState().auth.token;
                 let userId = await dispatch(getUserId());
+
+                console.warn(token);
 
                 let res = await fetch(`${API_URL}employees/${userId}`, {
                     method: 'GET',
@@ -128,7 +130,7 @@ export const getEmployee = () => {
                     alert(resJson.error || 'Something went wrong, pls try again');
                     return false;
                 } else {
-                    dispatch(setEmployee(resJson.success.employees));
+                    dispatch(setEmployee(resJson.success));
                     return resJson;
                 }
             } else {

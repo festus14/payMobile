@@ -1,6 +1,5 @@
 import { StyleSheet, Platform } from 'react-native'
-import { GREY, DARK_BLUE } from '../../utility/colors';
-import { SCREEN_WIDTH } from '../../utility/constants';
+import { GREY, ALMOST_BLACK, LIGHT_GREY } from '../../utility/colors';
 
 export const styles = StyleSheet.create({
     container: {
@@ -8,23 +7,21 @@ export const styles = StyleSheet.create({
     },
     data: {
         flex: 1,
-        padding: 10,
-        flexDirection: 'row',
-        flexWrap: 'wrap'
     },
     error: {
         color: GREY,
         alignSelf: 'center',
         fontSize: 16,
         fontFamily: 'Poppins-SemiBold',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginTop: 10,
     },
     employee: {
-        width: '100%',
-        marginVertical: 10,
-        justifyContent: 'space-around',
+        margin: 10,
+        borderRadius: 5,
+        justifyContent: 'space-between',
         alignItems: 'center',
-        height: 150,
+        height: 170,
         ...Platform.select({
             ios: {
                 shadowColor: 'rgb(77, 84, 124)',
@@ -38,34 +35,53 @@ export const styles = StyleSheet.create({
                 elevation: 4
             }
         }),
-        backgroundColor: '#fff'
+        backgroundColor: '#f6f6f6'
     },
     image: {
         height: 60,
         width: 60,
-        borderRadius: 90
+        borderRadius: 1000
+    },
+    top: {
+        width: '100%',
+        paddingHorizontal: 10,
+        paddingTop: 10
+    },
+    topText: {
+        fontWeight: 'bold',
+        fontSize: 13,
+    },
+    middle: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        paddingHorizontal: 10,
     },
     name: {
-        color: DARK_BLUE,
-        fontFamily: 'Poppins-SemiBold',
-        fontSize: 13,
-        textAlign: 'center'
-    },
-    employeeDetails: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%'
-    },
-    email: {
-        color: GREY,
-        fontFamily: 'Poppins-Regular',
-        fontSize: 11,
-        textAlign: 'center'
+        color: ALMOST_BLACK,
+        fontSize: 15,
+        fontWeight: '200'
     },
     staffId: {
-        color: GREY,
-        fontFamily: 'Poppins-Regular',
-        fontSize: 10,
-        textAlign: 'center'
+        fontSize: 12,
+        color: LIGHT_GREY,
+        fontWeight: 'bold'
     },
+    net: {
+        fontSize: 20,
+        marginTop: 5
+    },
+    bottom: {
+        backgroundColor: '#fff',
+        borderBottomLeftRadius: 5,
+        borderBottomRightRadius: 5,
+        width: '100%',
+        paddingHorizontal: 10,
+        height: '25%',
+        justifyContent: 'center'
+    },
+    bottomText: {
+        color: GREY,
+        fontSize: 15,
+    }
 })
