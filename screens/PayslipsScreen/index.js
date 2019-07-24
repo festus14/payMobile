@@ -8,26 +8,22 @@ import { getPayslips } from '../../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
-class EmployeePayslips extends Component {
+class PayslipsScreen extends Component {
     static navigationOptions = {
         header: null,
         drawerLabel: 'Payslips',
         drawerIcon: ({tintColor}) => (
             <Icon name="print" color={tintColor} size={20} />
-        )
+        ),
     }
 
     componentDidMount() {
-        const employee = this.props.navigation.getParam('employee', {});
-        this.props.getPayslips(employee.id);
+        const item = this.props.navigation.getParam('item', {});
+        this.props.getPayslips('', item.month, item.year, item.group_id);
     }
 
     goBack = () => {
-        this.props.navigation.navigate('EmployeesScreen');
-    }
-
-    openDrawer = () => {
-        this.props.navigation.openDrawer();
+        this.props.navigation.goBack();
     }
 
     render() {
@@ -38,8 +34,6 @@ class EmployeePayslips extends Component {
                     title="Payslips"
                     leftIcon="md-arrow-back"
                     onLeftPress={this.goBack}
-                    rightIcon="ios-menu"
-                    onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
                     <ScrollView>
@@ -59,8 +53,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getPayslips: (id) => dispatch(getPayslips(id)),
+    getPayslips: (id, month, year, group_id) => dispatch(getPayslips(id, month, year, group_id)),
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmployeePayslips);
+export default connect(mapStateToProps, mapDispatchToProps)(PayslipsScreen);

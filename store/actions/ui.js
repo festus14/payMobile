@@ -7,6 +7,8 @@ import {
     EMPLOYEES_UI_START_LOADING,
     ABSENTEEISM_UI_STOP_LOADING,
     ABSENTEEISM_UI_START_LOADING,
+    PAYROLLS_UI_STOP_LOADING,
+    PAYROLLS_UI_START_LOADING,
     ARREARS_UI_STOP_LOADING,
     ARREARS_UI_START_LOADING,
     PAYSLIPS_UI_STOP_LOADING,
@@ -70,6 +72,18 @@ export const absenteeismUiStartLoading = () =>  {
 export const absenteeismUiStopLoading = () => {
     return {
         type: ABSENTEEISM_UI_STOP_LOADING,
+    };
+};
+
+export const payrollsUiStartLoading = () =>  {
+    return {
+        type: PAYROLLS_UI_START_LOADING,
+    };
+};
+
+export const payrollsUiStopLoading = () => {
+    return {
+        type: PAYROLLS_UI_STOP_LOADING,
     };
 };
 

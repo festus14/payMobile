@@ -17,13 +17,13 @@ export const setArrears = arrears => {
     };
 };
 
-export const getArrears = () => {
+export const getArrears = (id) => {
     return async (dispatch, getState) => {
         dispatch(arrearsUiStartLoading());
         try {
             let token = getState().auth.token;
 
-            let res = await fetch(`${API_URL}employeeareas`, {
+            let res = await fetch(`${API_URL}employeeareas/employee/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export const getArrears = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setArrears(resJson));
+                dispatch(setArrears(resJson.success));
                 return resJson;
             }
         } catch (e) {

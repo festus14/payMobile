@@ -11,6 +11,7 @@ import userReducer from './reducers/user';
 import employeesReducer from './reducers/employees';
 import payslipsReducer from './reducers/payslips';
 import absenteeismReducer from './reducers/absenteeism';
+import payrollsReducer from './reducers/payrolls';
 import arrearsReducer from './reducers/arrears';
 
 // This combines the reducers into one root reducer
@@ -21,6 +22,7 @@ const appReducer = combineReducers({
     employees: employeesReducer,
     payslips: payslipsReducer,
     absenteeism: absenteeismReducer,
+    payrolls: payrollsReducer,
     arrears: arrearsReducer,
 });
 

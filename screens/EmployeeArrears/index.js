@@ -18,7 +18,8 @@ class EmployeeArrears extends Component {
     }
 
     componentDidMount() {
-        this.props.getArrears();
+        const employee = this.props.navigation.getParam('employee', {});
+        this.props.getArrears(employee.id);
     }
 
     goBack = () => {
@@ -58,7 +59,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getArrears: () => dispatch(getArrears()),
+    getArrears: (id) => dispatch(getArrears(id)),
 });
 
 

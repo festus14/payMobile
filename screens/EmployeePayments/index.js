@@ -18,7 +18,8 @@ class EmployeePayments extends Component {
     }
 
     componentDidMount() {
-        this.props.getPayments();
+        const employee = this.props.navigation.getParam('employee', {});
+        this.props.getPayments(employee.id);
     }
 
     goBack = () => {
@@ -58,7 +59,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getPayments: () => dispatch(getPayments()),
+    getPayments: (id) => dispatch(getPayments(id)),
 });
 
 

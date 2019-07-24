@@ -18,7 +18,8 @@ class EmployeeRecurrentDeductions extends Component {
     }
 
     componentDidMount() {
-        this.props.getRecurrentDeductions();
+        const employee = this.props.navigation.getParam('employee', {});
+        this.props.getRecurrentDeductions(employee.id);
     }
 
     goBack = () => {
@@ -58,7 +59,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getRecurrentDeductions: () => dispatch(getRecurrentDeductions()),
+    getRecurrentDeductions: (id) => dispatch(getRecurrentDeductions(id)),
 });
 
 

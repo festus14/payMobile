@@ -49,12 +49,17 @@ export const setRecurrentDeductions = recurrentDeductions => {
     };
 };
 
-export const getPayslips = () => {
+export const getPayslips = (userId, month, year, group_id) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
             let token = getState().auth.token;
-            let userId = getState().user.employee.id;
+
+            let body = month ? JSON.stringify({
+                month,
+                year,
+                unique_id: group_id,
+            }) : undefined;
 
             let res = await fetch(`${API_URL}payrolls/payslips/${userId}`, {
                 method: 'POST',
@@ -62,7 +67,9 @@ export const getPayslips = () => {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token,
                     'Accept': 'application/json',
+
                 },
+                body,
             });
             let resJson = await res.json();
 
@@ -87,13 +94,13 @@ export const getPayslips = () => {
     };
 };
 
-export const getPayments = () => {
+export const getPayments = (id) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
             let token = getState().auth.token;
 
-            let res = await fetch(`${API_URL}employee_payments`, {
+            let res = await fetch(`${API_URL}employee_payments/employee/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -113,7 +120,7 @@ export const getPayments = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setPayments(resJson));
+                dispatch(setPayments(resJson.success));
                 return resJson;
             }
         } catch (e) {
@@ -124,13 +131,13 @@ export const getPayments = () => {
     };
 };
 
-export const getDeductions = () => {
+export const getDeductions = (id) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
             let token = getState().auth.token;
 
-            let res = await fetch(`${API_URL}employeedeductions`, {
+            let res = await fetch(`${API_URL}employee_deductions/employee/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -150,7 +157,7 @@ export const getDeductions = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setDeductions(resJson));
+                dispatch(setDeductions(resJson.success));
                 return resJson;
             }
         } catch (e) {
@@ -162,13 +169,13 @@ export const getDeductions = () => {
 };
 
 
-export const getRecurrentPayments = () => {
+export const getRecurrentPayments = (id) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
             let token = getState().auth.token;
 
-            let res = await fetch(`${API_URL}employee_recurrent_payments`, {
+            let res = await fetch(`${API_URL}employee_recurrent_payments/employee/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -188,7 +195,7 @@ export const getRecurrentPayments = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setRecurrentPayments(resJson));
+                dispatch(setRecurrentPayments(resJson.success));
                 return resJson;
             }
         } catch (e) {
@@ -199,13 +206,13 @@ export const getRecurrentPayments = () => {
     };
 };
 
-export const getRecurrentDeductions = () => {
+export const getRecurrentDeductions = (id) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
             let token = getState().auth.token;
 
-            let res = await fetch(`${API_URL}employee_recurrent_deductions`, {
+            let res = await fetch(`${API_URL}employee_recurrent_deductions/employee/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -225,7 +232,7 @@ export const getRecurrentDeductions = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setRecurrentDeductions(resJson));
+                dispatch(setRecurrentDeductions(resJson.success));
                 return resJson;
             }
         } catch (e) {

@@ -17,13 +17,13 @@ export const setAbsenteeism = absenteeism => {
     };
 };
 
-export const getAbsenteeism = () => {
+export const getAbsenteeism = (id) => {
     return async (dispatch, getState) => {
         dispatch(absenteeismUiStartLoading());
         try {
             let token = getState().auth.token;
 
-            let res = await fetch(`${API_URL}employeeabsents`, {
+            let res = await fetch(`${API_URL}employeeabsents/employee/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export const getAbsenteeism = () => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setAbsenteeism(resJson));
+                dispatch(setAbsenteeism(resJson.success));
                 return resJson;
             }
         } catch (e) {

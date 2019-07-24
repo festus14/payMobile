@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
-import { GREY, DARK_GREEN, ALMOST_BLACK } from '../utility/colors';
+import { GREY, ALMOST_BLACK } from '../utility/colors';
 
 export default class EmployeeItem extends Component {
     render() {
         if (this.props.value) {
             return (
                 <View style={styles.container}>
-                    <Text style={styles.title}>{this.props.title}</Text>
-                    <Text style={styles.value}>{this.props.value}</Text>
+                    <Text style={[styles.title, this.props.labelStyle || {}]}>{this.props.title}</Text>
+                    <Text style={[styles.value, this.props.valueStyle || {}]}>{this.props.value}</Text>
                 </View>
             )
         }

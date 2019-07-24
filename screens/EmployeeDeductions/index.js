@@ -18,7 +18,8 @@ class EmployeeDeductions extends Component {
     }
 
     componentDidMount() {
-        this.props.getDeductions();
+        const employee = this.props.navigation.getParam('employee', {});
+        this.props.getDeductions(employee.id);
     }
 
     goBack = () => {
@@ -58,7 +59,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getDeductions: () => dispatch(getDeductions()),
+    getDeductions: (id) => dispatch(getDeductions(id)),
 });
 
 

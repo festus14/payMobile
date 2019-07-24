@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Platform } from 'react-native';
-import { ALMOST_BLACK, LIGHT_GREY } from '../utility/colors';
+import { ALMOST_BLACK } from '../utility/colors';
 import { getPercentage, reformatDate, getMonth } from '../utility/helpers';
 import EmployeeItem from './EmployeeItem';
 

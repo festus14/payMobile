@@ -17,7 +17,8 @@ class EmployeeAbsenteeism extends Component {
     }
 
     componentDidMount() {
-        this.props.getAbsenteeism();
+        const employee = this.props.navigation.getParam('employee', {});
+        this.props.getAbsenteeism(employee.id);
     }
 
     goBack = () => {
@@ -57,7 +58,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getAbsenteeism: () => dispatch(getAbsenteeism()),
+    getAbsenteeism: (id) => dispatch(getAbsenteeism(id)),
 });
 
 
