@@ -5,22 +5,39 @@ import ItemList from '../../components/ItemList';
 import { connect } from 'react-redux';
 import data from './data.json';
 import { styles } from './style';
-import { logout } from '../../store/actions/auth';
+import { logout, updateNotifications } from '../../store/actions/';
 
 class SettingsScreen extends Component {
     static navigationOptions = {
         header: null,
     }
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isChecked: {
+                'Email notifications': this.props.notifications.email_notify || false,
+                'SMS notifications': this.props.notifications.sms || false,
+            },
+        };
+    }
+
+
     onPressItem = title => {
         switch (title) {
             case 'Log Out':
                 this.onLogout();
                 break;
-
             default:
+                this.onCheck(title);
                 break;
         }
+    }
+
+    onCheck = async (title) => {
+        await this.setState({ isChecked: {...this.state.isChecked, [title]: !this.state.isChecked[title]} });
+        this.props.updateNotifications(this.state.isChecked);
     }
 
     onLogout = async () => {
@@ -59,6 +76,7 @@ class SettingsScreen extends Component {
                     renderItem={({ item, index }) => <ItemList
                         item={item}
                         onPress={this.onPressItem}
+                        isChecked={this.state.isChecked}
                     />}
                 />
             </View>
@@ -66,8 +84,13 @@ class SettingsScreen extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    onLogOut: () => dispatch(logout()),
+const mapStateToProps = (state) => ({
+    notifications: state.employees.notifications,
 });
 
-export default connect(null, mapDispatchToProps)(SettingsScreen);
+const mapDispatchToProps = dispatch => ({
+    onLogOut: () => dispatch(logout()),
+    updateNotifications: (notifications) => dispatch(updateNotifications(notifications))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsScreen);

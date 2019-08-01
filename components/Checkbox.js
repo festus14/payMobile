@@ -8,7 +8,7 @@ export default class Checkbox extends Component {
         const { checkSize = 12, checkColor = "#fff", containerStyle = {}, isChecked = false, onPress = () => { } } = this.props
         return (
             <TouchableWithoutFeedback onPress={onPress}>
-                <View style={[styles.container, isChecked && { backgroundColor: MAIN_COLOR, borderWidth: 0 }, containerStyle]}>
+                <View style={[styles.container, containerStyle, isChecked && { backgroundColor: MAIN_COLOR, borderWidth: 0 }, ]}>
                     {isChecked && <Icon name="md-checkmark" color={checkColor} size={checkSize} />}
                 </View>
             </TouchableWithoutFeedback>

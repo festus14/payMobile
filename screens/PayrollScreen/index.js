@@ -16,7 +16,7 @@ class PayrollScreen extends Component {
     }
 
     render() {
-        const { isLoading, payrolls, navigation } = this.props;
+        const { isLoading, payrolls, navigation, token } = this.props;
         return (
             <View style={styles.container}>
                 <Header
@@ -25,7 +25,7 @@ class PayrollScreen extends Component {
                 <View style={styles.container}>
                     <ScrollView>
                     {payrolls.length > 0 && !isLoading ? payrolls.map((item, id) => (
-                        <PayrollsItem downloadPayrolls={this.props.downloadPayrolls} sendPayrolls={this.props.sendPayrolls} navigation={navigation} item={item} key={id}/>
+                        <PayrollsItem token={token} downloadPayrolls={this.props.downloadPayrolls} sendPayrolls={this.props.sendPayrolls} navigation={navigation} item={item} key={id}/>
                     )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No payrolls found</Text>}
                     </ScrollView>
                 </View>
@@ -36,6 +36,7 @@ class PayrollScreen extends Component {
 
 const mapStateToProps = (state) => ({
     payrolls: state.payrolls.payrolls,
+    token: state.auth.token,
     isLoading: state.ui.isPayrollsLoading,
 });
 

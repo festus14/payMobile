@@ -1,45 +1,84 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { DARK_GREEN, LIGHTER_GREY } from '../utility/colors';
 import { getMonth } from '../utility/helpers';
 import EmployeeItem from './EmployeeItem';
 import Icon from 'react-native-vector-icons/Ionicons';
+import RNFetchBlob from 'rn-fetch-blob';
+
 
 export default class PayslipItem extends Component {
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
             isDownloading: false,
-            isSending: false
-        }
+            isSending: false,
+        };
     }
 
     sendPayrolls = async () => {
-        const { item, sendPayrolls } = this.props;
-        this.setState({
-            isSending: true
-        });
-        console.warn("object")
+        try {
+            const { item, sendPayrolls } = this.props;
+            this.setState({
+                isSending: true,
+            });
 
-        await sendPayrolls(item.month, item.year, item.group_id, item.company_id)
+            let resJson = await sendPayrolls(item.month, item.year, item.group_id, item.company_id);
 
-        this.setState({
-            isSending: false
-        });
+            if (!resJson) { throw new Error(); }
+
+            this.setState({
+                isSending: false,
+            });
+        } catch (e) {
+            this.setState({ isSending: false });
+        }
     }
 
     downloadPayrolls = async () => {
-        const { item, downloadPayrolls } = this.props;
-        this.setState({
-            isDownloading: true
-        });
+        try {
+            const { item, downloadPayrolls, token } = this.props;
+            this.setState({
+                isDownloading: true,
+            });
 
-        await downloadPayrolls(item.month, item.year, item.group_id, item.company_id)
+            let resJson = await downloadPayrolls(item.month, item.year, item.group_id, item.company_id);
 
-        this.setState({
-            isDownloading: false
-        });
+            if (!resJson) { throw new Error(); }
+
+            let dirs = RNFetchBlob.fs.dirs;
+
+            console.warn(dirs);
+
+            let filename = `payroll-${item.group_id}.zip`;
+
+            let file = await RNFetchBlob.config({
+                addAndroidDownloads: {
+                    useDownloadManager: true,
+                    notification: false,
+                    description: 'Zip file of Payslips',
+                    mime : 'application/octet-stream',
+                    title : filename,
+                    path: dirs.DCIMDir + `/${filename}`,
+                },
+                path: dirs.DocumentDir + `/${filename}`,
+
+            })
+            .fetch('GET', resJson.url, {
+                'Authorization': 'Bearer ' + token,
+            });
+
+            console.warn(file);
+
+            alert('The file was saved to ' + file.path());
+
+            this.setState({
+                isDownloading: false,
+            });
+        } catch (e) {
+            this.setState({ isDownloading: false });
+        }
     }
 
     render() {
@@ -57,12 +96,14 @@ export default class PayslipItem extends Component {
                     <TouchableOpacity onPress={() => navigation.navigate('PayslipsScreen', { item })}>
                         <Icon name="ios-eye" size={25} color="#FFF" />
                     </TouchableOpacity>
-                    <TouchableOpacity disabled={this.state.isSending} onPress={this.downloadPayrolls}>
-                        <Icon name="ios-download" size={25} color="#FFF" />
-                    </TouchableOpacity>
-                    <TouchableOpacity disabled={this.state.isDownloading} onPress={this.sendPayrolls}>
-                        <Icon name="ios-send" size={25} color="#FFF" />
-                    </TouchableOpacity>
+                    {this.state.isDownloading ?
+                        <ActivityIndicator color="#fff" size={25} /> : <TouchableOpacity disabled={this.state.isDownloading} onPress={this.downloadPayrolls}>
+                            <Icon name="ios-download" size={25} color="#FFF" />
+                        </TouchableOpacity>}
+                    {this.state.isSending ?
+                        <ActivityIndicator color="#fff" size={25} /> : <TouchableOpacity disabled={this.state.isSending} onPress={this.sendPayrolls}>
+                            <Icon name="ios-send" size={25} color="#FFF" />
+                        </TouchableOpacity>}
                 </View>
             </View>
         );

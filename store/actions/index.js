@@ -10,7 +10,7 @@ export { setUser, getUser, getUserId, getEmployee, resetUser } from './user';
 export { logIn, authRemoveToken, authError, authSetToken, logout } from './auth';
 
 // employees actions
-export { setEmployees, getEmployees } from './employees';
+export { setEmployees, getEmployees, setNotifications, updateNotifications } from './employees';
 
 // payslips actions
 export { getPayslips, getDeductions, getPayments, getRecurrentDeductions, getRecurrentPayments } from './payslips';

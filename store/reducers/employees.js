@@ -1,7 +1,8 @@
-import { SET_EMPLOYEES } from "../actions/actionTypes";
+import { SET_EMPLOYEES, SET_NOTIFICATIONS } from "../actions/actionTypes";
 
 const initialState = {
-    employees: []
+    employees: [],
+    notifications: {},
 }
 
 const reducer = (state = initialState, action) => {
@@ -9,10 +10,15 @@ const reducer = (state = initialState, action) => {
     case SET_EMPLOYEES:
         return {
             ...state,
-            employees: action.employees
-        }
+            employees: action.employees,
+        };
+    case SET_NOTIFICATIONS:
+        return {
+            ...state,
+            notifications: action.notifications,
+        };
     default:
-        return state
+        return state;
     }
 }
 

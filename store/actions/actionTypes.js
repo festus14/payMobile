@@ -26,6 +26,7 @@ export const SET_EMPLOYEE = 'SET_EMPLOYEE';
 
 // Employees action types
 export const SET_EMPLOYEES = 'SET_EMPLOYEES';
+export const SET_NOTIFICATIONS = 'SET_NOTIFICATIONS';
 
 // Payslips action types
 export const SET_PAYSLIPS = 'SET_PAYSLIPS';

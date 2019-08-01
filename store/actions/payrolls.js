@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import {
     SET_PAYROLLS,
 } from './actionTypes';
@@ -9,8 +10,6 @@ import {
     payrollsUiStopLoading,
     resetApp,
 } from './';
-
-// import RNFetchBlob from 'rn-fetch-blob'
 
 export const setPayrolls = payrolls => {
     return {
@@ -68,25 +67,28 @@ export const downloadPayrolls = (month, year, group_id, company_id) => {
                 unique_id: group_id,
             });
 
-            // let dirs = RNFetchBlob.fs.dirs;
+            let res = await fetch(`${API_URL}download_all_payslip`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                    'Accept': 'application/json',
+                },
+                body
+            });
+            let resJson = await res.json();
 
-            // let res = await RNFetchBlob.config({
-            //     fileCache: true,
-            //     addAndroidDownloads: {
-            //         useDownloadManager: true,
-            //         notification: false,
-            //         description: 'Excel File',
-            //     },
-            //     path : dirs.DocumentDir + '/path-to-file.anything'
-            // })
-            // .fetch('POST', `${API_URL}download_all_payslip`, {
-            //     'Content-Type': 'application/json',
-            //     'Authorization': 'Bearer ' + token,
-            //     'Accept': 'application/zip',
-            // }, body);
+            console.warn(resJson);
 
-            // alert('The file was saved to ' + res.path())
-            
+            if (resJson.error) {
+                if (resJson.message === 'Unauthenticated.') {
+                    dispatch(resetApp());
+                }
+                alert(resJson.error || 'Something went wrong, pls try again');
+                return false;
+            } else {
+                return Promise.resolve(resJson);
+            }
         } catch (e) {
             alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
             return false;
@@ -119,13 +121,14 @@ export const sendPayrolls = (month, year, group_id, company_id) => {
 
             console.warn(resJson);
 
-            if (resJson.error || resJson.message) {
+            if (resJson.error) {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
+                alert(resJson.message)
                 return resJson;
             }
         } catch (e) {
