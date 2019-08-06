@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, ActivityIndicator, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { getPayrolls, sendPayrolls, downloadPayrolls } from '../../store/actions';
+import { getPayrolls, sendPayrolls } from '../../store/actions';
 import PayrollsItem from '../../components/PayrollsItem';
 import Header from '../../components/Header';
 import { styles } from './style.js';
@@ -43,9 +43,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = dispatch => ({
     getPayrolls: () => dispatch(getPayrolls()),
     sendPayrolls: (month, year, group_id, company_id) => dispatch(sendPayrolls(month, year, group_id, company_id)),
-    downloadPayrolls: (month, year, group_id, company_id) => dispatch(downloadPayrolls(month, year, group_id, company_id))
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PayrollScreen)
-;
+export default connect(mapStateToProps, mapDispatchToProps)(PayrollScreen);

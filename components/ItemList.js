@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { LIGHT_GREY, ALMOST_BLACK, GREY, DARK_GREEN } from '../utility/colors';
-import Checkbox from './Checkbox'
+import Checkbox from './Checkbox';
 
 export default class ItemList extends Component {
     render() {
@@ -14,14 +14,14 @@ export default class ItemList extends Component {
                             height: 38,
                             marginLeft: 15,
                             justifyContent: 'center',
-                            marginTop: 20
+                            marginTop: 20,
                         }}
                     >
                         <Text
                             style={{
                                 color: DARK_GREEN,
                                 fontSize: 11,
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
                             }}
                         >{item.name}</Text>
                     </View>)
@@ -69,7 +69,7 @@ export default class ItemList extends Component {
                                     fontSize: 13,
                                 }}
                             >{item.name}</Text>
-                            
+
                             <Checkbox
                                 isChecked={isChecked[item.name]}
                                 containerStyle={{ borderColor: GREY }}

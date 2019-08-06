@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 // ui actions
-export { uiStartLoading, uiStopLoading, payrollsUiStartLoading, payrollsUiStopLoading, userUiStartLoading, userUiStopLoading, employeesUiStartLoading, employeesUiStopLoading, payslipsUiStartLoading, payslipsUiStopLoading, absenteeismUiStartLoading, absenteeismUiStopLoading, arrearsUiStartLoading, arrearsUiStopLoading } from './ui';
+export { uiStartLoading, uiStopLoading, payrollsUiStartLoading, payrollsUiStopLoading, reportsUiStartLoading, reportsUiStopLoading, userUiStartLoading, userUiStopLoading, employeesUiStartLoading, employeesUiStopLoading, payslipsUiStartLoading, payslipsUiStopLoading, absenteeismUiStartLoading, absenteeismUiStopLoading, arrearsUiStartLoading, arrearsUiStopLoading } from './ui';
 
 // user actions
 export { setUser, getUser, getUserId, getEmployee, resetUser } from './user';
@@ -19,7 +19,7 @@ export { getPayslips, getDeductions, getPayments, getRecurrentDeductions, getRec
 export { getAbsenteeism } from './absenteeism';
 
 // payrolls actions
-export { getPayrolls, sendPayrolls, downloadPayrolls } from './payrolls';
+export { getPayrolls, sendPayrolls } from './payrolls';
 
 // arrears actions
 export { getArrears } from './arrears';

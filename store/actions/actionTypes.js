@@ -42,4 +42,4 @@ export const SET_ABSENTEEISM = 'SET_ABSENTEEISM';
 export const SET_ARREARS = 'SET_ARREARS';
 
 // Payrolls action types
-export const SET_PAYROLLS = 'SET_PAYROLLS'
+export const SET_PAYROLLS = 'SET_PAYROLLS';

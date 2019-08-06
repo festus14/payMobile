@@ -55,47 +55,6 @@ export const getPayrolls = () => {
     };
 };
 
-export const downloadPayrolls = (month, year, group_id, company_id) => {
-    return async (dispatch, getState) => {
-        try {
-            let token = getState().auth.token;
-
-            let body = JSON.stringify({
-                month,
-                year,
-                company_id,
-                unique_id: group_id,
-            });
-
-            let res = await fetch(`${API_URL}download_all_payslip`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': 'application/json',
-                },
-                body
-            });
-            let resJson = await res.json();
-
-            console.warn(resJson);
-
-            if (resJson.error) {
-                if (resJson.message === 'Unauthenticated.') {
-                    dispatch(resetApp());
-                }
-                alert(resJson.error || 'Something went wrong, pls try again');
-                return false;
-            } else {
-                return Promise.resolve(resJson);
-            }
-        } catch (e) {
-            alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
-            return false;
-        }
-    };
-};
-
 export const sendPayrolls = (month, year, group_id, company_id) => {
     return async (dispatch, getState) => {
         try {
