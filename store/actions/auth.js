@@ -3,7 +3,7 @@ import {
     AUTH_REMOVE_TOKEN,
     AUTH_SET_TOKEN,
 } from './actionTypes';
-import AsyncStorage from '@react-native-community/async-storage';
+import RNSecureKeyStore, { ACCESSIBLE } from 'react-native-secure-key-store';
 import {
     uiStartLoading,
     uiStopLoading,
@@ -68,8 +68,8 @@ export const logIn = (authData) => {
             } else {
                 dispatch(authError(''));
                 dispatch(authSetToken(resJson.success.token, resJson.success.user.id));
-                await AsyncStorage.setItem('token', resJson.success.token);
-                await AsyncStorage.setItem('user-id', `${resJson.success.user.id}`);
+                await RNSecureKeyStore.set('token', resJson.success.token, { accessible: ACCESSIBLE.WHEN_UNLOCKED });
+                await RNSecureKeyStore.set('user-id', `${resJson.success.user.id}`, { accessible: ACCESSIBLE.WHEN_UNLOCKED });
                 dispatch(setUser(resJson.success.user));
             }
         } catch (error) {
@@ -95,13 +95,6 @@ export const logout = () => {
                     'Authorization': 'Bearer ' + token,
                 },
             });
-
-            setTimeout(() => {
-                if (!res) {
-                    dispatch(uiStopLoading());
-                    dispatch(authError('Please check your internet connection'));
-                }
-            }, 15000);
 
             let resJson = await res.json();
             console.warn(resJson);

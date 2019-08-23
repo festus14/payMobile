@@ -6,13 +6,13 @@ import EmployeeItem from './EmployeeItem';
 
 export default class PayslipItem extends Component {
     render() {
-        const { item } = this.props;
+        const { item = {} } = this.props;
         const date = reformatDate(item.date);
 
         return (
             <View style={styles.section}>
                 <View style={styles.sectionDetails}>
-                    <Text style={styles.sectionTitle}>Personal Info</Text>
+                    <Text style={styles.sectionTitle}>{item.type ? item.type.name : item.recurrent_deduction_type ? item.recurrent_deduction_type.name : null}</Text>
                     <EmployeeItem title="Amount" value={getPercentage(parseFloat(item.amount), 100)} />
                     <EmployeeItem title="Frequency" value={item.frequency} />
                     <EmployeeItem title="Date" value={`${getMonth(date.getMonth() + 1)} ${date.getFullYear()}`} />

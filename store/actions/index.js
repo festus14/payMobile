@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import RNSecureKeyStore from 'react-native-secure-key-store';
 
 // ui actions
 export { uiStartLoading, uiStopLoading, payrollsUiStartLoading, payrollsUiStopLoading, reportsUiStartLoading, reportsUiStopLoading, userUiStartLoading, userUiStopLoading, employeesUiStartLoading, employeesUiStopLoading, payslipsUiStartLoading, payslipsUiStopLoading, absenteeismUiStartLoading, absenteeismUiStopLoading, arrearsUiStartLoading, arrearsUiStopLoading } from './ui';
@@ -19,15 +19,15 @@ export { getPayslips, getDeductions, getPayments, getRecurrentDeductions, getRec
 export { getAbsenteeism } from './absenteeism';
 
 // payrolls actions
-export { getPayrolls, sendPayrolls } from './payrolls';
+export { getPayrolls, sendPayrolls, getPayrollDetails } from './payrolls';
 
 // arrears actions
 export { getArrears } from './arrears';
 
 export const resetApp = () => {
     return async (dispatch) => {
-        await AsyncStorage.removeItem('token');
-        await AsyncStorage.removeItem('userId');
+        await RNSecureKeyStore.remove('token');
+        await RNSecureKeyStore.remove('userId');
         return ({
             type: 'RESET_APP',
         });

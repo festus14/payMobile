@@ -15,7 +15,7 @@ class TopDrawer extends Component {
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={styles.personal}>
                     <MyImage resizeMode="contain" style={styles.image} source={employee.users ? [{ uri: PHOTO_URL + employee.users.picture }, defaultImage] : [defaultImage]} />
-                    <View style={styles.personalText}>
+                    <View>
                         <Text style={styles.name}>{`${employee.firstname} ${employee.middlename || ''} ${employee.lastname}` || 'Unknown Unknown'}</Text>
                         <Text style={styles.email}>{employee.email || 'mail@domain.com'}</Text>
                     </View>
@@ -36,9 +36,9 @@ const mapStateToProps = (state) => ({
 
 const styles = StyleSheet.create({
     personal: {
-        minHeight: SCREEN_HEIGHT * 0.24,
+        minHeight: SCREEN_HEIGHT * 0.2,
         justifyContent: 'space-around',
-        paddingLeft: '5%',
+        alignItems: 'center',
         backgroundColor: SECONDARY_COLOR,
         ...Platform.select({
             ios: {
@@ -59,16 +59,17 @@ const styles = StyleSheet.create({
         height: 60,
         width: 60,
         borderRadius: 1000,
-        marginRight: 25,
     },
     name: {
         color: '#FFF',
         fontSize: 13,
         fontWeight: 'bold',
+        textAlign: 'center',
     },
     email: {
         color: LIGHTER_GREY,
         fontSize: 11,
+        textAlign: 'center',
     },
 })
 

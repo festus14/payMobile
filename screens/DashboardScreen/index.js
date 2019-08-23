@@ -27,7 +27,7 @@ class DashboardScreen extends Component {
 
     componentDidMount() {
         if (!this.props.employee.firstname) {
-            this.props.getEmployee()
+            this.props.getEmployee();
         }
     }
 

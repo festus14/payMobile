@@ -4,7 +4,7 @@ import { DARK_GREEN, LIGHTER_GREY } from '../utility/colors';
 import { getMonth } from '../utility/helpers';
 import EmployeeItem from './EmployeeItem';
 import Icon from 'react-native-vector-icons/Ionicons';
-import RNFetchBlob from 'rn-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
 
 
 export default class PayslipItem extends Component {
@@ -36,50 +36,52 @@ export default class PayslipItem extends Component {
         }
     }
 
-    downloadPayrolls = async () => {
-        try {
-            const { item, downloadPayrolls, token } = this.props;
-            this.setState({
-                isDownloading: true,
-            });
+    // function that downloads payroll payslips
+    // downloadPayrolls = async () => {
+    //     try {
+    //         console.warn("object");
+    //         const { item, downloadPayrolls, token } = this.props;
+    //         await this.setState({
+    //             isDownloading: true,
+    //         });
 
-            let resJson = await downloadPayrolls(item.month, item.year, item.group_id, item.company_id);
+    //         let resJson = await downloadPayrolls(item.month, item.year, item.group_id, item.company_id);
 
-            if (!resJson) { throw new Error(); }
+    //         if (!resJson) { throw new Error(); }
 
-            let dirs = RNFetchBlob.fs.dirs;
+    //         let dirs = RNFetchBlob.fs.dirs;
 
-            console.warn(dirs);
+    //         console.warn(dirs);
 
-            let filename = `payroll-${item.group_id}.zip`;
+    //         let filename = `payroll-${item.group_id}.zip`;
 
-            let file = await RNFetchBlob.config({
-                addAndroidDownloads: {
-                    useDownloadManager: true,
-                    notification: false,
-                    description: 'Zip file of Payslips',
-                    mime : 'application/octet-stream',
-                    title : filename,
-                    path: dirs.DCIMDir + `/${filename}`,
-                },
-                path: dirs.DocumentDir + `/${filename}`,
+    //         let file = await RNFetchBlob.config({
+    //             addAndroidDownloads: {
+    //                 useDownloadManager: true,
+    //                 notification: false,
+    //                 description: 'Zip file of Payslips',
+    //                 mime : 'application/octet-stream',
+    //                 title : filename,
+    //                 path: dirs.DCIMDir + `/${filename}`,
+    //             },
+    //             path: dirs.DocumentDir + `/${filename}`,
 
-            })
-            .fetch('GET', resJson.url, {
-                'Authorization': 'Bearer ' + token,
-            });
+    //         })
+    //         .fetch('GET', resJson.url, {
+    //             'Authorization': 'Bearer ' + token,
+    //         });
 
-            console.warn(file);
+    //         console.warn(file);
 
-            alert('The file was saved to ' + file.path());
+    //         alert('The file was saved to ' + file.path());
 
-            this.setState({
-                isDownloading: false,
-            });
-        } catch (e) {
-            this.setState({ isDownloading: false });
-        }
-    }
+    //         await this.setState({
+    //             isDownloading: false,
+    //         });
+    //     } catch (e) {
+    //         await this.setState({ isDownloading: false });
+    //     }
+    // }
 
     render() {
         const { item, navigation } = this.props;
@@ -90,16 +92,17 @@ export default class PayslipItem extends Component {
                     <Text style={styles.sectionTitle}>{`${getMonth(item.month)} ${item.year}`}</Text>
                     <EmployeeItem labelStyle={styles.white} valueStyle={styles.white} title="HR Approval" value={item.hr_approval} />
                     <EmployeeItem labelStyle={styles.white} valueStyle={styles.white} title="Supervisor Approval" value={item.supervisor_approval} />
-                    <Text style={styles.footer}>{item.group_id}</Text>
+                    <Text style={styles.footer}>{/* item.group_id */}</Text>
                 </View>
                 <View style={styles.view}>
-                    <TouchableOpacity onPress={() => navigation.navigate('PayslipsScreen', { item })}>
+                    <TouchableOpacity onPress={() => navigation.navigate('PayrollDetails', { item })}>
                         <Icon name="ios-eye" size={25} color="#FFF" />
                     </TouchableOpacity>
+                    {/* // Might use in the future for downloading payroll payslips
                     {this.state.isDownloading ?
                         <ActivityIndicator color="#fff" size={25} /> : <TouchableOpacity disabled={this.state.isDownloading} onPress={this.downloadPayrolls}>
                             <Icon name="ios-download" size={25} color="#FFF" />
-                        </TouchableOpacity>}
+                        </TouchableOpacity>} */}
                     {this.state.isSending ?
                         <ActivityIndicator color="#fff" size={25} /> : <TouchableOpacity disabled={this.state.isSending} onPress={this.sendPayrolls}>
                             <Icon name="ios-send" size={25} color="#FFF" />
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
     view: {
         backgroundColor: 'rgba(0, 0, 0, 0.1)',
         paddingVertical: 8,
-        paddingHorizontal: 15,
+        paddingHorizontal: 40,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

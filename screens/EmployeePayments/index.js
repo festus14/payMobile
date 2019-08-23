@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
@@ -8,12 +8,12 @@ import { getPayments } from '../../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
-class EmployeePayments extends Component {
+class EmployeePayments extends PureComponent {
     static navigationOptions = {
         header: null,
         drawerLabel: 'Payments',
         drawerIcon: ({tintColor}) => (
-            <Icon name="print" color={tintColor} size={20} />
+            <Icon name="plus" color={tintColor} size={20} />
         )
     }
 

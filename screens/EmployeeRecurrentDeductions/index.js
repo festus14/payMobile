@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import PaymentsItem from '../../components/PaymentsItem';
 import { connect } from 'react-redux';
 import { getRecurrentDeductions } from '../../store/actions';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
-class EmployeeRecurrentDeductions extends Component {
+class EmployeeRecurrentDeductions extends PureComponent {
     static navigationOptions = {
         header: null,
         drawerLabel: 'Recurrent Deductions',
         drawerIcon: ({tintColor}) => (
-            <Icon name="print" color={tintColor} size={20} />
+            <Icon name="minus" color={tintColor} size={20} />
         )
     }
 

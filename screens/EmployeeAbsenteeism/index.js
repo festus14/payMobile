@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import AbsenteeismItem from '../../components/AbsenteeismItem';
 import { connect } from 'react-redux';
 import { getAbsenteeism } from '../../store/actions';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-class EmployeeAbsenteeism extends Component {
+class EmployeeAbsenteeism extends PureComponent {
     static navigationOptions = {
         header: null,
         drawerLabel: 'Absenteeism',

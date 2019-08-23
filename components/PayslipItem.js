@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Platform, Modal, PermissionsAndroid } from 'react-native';
-import { ALMOST_BLACK, GREY, DARK_GREEN, LIGHT_BLUE, LIGHT_GREY } from '../utility/colors';
+import { ALMOST_BLACK, DARK_GREEN, LIGHT_GREY } from '../utility/colors';
 import { getPercentage } from '../utility/helpers';
 import WebView from 'react-native-webview';
 import { COMPANY_PHOTO_URL } from '../utility/constants';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class PayslipItem extends Component {
     constructor(props) {
@@ -57,7 +57,7 @@ export default class PayslipItem extends Component {
     }
 
     render() {
-        const { item } = this.props;
+        const { item, payrolls = false } = this.props;
         return (
             <View style={styles.item}>
                 <Modal
@@ -72,23 +72,26 @@ export default class PayslipItem extends Component {
                             originWhitelist={['*']}
                             style={{ flex: 1 }}
                             source={{
-                                html: this.html()
+                                html: this.html(),
                             }}
                         />
                     </View>
                 </Modal>
-                <Text style={styles.top}>{item.date}</Text>
+                <View style={styles.top}>
+                    {item.info && <Text style={[styles.topText, { color: DARK_GREEN, }]}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.info.employee.lastname.toUpperCase()}</Text>, {item.info.employee.firstname}</Text>}
+                    <Text style={styles.topText}>{item.date}</Text>
+                </View>
                 {item.info && <View style={styles.middle}>
                 <Text style={styles.city}>{item.info.location}</Text>
                     <Text style={styles.dept}>{item.info.department}</Text>
                 </View>}
                 {item.pcm && <View style={styles.net}>
-                    <Text style={styles.netText}> {getPercentage(item.pcm.net_pay, 100) || 0.00}</Text>
+                    <Text style={styles.netText}>{getPercentage(item.pcm.net_pay, 100) || 0.00}</Text>
 
                 </View>}
                 <View style={styles.bottom}>
-                    <TouchableOpacity style={styles.btn} onPress={this.toggleModal}><Icon name="ios-eye" color={GREY} size={24} /></TouchableOpacity>
-                    <TouchableOpacity style={[styles.btn, { alignItems: 'flex-end' }]} onPress={this.createPdf}><Icon name="ios-download" color={GREY} size={24} /></TouchableOpacity>
+                    <TouchableOpacity style={styles.btn} onPress={this.toggleModal}><Icon name="ios-eye" color={'#FFF'} size={24} /></TouchableOpacity>
+                    <TouchableOpacity style={[styles.btn, { alignItems: 'flex-end' }]} onPress={this.createPdf}><Icon name="ios-download" color={'#FFF'} size={24} /></TouchableOpacity>
                 </View>
             </View>
         );
@@ -100,7 +103,7 @@ export default class PayslipItem extends Component {
         let v_total_pcm = 0;
         let v_total_ptd = 0;
 
-        return `
+        return (`
         <!DOCTYPE html>
         <html lang="en">
         
@@ -147,9 +150,6 @@ export default class PayslipItem extends Component {
         </head>
         
         <body>
-            <br><br><br>
-            <br><br><br>
-            <br><br><br>
             <div id="data">
                 <br>
                 <table border=0 width='500px'>
@@ -206,13 +206,11 @@ export default class PayslipItem extends Component {
                                                 <h5>YTD ${item.currency ? item.currency.name : 'NGN'}</h5>
                                             </td>
                                         </tr>
-                                        ${
-            Object.keys(item.payments).map(key => {
-                if (item.payments[key] > 0) {
-                    return '<tr><td>' + key + '</td>' + (item.pcm.payment[key] ? "<td align='right'> " + getPercentage(item.pcm.payment[key], 100) + ' </td>' : "<td align='right'> 0.00 </td>") + "<td align='right'>" + getPercentage(item.payments[key], 100) + '</td> </tr>';
-                }
-            })
-            }
+                                        ${Object.keys(item.payments).map(key => {
+                                            if (item.payments[key] > 0) {
+                                                return '<tr><td>' + key + '</td>' + (item.pcm.payment[key] ? '<td align="right"> ' + getPercentage(item.pcm.payment[key], 100) + ' </td>' : '<td align="right"> 0.00 </td>') + '<td align="right">' + getPercentage(item.payments[key], 100) + '</td> </tr>';
+                                            }
+                                        }).join('')}
                                         <tr>
                                             <td>&nbsp;</td>
                                             <td align='right'>____________</td>
@@ -249,13 +247,11 @@ export default class PayslipItem extends Component {
                                             <td>&nbsp;</td>
                                             <td>&nbsp;</td>
                                         </tr>
-                                        ${
-            Object.keys(item.deductions).map(key => {
-                if (item.deductions[key] > 0) {
-                    return (key === 'Payee' ? '<tr><td> PAYE</td>' : '<tr><td>' + key + '</td>') + (item.pcm.deduction[key] ? "<td align='right'> " + getPercentage(item.pcm.deduction[key], 100) + ' </td>' : "<td align='right'> 0.00 </td>") + "<td align='right'>" + getPercentage(item.deductions[key], 100) + '</td> </tr>';
-                }
-            })
-            }
+                                        ${Object.keys(item.deductions).map(key => {
+                                            if (item.deductions[key] > 0) {
+                                                return (key === 'Payee' ? '<tr><td> PAYE</td>' : '<tr><td>' + key + '</td>') + (item.pcm.deduction[key] ? "<td align='right'> " + getPercentage(item.pcm.deduction[key], 100) + ' </td>' : "<td align='right'> 0.00 </td>") + "<td align='right'>" + getPercentage(item.deductions[key], 100) + '</td> </tr>';
+                                            }
+                                        }).join('')}
                                         <tr>
                                             <td>&nbsp;</td>
                                             <td align='right'>____________</td>
@@ -271,14 +267,14 @@ export default class PayslipItem extends Component {
                                             <td align='right'>____________</td>
                                             <td align='right'>____________</td>
                                         </tr>
-                                        ${Object.keys(item.other_payments).length !== 0 && item.other_payments.constructor === Object ?
+                                        ${(Object.keys(item.other_payments).length !== 0 && item.other_payments.constructor === Object) ?
                 (`
                                                 <tr>
                                                     <td><strong>Other Payments:</strong></td>
                                                     <td>&nbsp;</td>
                                                     <td>&nbsp;</td>
                                                 </tr>
-                                                ${Object.keys(item.other_payments).map(key => (item.other_payments[key] > 0 ? ('<tr><td>' + key + '</td>' + (item.pcm.other_payments[key] ? ("<td align='right'> " + getPercentage(item.pcm.other_payments[key], 100) + ' </td>') : "<td align='right'> 0.00 </td>") + "<td align='right'>" + getPercentage(item.other_payments[key], 100) + '</td> </tr>') : ''))}
+                                                ${Object.keys(item.other_payments).map(key => (item.other_payments[key] > 0 ? ('<tr><td>' + key + '</td>' + (item.pcm.other_payments[key] ? ("<td align='right'> " + getPercentage(item.pcm.other_payments[key], 100) + ' </td>') : "<td align='right'> 0.00 </td>") + "<td align='right'>" + getPercentage(item.other_payments[key], 100) + '</td> </tr>') : '')).join('')}
                                                 <tr>
                                                     <td><b>Total Other Payments(c)</b></td>
                                                     <td align='right'><b>${getPercentage(item.pcm.total_other_payments, 100)}</b></td>
@@ -300,7 +296,7 @@ export default class PayslipItem extends Component {
                                                     <td align='right'>____________</td>
                                                 </tr>
                                             `
-                ) : `
+                ) : (`
                                                 <tr>
                                                     <td><strong> Net Salary (a - b)</strong></td>
                                                     <td align='right'><b> ${getPercentage(item.pcm.net_pay, 100)}</b></td>
@@ -321,8 +317,7 @@ export default class PayslipItem extends Component {
                                                     <td align='right'>____________</td>
                                                     <td align='right'>____________</td>
                                                 </tr>
-                                            `
-            }
+                                            `)}
                                         ${item.disbursement_variance.length <= 0 ? `
                                             <tr>
                                                 <td><b>Disbursement:</b></td>
@@ -377,9 +372,9 @@ export default class PayslipItem extends Component {
                             `<td>&nbsp;</td>
                                                             <td align='right'><b>${getPercentage(detail.actual, 100)}</b></td>
                                                             <td align='right'><b>${getPercentage(detail.rate, 100)}</b></td>`
-                        )
-                    )}
-                                                </tr>`)}
+                        ).join('')
+                    ).join('')}
+                                                </tr>`).join('')}
                                             <tr>
                                                 <td><b>NGN</b></td>
                                                 <td align='right'><b>${getPercentage(item.pcm.net_pay - v_total_pcm, 100)}</b></td>
@@ -418,7 +413,7 @@ export default class PayslipItem extends Component {
             <a href="#" style='font-size:8px;font-weight:bold; color: red; position: fixed; bottom: 10px; left: 40px;'>Generated  at ${new Date(Date.now())}</a>
         </body>
         </html>
-        `
+        `);
     }
 }
 
@@ -444,13 +439,16 @@ const styles = StyleSheet.create({
         borderRadius: 3,
     },
     top: {
+        margin: 10,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+    },
+    topText: {
         color: ALMOST_BLACK,
         fontSize: 13,
-        margin: 10,
-        fontWeight: 'bold'
     },
     middle: {
-        marginHorizontal: 10
+        marginHorizontal: 10,
     },
     city: {
         color: ALMOST_BLACK,
@@ -459,17 +457,17 @@ const styles = StyleSheet.create({
     dept: {
         color: LIGHT_GREY,
         fontWeight: 'bold',
-        fontSize: 12
+        fontSize: 12,
     },
     net: {
-        marginHorizontal: 10
+        marginHorizontal: 10,
     },
     netText: {
-        color: ALMOST_BLACK,
         fontSize: 20,
+        color: DARK_GREEN,
     },
     bottom: {
-        backgroundColor: '#fff',
+        backgroundColor: DARK_GREEN,
         width: '100%',
         flexDirection: 'row',
         borderBottomLeftRadius: 3,
@@ -477,6 +475,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         height: '25%',
         alignItems: 'center',
-        paddingHorizontal: 20
-    }
+        paddingHorizontal: 20,
+    },
 });

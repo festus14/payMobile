@@ -1,7 +1,8 @@
-import { SET_PAYROLLS } from '../actions/actionTypes';
+import { SET_PAYROLLS, SET_PAYROLL_DETAILS } from '../actions/actionTypes';
 
 const initialState = {
     payrolls: [],
+    payrollDetails: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -10,6 +11,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 payrolls: action.payrolls,
+            };
+        case SET_PAYROLL_DETAILS:
+            return {
+                ...state,
+                payrollDetails: action.payrollDetails,
             };
         default:
             return state;

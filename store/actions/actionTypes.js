@@ -43,3 +43,6 @@ export const SET_ARREARS = 'SET_ARREARS';
 
 // Payrolls action types
 export const SET_PAYROLLS = 'SET_PAYROLLS';
+
+// Payroll Details action types
+export const SET_PAYROLL_DETAILS = 'SET_PAYROLL_DETAILS';

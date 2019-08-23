@@ -44,7 +44,7 @@ export const getEmployees = () => {
             console.warn(resJson);
 
             await dispatch(employeesUiStopLoading());
-            if (resJson.error || resJson.message) {
+            if (resJson.error) {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }
@@ -62,15 +62,16 @@ export const getEmployees = () => {
     };
 };
 
-export const updateNotifications = (notifications) => {
+export const updateNotifications = (notifications, notificationId) => {
     return async (dispatch, getState) => {
         try {
             let token = getState().auth.token;
-            let employeeId = getState().user.employee.id;
             let company_id = getState().user.employee.company_id;
 
-            let res = await fetch(`${API_URL}employee_notifications/${employeeId}`, {
-                method: 'PUT',
+            console.warn(notificationId);
+
+            let res = await fetch(`${API_URL}employee_notifications/${notificationId}`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token,
@@ -93,7 +94,7 @@ export const updateNotifications = (notifications) => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                dispatch(setNotifications(resJson));
+                dispatch(setNotifications(resJson.success));
                 return resJson;
             }
         } catch (e) {

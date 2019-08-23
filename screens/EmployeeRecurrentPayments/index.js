@@ -13,7 +13,7 @@ class EmployeeRecurrentPayments extends Component {
         header: null,
         drawerLabel: 'Recurrent Payments',
         drawerIcon: ({tintColor}) => (
-            <Icon name="print" color={tintColor} size={20} />
+            <Icon name="plus" color={tintColor} size={20} />
         )
     }
 

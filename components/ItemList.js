@@ -5,7 +5,7 @@ import Checkbox from './Checkbox';
 
 export default class ItemList extends Component {
     render() {
-        const { item, onPress, isChecked } = this.props;
+        const { item, onPress, isChecked, notifications } = this.props;
         return (
             <View style={{ width: '100%' }}>
                 {
@@ -50,7 +50,7 @@ export default class ItemList extends Component {
                     )
                 }
                 {
-                    item.type === 'switch' && (
+                    (item.type === 'switch' && notifications.id) ? (
                         <TouchableOpacity
                             style={{
                                 height: 40,
@@ -71,12 +71,12 @@ export default class ItemList extends Component {
                             >{item.name}</Text>
 
                             <Checkbox
-                                isChecked={isChecked[item.name]}
+                                isChecked={isChecked[item.name] === 1}
                                 containerStyle={{ borderColor: GREY }}
                                 onPress={() => onPress(item.name)}
                             />
                         </TouchableOpacity>
-                    )
+                    ) : null
                 }
             </View>
         );

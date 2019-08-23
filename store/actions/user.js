@@ -11,6 +11,7 @@ import {
     userUiStopLoading,
     resetApp,
 } from './';
+import { setNotifications } from './employees';
 
 export const setUser = (user) => {
     return {
@@ -75,14 +76,14 @@ export const getUser = () => {
                 console.warn(resJson);
 
                 await dispatch(userUiStopLoading());
-                if (resJson.error || resJson.message) {
+                if (resJson.error) {
                     if (resJson.message === 'Unauthenticated.') {
                         dispatch(resetApp());
                     }
                     alert(resJson.error || 'Something went wrong, pls try again');
                     return false;
                 } else {
-                    dispatch(setUser(resJson));
+                    dispatch(setUser(resJson.success));
                     return resJson.user;
                 }
             } else {
@@ -131,6 +132,7 @@ export const getEmployee = () => {
                     return false;
                 } else {
                     dispatch(setEmployee(resJson.success));
+                    dispatch(setNotifications(resJson.success.notification));
                     return resJson;
                 }
             } else {

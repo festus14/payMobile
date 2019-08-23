@@ -1,6 +1,6 @@
 /* eslint-disable no-alert */
 import {
-    SET_PAYROLLS,
+    SET_PAYROLLS, SET_PAYROLL_DETAILS,
 } from './actionTypes';
 import {
     API_URL,
@@ -15,6 +15,13 @@ export const setPayrolls = payrolls => {
     return {
         type: SET_PAYROLLS,
         payrolls,
+    };
+};
+
+export const setPayrollDetails = payrollDetails => {
+    return {
+        type: SET_PAYROLL_DETAILS,
+        payrollDetails,
     };
 };
 
@@ -74,7 +81,7 @@ export const sendPayrolls = (month, year, group_id, company_id) => {
                     'Authorization': 'Bearer ' + token,
                     'Accept': 'application/json',
                 },
-                body
+                body,
             });
             let resJson = await res.json();
 
@@ -87,10 +94,57 @@ export const sendPayrolls = (month, year, group_id, company_id) => {
                 alert(resJson.error || 'Something went wrong, pls try again');
                 return false;
             } else {
-                alert(resJson.message)
+                alert(resJson.message);
                 return resJson;
             }
         } catch (e) {
+            alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
+            return false;
+        }
+    };
+};
+
+
+
+export const getPayrollDetails = (month, year, group_id) => {
+    return async (dispatch, getState) => {
+        dispatch(payrollsUiStartLoading());
+        try {
+            let token = getState().auth.token;
+
+            let body = month ? JSON.stringify({
+                month,
+                year,
+                unique_id: group_id,
+            }) : undefined;
+
+            let res = await fetch(`${API_URL}payrolls_details`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                    'Accept': 'application/json',
+
+                },
+                body,
+            });
+            let resJson = await res.json();
+
+            console.warn(resJson);
+
+            await dispatch(payrollsUiStopLoading());
+            if (resJson.error) {
+                if (resJson.message === 'Unauthenticated.') {
+                    dispatch(resetApp());
+                }
+                alert(resJson.error || 'Something went wrong, pls try again');
+                return false;
+            } else {
+                dispatch(setPayrollDetails(resJson.success));
+                return resJson;
+            }
+        } catch (e) {
+            dispatch(payrollsUiStopLoading());
             alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
             return false;
         }

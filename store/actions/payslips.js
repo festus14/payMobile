@@ -49,17 +49,11 @@ export const setRecurrentDeductions = recurrentDeductions => {
     };
 };
 
-export const getPayslips = (userId, month, year, group_id) => {
+export const getPayslips = (userId) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
             let token = getState().auth.token;
-
-            let body = month ? JSON.stringify({
-                month,
-                year,
-                unique_id: group_id,
-            }) : undefined;
 
             let res = await fetch(`${API_URL}payrolls/payslips/${userId}`, {
                 method: 'POST',
@@ -69,7 +63,6 @@ export const getPayslips = (userId, month, year, group_id) => {
                     'Accept': 'application/json',
 
                 },
-                body,
             });
             let resJson = await res.json();
 

@@ -4,7 +4,7 @@ import {
     createBottomTabNavigator,
 } from 'react-navigation';
 import DashboardNavigator from './DashboardNavigator';
-import ReportsNavigator from './ReportsNavigator';
+// import ReportsNavigator from './ReportsNavigator';
 import EmployeesNavigator from './EmployeesNavigator';
 import SettingsNavigator from './SettingsNavigator';
 import PayrollNavigator from './PayrollNavigator';
@@ -20,7 +20,7 @@ const MemberNavigator = createBottomTabNavigator({
     Dashboard: DashboardNavigator,
     Employees: EmployeesNavigator,
     Payroll: PayrollNavigator,
-    Reports: ReportsNavigator,
+    // Reports: ReportsNavigator,
     Settings: SettingsNavigator,
 }, {
         initialRouteName: 'Dashboard',
@@ -50,9 +50,9 @@ const MemberNavigator = createBottomTabNavigator({
                     case 'Payroll':
                         iconName = 'money';
                         break;
-                    case 'Reports':
-                        iconName = 'file';
-                        break;
+                    // case 'Reports':
+                    //     iconName = 'file';
+                    //     break;
                     default:
                         break;
                 }

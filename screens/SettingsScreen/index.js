@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList, Alert } from 'react-native';
+import { Linking, View, FlatList, Alert } from 'react-native';
 import Header from '../../components/Header';
 import ItemList from '../../components/ItemList';
 import { connect } from 'react-redux';
 import data from './data.json';
 import { styles } from './style';
 import { logout, updateNotifications } from '../../store/actions/';
+
+const url = 'https://portal.ipaysuite.com/password/reset';
 
 class SettingsScreen extends Component {
     static navigationOptions = {
@@ -17,10 +19,14 @@ class SettingsScreen extends Component {
 
         this.state = {
             isChecked: {
-                'Email notifications': this.props.notifications.email_notify || false,
-                'SMS notifications': this.props.notifications.sms || false,
+                'Email notifications': this.props.notifications.email_notify || 0,
+                'SMS notifications': this.props.notifications.sms || 0,
             },
         };
+    }
+
+    componentDidMount() {
+        console.warn(this.props.notifications)
     }
 
 
@@ -29,15 +35,32 @@ class SettingsScreen extends Component {
             case 'Log Out':
                 this.onLogout();
                 break;
+            case 'Change password':
+                this.changePassword();
+                break;
             default:
                 this.onCheck(title);
                 break;
         }
     }
 
+    changePassword = () => {
+        Linking.canOpenURL(url).then(supported => {
+            console.warn(url)
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.warn("Don't know how to open URI: " + url);
+            }
+        });
+    };
+
+
     onCheck = async (title) => {
-        await this.setState({ isChecked: {...this.state.isChecked, [title]: !this.state.isChecked[title]} });
-        this.props.updateNotifications(this.state.isChecked);
+        const type = title === 'Email notifications' ? 'email_notify' : 'sms';
+        await this.setState({ isChecked: { ...this.state.isChecked, [title]: this.state.isChecked[title] ? 0 : 1 } });
+        await this.props.updateNotifications(this.state.isChecked, this.props.notifications.id);
+        await this.setState({ isChecked: { ...this.state.isChecked, [title]: this.props.notifications[type] } });
     }
 
     onLogout = async () => {
@@ -77,6 +100,7 @@ class SettingsScreen extends Component {
                         item={item}
                         onPress={this.onPressItem}
                         isChecked={this.state.isChecked}
+                        notifications={this.props.notifications || {}}
                     />}
                 />
             </View>
@@ -90,7 +114,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
     onLogOut: () => dispatch(logout()),
-    updateNotifications: (notifications) => dispatch(updateNotifications(notifications))
+    updateNotifications: (notifications, notificationsId) => dispatch(updateNotifications(notifications, notificationsId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsScreen);

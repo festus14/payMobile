@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
@@ -8,7 +8,7 @@ import { getPayslips } from '../../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
-class EmployeePayslips extends Component {
+class EmployeePayslips extends PureComponent {
     static navigationOptions = {
         header: null,
         drawerLabel: 'Payslips',

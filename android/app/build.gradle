@@ -94,7 +94,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * Use international variant JavaScriptCore
@@ -167,9 +167,6 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_module
-    implementation project(':rn-fetch-blob')
-    def multidex_version = "2.0.1"
-    implementation "androidx.multidex:multidex:$multidex_version"
 
     // JSC from node_modules
     if (useIntlJsc) {

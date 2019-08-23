@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Text, View, ScrollView } from 'react-native';
+import React, { PureComponent } from 'react';
+import { Text, View, ScrollView, BackHandler } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import defaultImage from '../../assets/images/myAvatar.png';
@@ -10,7 +10,7 @@ import { getPercentage } from '../../utility/helpers';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
-export default class EmployeeDetails extends Component {
+export default class EmployeeDetails extends PureComponent {
     static navigationOptions = {
         header: null,
         drawerLabel: 'Employee Info',
@@ -25,6 +25,17 @@ export default class EmployeeDetails extends Component {
         } else {
             this.props.navigation.navigate('EmployeesScreen');
         }
+    }
+
+    componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            console.warn("object")
+            if (this.props.navigation) { this.props.navigation.navigate('EmployeesScreen'); }
+        });
+    }
+    
+    componentWillUnmount() {
+        this.backHandler.remove();
     }
 
     openDrawer = () => {
