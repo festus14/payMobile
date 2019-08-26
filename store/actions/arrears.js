@@ -36,7 +36,7 @@ export const getArrears = (id) => {
             console.warn(resJson);
 
             await dispatch(arrearsUiStopLoading());
-            if (resJson.error || resJson.message) {
+            if (resJson.error) {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }

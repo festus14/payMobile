@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
-import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, RefreshControl, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import PaymentsItem from '../../components/PaymentsItem';
 import { connect } from 'react-redux';
 import { getDeductions } from '../../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { SECONDARY_COLOR } from '../../utility/colors';
 
 
 class EmployeeDeductions extends PureComponent {
@@ -42,11 +43,25 @@ class EmployeeDeductions extends PureComponent {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                    <ScrollView>
-                    {deductions.length > 0 && !isLoading ? deductions.map((item, id) => (
-                        <PaymentsItem item={item} key={id}/>
-                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No deductions found</Text>}
-                    </ScrollView>
+                    {deductions.length > 0 && !isLoading ? (<FlatList
+                        removeClippedSubviews
+                        data={deductions}
+                        keyExtractor={(item, index) => `${index}`}
+                        renderItem={({ item, index }) => (
+                            <PaymentsItem item={item} />
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isLoading}
+                                onRefresh={this.props.getDeductions}
+                            />
+                        }
+                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <View>
+                        <Text style={styles.error}>No deductions found</Text>
+                        <TouchableOpacity onPress={this.props.getDeductions}>
+                            <Text style={{ color: SECONDARY_COLOR, textAlign: 'center' }}>Tap to refresh</Text>
+                        </TouchableOpacity>
+                    </View>}
                 </View>
             </View>
         );

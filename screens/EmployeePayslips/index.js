@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
-import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, RefreshControl, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import PayslipItem from '../../components/PayslipItem';
 import { connect } from 'react-redux';
 import { getPayslips } from '../../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { SECONDARY_COLOR } from '../../utility/colors';
 
 
 class EmployeePayslips extends PureComponent {
@@ -42,11 +43,25 @@ class EmployeePayslips extends PureComponent {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                    <ScrollView>
-                    {payslips.length > 0 && !isLoading ? payslips.map((item, id) => (
-                        <PayslipItem item={item} key={id}/>
-                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No payslips found</Text>}
-                    </ScrollView>
+                    {payslips.length > 0 && !isLoading ? (<FlatList
+                        removeClippedSubviews
+                        data={payslips}
+                        keyExtractor={(item, index) => `${index}`}
+                        renderItem={({ item, index }) => (
+                            <PayslipItem item={item} />
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isLoading}
+                                onRefresh={this.props.getPayslips}
+                            />
+                        }
+                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <View>
+                        <Text style={styles.error}>No payslips found</Text>
+                        <TouchableOpacity onPress={this.props.getPayslips}>
+                            <Text style={{ color: SECONDARY_COLOR, textAlign: 'center' }}>Tap to refresh</Text>
+                        </TouchableOpacity>
+                    </View>}
                 </View>
             </View>
         );

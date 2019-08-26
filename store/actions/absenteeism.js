@@ -36,7 +36,7 @@ export const getAbsenteeism = (id) => {
             console.warn(resJson);
 
             await dispatch(absenteeismUiStopLoading());
-            if (resJson.error || resJson.message) {
+            if (resJson.error) {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }

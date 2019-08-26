@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, RefreshControl, ActivityIndicator, Text } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import PaymentsItem from '../../components/PaymentsItem';
@@ -42,11 +42,20 @@ class EmployeeRecurrentDeductions extends PureComponent {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                    <ScrollView>
-                    {recurrentDeductions.length > 0 && !isLoading ? recurrentDeductions.map((item, id) => (
-                        <PaymentsItem item={item} key={id}/>
-                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No recurrent deductions found</Text>}
-                    </ScrollView>
+                    {recurrentDeductions.length > 0 && !isLoading ? (<FlatList
+                        removeClippedSubviews
+                        data={recurrentDeductions}
+                        keyExtractor={(item, index) => `${index}`}
+                        renderItem={({ item, index }) => (
+                            <PaymentsItem item={item} />
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isLoading}
+                                onRefresh={this.props.getRecurrentDeductions}
+                            />
+                        }
+                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No recurrent deductions found</Text>}
                 </View>
             </View>
         );

@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
-import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, RefreshControl, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import AbsenteeismItem from '../../components/AbsenteeismItem';
 import { connect } from 'react-redux';
 import { getAbsenteeism } from '../../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { SECONDARY_COLOR } from '../../utility/colors';
 
 class EmployeeAbsenteeism extends PureComponent {
     static navigationOptions = {
@@ -41,11 +42,26 @@ class EmployeeAbsenteeism extends PureComponent {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                    <ScrollView>
-                        {absenteeism.length > 0 && !isLoading ? absenteeism.map((item, id) => (
-                            <AbsenteeismItem item={item} key={id} />
-                        )) : (isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No absenteeism found</Text>)}
-                    </ScrollView>
+                        {absenteeism.length > 0 && !isLoading ? (<FlatList
+                            removeClippedSubviews
+                            data={absenteeism}
+                            keyExtractor={(item, index) => `${index}`}
+                            renderItem={({ item, index }) => (
+                                <AbsenteeismItem item={item} />
+                            )}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={isLoading}
+                                    onRefresh={this.props.getAbsenteeism}
+                                />
+                            }
+                        />) : (isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> :
+                            <View>
+                                <Text style={styles.error}>No absenteeism found</Text>
+                                <TouchableOpacity onPress={this.props.getAbsenteeism}>
+                                    <Text style={{ color: SECONDARY_COLOR, textAlign: 'center' }}>Tap to refresh</Text>
+                                </TouchableOpacity>
+                            </View>)}
                 </View>
             </View>
         );

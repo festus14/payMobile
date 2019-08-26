@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
+import { View, ActivityIndicator, Text, RefreshControl, FlatList } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import PayslipItem from '../../components/PayslipItem';
@@ -31,11 +31,20 @@ class PayrollDetails extends Component {
                     onLeftPress={this.goBack}
                 />
                 <View style={styles.data}>
-                    <ScrollView>
-                    {payslips.length > 0 && !isLoading ? payslips.map((item, id) => (
-                        <PayslipItem item={item} key={id} payrolls={true}/>
-                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No payslips found</Text>}
-                    </ScrollView>
+                    {payslips.length > 0 && !isLoading ? (<FlatList
+                        removeClippedSubviews
+                        data={payslips}
+                        keyExtractor={(item, index) => `${index}`}
+                        renderItem={({ item, index }) => (
+                            <PayslipItem item={item} payrolls={true}/>
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isLoading}
+                                onRefresh={this.props.getPayrollDetails}
+                            />
+                        }
+                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No payslips found</Text>}
                 </View>
             </View>
         );

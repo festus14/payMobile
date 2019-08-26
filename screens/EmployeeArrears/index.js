@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
-import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, RefreshControl, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import ArrearsItem from '../../components/ArrearsItem';
 import { connect } from 'react-redux';
 import { getArrears } from '../../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { SECONDARY_COLOR } from '../../utility/colors';
 
 
 class EmployeeArrears extends PureComponent {
@@ -42,11 +43,25 @@ class EmployeeArrears extends PureComponent {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                    <ScrollView>
-                    {arrears.length > 0 && !isLoading ? arrears.map((item, id) => (
-                        <ArrearsItem item={item} key={id}/>
-                    )) : (isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No arrears found</Text>)}
-                    </ScrollView>
+                    {arrears.length > 0 && !isLoading ? (<FlatList
+                        removeClippedSubviews
+                        data={arrears}
+                        keyExtractor={(item, index) => `${index}`}
+                        renderItem={({ item, index }) => (
+                            <ArrearsItem item={item} />
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isLoading}
+                                onRefresh={this.props.getArrears}
+                            />
+                        }
+                    />) : (isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <View>
+                        <Text style={styles.error}>No arrears found</Text>
+                        <TouchableOpacity onPress={this.props.getArrears}>
+                            <Text style={{ color: SECONDARY_COLOR, textAlign: 'center' }}>Tap to refresh</Text>
+                        </TouchableOpacity>
+                    </View>)}
                 </View>
             </View>
         );

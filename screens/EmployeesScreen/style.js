@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 10,
     },
-    employee: {
+    item: {
         margin: 10,
         borderRadius: 5,
         justifyContent: 'space-between',

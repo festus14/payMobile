@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ActivityIndicator, ScrollView } from 'react-native';
+import { Text, View, ActivityIndicator, FlatList, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import { getPayrolls, sendPayrolls } from '../../store/actions';
 import PayrollsItem from '../../components/PayrollsItem';
@@ -23,11 +23,20 @@ class PayrollScreen extends Component {
                     title="Payrolls"
                 />
                 <View style={styles.container}>
-                    <ScrollView>
-                    {payrolls.length > 0 && !isLoading ? payrolls.map((item, id) => (
-                        <PayrollsItem token={token} downloadPayrolls={this.props.downloadPayrolls} sendPayrolls={this.props.sendPayrolls} navigation={navigation} item={item} key={id}/>
-                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No payrolls found</Text>}
-                    </ScrollView>
+                    {payrolls.length > 0 && !isLoading ? (<FlatList
+                        removeClippedSubviews
+                        data={payrolls}
+                        keyExtractor={(item, index) => `${index}`}
+                        renderItem={({ item, index }) => (
+                            <PayrollsItem token={token} downloadPayrolls={this.props.downloadPayrolls} sendPayrolls={this.props.sendPayrolls} navigation={navigation} item={item} />
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isLoading}
+                                onRefresh={this.props.getPayrolls}
+                            />
+                        }
+                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No payrolls found</Text>}
                 </View>
             </View>
         );

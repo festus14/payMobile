@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, RefreshControl, ActivityIndicator, Text } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import PaymentsItem from '../../components/PaymentsItem';
@@ -42,11 +42,20 @@ class EmployeeRecurrentPayments extends Component {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                    <ScrollView>
-                    {recurrentPayments.length > 0 && !isLoading ? recurrentPayments.map((item, id) => (
-                        <PaymentsItem item={item} key={id}/>
-                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No recurrent payments found</Text>}
-                    </ScrollView>
+                    {recurrentPayments.length > 0 && !isLoading ? (<FlatList
+                        removeClippedSubviews
+                        data={recurrentPayments}
+                        keyExtractor={(item, index) => `${index}`}
+                        renderItem={({ item, index }) => (
+                            <PaymentsItem item={item}/>
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isLoading}
+                                onRefresh={this.props.getRecurrentPayments}
+                            />
+                        }
+                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No recurrent payments found</Text>}
                 </View>
             </View>
         );

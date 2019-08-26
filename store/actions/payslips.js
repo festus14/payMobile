@@ -69,7 +69,7 @@ export const getPayslips = (userId) => {
             console.warn(resJson);
 
             await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message) {
+            if (resJson.error) {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }
