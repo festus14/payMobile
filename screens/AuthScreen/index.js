@@ -11,6 +11,7 @@ import Button from '../../components/Button'
 import DismissKeyboard from '../../components/DismissKeyboard'
 import logo from '../../assets/images/logo.jpg'
 import { SCREEN_HEIGHT } from '../../utility/constants';
+import { isAdmin } from '../../utility/helpers';
 
 class AuthScreen extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class AuthScreen extends Component {
                 value: '',
                 error: undefined,
                 validationRules: {
-                    minLength: 6
+                    minLength: 4
                 }
             },
             email: {
@@ -84,8 +85,12 @@ class AuthScreen extends Component {
                 if (this.props.error !== '') {
                     this.showError(this.props.error);
                 }
-                if (this.props.isDoneLoading && this.props.user.email && this.props.user.employee_id && this.props.error === '') {
-                    this.props.navigation.navigate('DashboardScreen')
+                if (this.props.isDoneLoading && this.props.user && this.props.user.email && this.props.user.employee_id && this.props.error === '') {
+                    if (isAdmin(this.props.user.role)) {
+                        this.props.navigation.navigate('MemberNavigator');
+                    } else {
+                        this.props.navigation.navigate('EmployeeMainNavigator');
+                    }
                 }
             }
         }

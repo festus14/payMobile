@@ -44,7 +44,7 @@ export const getEmployees = () => {
             console.warn(resJson);
 
             await dispatch(employeesUiStopLoading());
-            if (resJson.error) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }

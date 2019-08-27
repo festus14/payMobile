@@ -54,6 +54,7 @@ export const getPayslips = (userId) => {
         dispatch(payslipsUiStartLoading());
         try {
             let token = getState().auth.token;
+            console.warn(userId)
 
             let res = await fetch(`${API_URL}payrolls/payslips/${userId}`, {
                 method: 'POST',
@@ -69,7 +70,7 @@ export const getPayslips = (userId) => {
             console.warn(resJson);
 
             await dispatch(payslipsUiStopLoading());
-            if (resJson.error) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }
@@ -106,7 +107,7 @@ export const getPayments = (id) => {
             console.warn(resJson);
 
             await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }
@@ -143,7 +144,7 @@ export const getDeductions = (id) => {
             console.warn(resJson);
 
             await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }
@@ -181,7 +182,7 @@ export const getRecurrentPayments = (id) => {
             console.warn(resJson);
 
             await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }
@@ -218,7 +219,7 @@ export const getRecurrentDeductions = (id) => {
             console.warn(resJson);
 
             await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }

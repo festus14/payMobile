@@ -44,7 +44,7 @@ export const getPayrolls = () => {
             console.warn(resJson);
 
             await dispatch(payrollsUiStopLoading());
-            if (resJson.error || resJson.message) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }
@@ -87,7 +87,7 @@ export const sendPayrolls = (month, year, group_id, company_id) => {
 
             console.warn(resJson);
 
-            if (resJson.error) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }
@@ -133,7 +133,7 @@ export const getPayrollDetails = (month, year, group_id) => {
             console.warn(resJson);
 
             await dispatch(payrollsUiStopLoading());
-            if (resJson.error) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 if (resJson.message === 'Unauthenticated.') {
                     dispatch(resetApp());
                 }

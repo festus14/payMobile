@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
-import { View, FlatList, RefreshControl, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, RefreshControl, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import PaymentsItem from '../../components/PaymentsItem';
 import { connect } from 'react-redux';
 import { getRecurrentDeductions } from '../../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { SECONDARY_COLOR } from '../../utility/colors';
 
 
 class EmployeeRecurrentDeductions extends PureComponent {
@@ -18,16 +19,20 @@ class EmployeeRecurrentDeductions extends PureComponent {
     }
 
     componentDidMount() {
-        const employee = this.props.navigation.getParam('employee', {});
-        this.props.getRecurrentDeductions(employee.id);
+        this.getThis();
     }
 
     goBack = () => {
-        this.props.navigation.navigate('EmployeesScreen');
+        this.props.navigation.goBack(null);
     }
 
     openDrawer = () => {
         this.props.navigation.openDrawer();
+    }
+
+    getThis = () => {
+        const employee = this.props.navigation.getParam('employee', {});
+        this.props.getRecurrentDeductions(employee.id);
     }
 
     render() {
@@ -47,15 +52,20 @@ class EmployeeRecurrentDeductions extends PureComponent {
                         data={recurrentDeductions}
                         keyExtractor={(item, index) => `${index}`}
                         renderItem={({ item, index }) => (
-                            <PaymentsItem item={item} />
+                            <PaymentsItem item={item}  />
                         )}
                         refreshControl={
                             <RefreshControl
                                 refreshing={isLoading}
-                                onRefresh={this.props.getRecurrentDeductions}
+                                onRefresh={this.getThis}
                             />
                         }
-                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No recurrent deductions found</Text>}
+                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <View>
+                    <Text style={styles.error}>No recurrent deductions found</Text>
+                    <TouchableOpacity onPress={this.getThis}>
+                        <Text style={{ color: SECONDARY_COLOR, textAlign: 'center' }}>Tap to refresh</Text>
+                    </TouchableOpacity>
+                </View>}
                 </View>
             </View>
         );

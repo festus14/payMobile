@@ -63,7 +63,7 @@ export const logIn = (authData) => {
             console.warn(resJson);
 
             await dispatch(uiStopLoading());
-            if (resJson.error) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 dispatch(authError(resJson.error === 'Unauthorised' ? 'Email and password do not match' : 'Authentication failed, please try again'));
             } else {
                 dispatch(authError(''));
@@ -99,7 +99,7 @@ export const logout = () => {
             let resJson = await res.json();
             console.warn(resJson);
 
-            if (resJson.message || resJson.error) {
+            if (resJson.error || resJson.message === 'Unauthenticated.') {
                 alert('Logout failed, please try again');
                 dispatch(uiStopLoading());
                 return null;

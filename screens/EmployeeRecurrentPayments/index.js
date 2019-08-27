@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, FlatList, RefreshControl, ActivityIndicator, Text } from 'react-native';
+import { View, FlatList, RefreshControl, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import PaymentsItem from '../../components/PaymentsItem';
 import { connect } from 'react-redux';
 import { getRecurrentPayments } from '../../store/actions';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { SECONDARY_COLOR } from '../../utility/colors';
 
 
 class EmployeeRecurrentPayments extends Component {
@@ -18,16 +19,20 @@ class EmployeeRecurrentPayments extends Component {
     }
 
     componentDidMount() {
-        const employee = this.props.navigation.getParam('employee', {});
-        this.props.getRecurrentPayments(employee.id);
+        this.getThis();
     }
 
     goBack = () => {
-        this.props.navigation.navigate('EmployeesScreen');
+        this.props.navigation.goBack(null);
     }
 
     openDrawer = () => {
         this.props.navigation.openDrawer();
+    }
+
+    getThis = () => {
+        const employee = this.props.navigation.getParam('employee', {});
+        this.props.getRecurrentPayments(employee.id);
     }
 
     render() {
@@ -52,10 +57,15 @@ class EmployeeRecurrentPayments extends Component {
                         refreshControl={
                             <RefreshControl
                                 refreshing={isLoading}
-                                onRefresh={this.props.getRecurrentPayments}
+                                onRefresh={this.getThis}
                             />
                         }
-                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No recurrent payments found</Text>}
+                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <View>
+                    <Text style={styles.error}>No recurrent payments found</Text>
+                    <TouchableOpacity onPress={this.getThis}>
+                        <Text style={{ color: SECONDARY_COLOR, textAlign: 'center' }}>Tap to refresh</Text>
+                    </TouchableOpacity>
+                </View>}
                 </View>
             </View>
         );

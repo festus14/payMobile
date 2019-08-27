@@ -76,7 +76,7 @@ export const getUser = () => {
                 console.warn(resJson);
 
                 await dispatch(userUiStopLoading());
-                if (resJson.error) {
+                if (resJson.error || resJson.message === 'Unauthenticated.') {
                     if (resJson.message === 'Unauthenticated.') {
                         dispatch(resetApp());
                     }
@@ -109,8 +109,6 @@ export const getEmployee = () => {
                 let token = await getState().auth.token;
                 let userId = await dispatch(getUserId());
 
-                console.warn(token);
-
                 let res = await fetch(`${API_URL}employees/${userId}`, {
                     method: 'GET',
                     headers: {
@@ -124,7 +122,7 @@ export const getEmployee = () => {
                 console.warn(resJson);
 
                 await dispatch(userUiStopLoading());
-                if (resJson.error || resJson.message) {
+                if (resJson.error || resJson.message === 'Unauthenticated.') {
                     if (resJson.message === 'Unauthenticated.') {
                         dispatch(resetApp());
                     }

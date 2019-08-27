@@ -16,3 +16,12 @@ export const reformatDate = (date) => {
     date = date.split('-');
     return new Date(date[2], date[1] - 1, date[0]);
 }
+
+export function isAdmin(roles) {
+    if (!roles || roles.length < 1) {return false;}
+    for (let i = 0; i < roles.length; i++) {
+        if (roles[i].id < 4 && roles[i].id > 0) {return true;}
+    }
+
+    return false;
+}

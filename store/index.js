@@ -28,6 +28,7 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
     if (action.type === 'RESET_APP') {
+        console.warn(state);
         state = undefined;
     }
     return appReducer(state, action);

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Text, View, ScrollView, BackHandler } from 'react-native';
+import { Text, View, ScrollView } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import defaultImage from '../../assets/images/myAvatar.png';
@@ -7,7 +7,7 @@ import { PHOTO_URL } from '../../utility/constants';
 import MyImage from '../../components/MyImage';
 import EmployeeItem from '../../components/EmployeeItem';
 import { getPercentage } from '../../utility/helpers';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 export default class EmployeeDetails extends PureComponent {
@@ -16,31 +16,12 @@ export default class EmployeeDetails extends PureComponent {
         drawerLabel: 'Employee Info',
         drawerIcon: ({tintColor}) => (
             <Icon name="user" color={tintColor} size={20} />
-        )
-    }
-
-    goBack = () => {
-        if (!this.props.navigation) {
-            this.props.onGoBack();
-        } else {
-            this.props.navigation.navigate('EmployeesScreen');
-        }
-    }
-
-    componentDidMount() {
-        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            console.warn("object")
-            if (this.props.navigation) { this.props.navigation.navigate('EmployeesScreen'); }
-        });
-    }
-    
-    componentWillUnmount() {
-        this.backHandler.remove();
+        ),
     }
 
     openDrawer = () => {
         this.props.navigation.openDrawer({
-            employee: this.props.navigation ? this.props.navigation.getParam('employee', {}) : this.props.employee
+            employee: this.props.navigation ? this.props.navigation.getParam('employee', {}) : this.props.employee,
         });
     }
 
@@ -53,9 +34,9 @@ export default class EmployeeDetails extends PureComponent {
                 <Header
                     title={`${employee.firstname} ${employee.lastname}` || 'Unknown Unknown'}
                     leftIcon="md-arrow-back"
-                    onLeftPress={this.goBack}
-                    rightIcon={navigation ? "ios-menu" : undefined}
-                    onRightPress={navigation ? this.openDrawer : undefined}
+                    onLeftPress={() => navigation.goBack(null)}
+                    rightIcon="ios-menu"
+                    onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
                     <ScrollView>

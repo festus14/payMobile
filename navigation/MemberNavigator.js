@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native'
+import { Platform } from 'react-native';
 import {
     createBottomTabNavigator,
 } from 'react-navigation';
@@ -10,7 +10,7 @@ import SettingsNavigator from './SettingsNavigator';
 import PayrollNavigator from './PayrollNavigator';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
-    DARK_GREEN, GREY,
+    DARK_GREEN,
 } from '../utility/colors';
 import { SCREEN_HEIGHT } from '../utility/constants';
 
@@ -28,8 +28,6 @@ const MemberNavigator = createBottomTabNavigator({
             navigation,
         }) => ({
             tabBarIcon: ({
-                focused,
-                horizontal,
                 tintColor,
             }) => {
                 const {
@@ -65,11 +63,11 @@ const MemberNavigator = createBottomTabNavigator({
             activeTintColor: DARK_GREEN,
             inactiveTintColor: '#888',
             labelStyle: {
-                fontSize: 11
+                fontSize: 11,
             },
             tabStyle: {
                 justifyContent: 'center',
-                height: '80%'
+                height: '80%',
             },
             style: {
                 backgroundColor: '#f9f9f9',
@@ -85,12 +83,12 @@ const MemberNavigator = createBottomTabNavigator({
                         },
                     },
                     android: {
-                        elevation: 10
-                    }
+                        elevation: 10,
+                    },
                 }),
-                alignItems: 'center'
+                alignItems: 'center',
             },
-            keyboardHidesTabBar: true
+            keyboardHidesTabBar: true,
         },
     });
 

@@ -19,16 +19,20 @@ class EmployeePayslips extends PureComponent {
     }
 
     componentDidMount() {
-        const employee = this.props.navigation.getParam('employee', {});
-        this.props.getPayslips(employee.id);
+        this.getThis();
     }
 
     goBack = () => {
-        this.props.navigation.navigate('EmployeesScreen');
+        this.props.navigation.goBack(null);
     }
 
     openDrawer = () => {
         this.props.navigation.openDrawer();
+    }
+
+    getThis = () => {
+        const employee = this.props.navigation.getParam('employee', {});
+        this.props.getPayslips(employee.id);
     }
 
     render() {
@@ -53,12 +57,12 @@ class EmployeePayslips extends PureComponent {
                         refreshControl={
                             <RefreshControl
                                 refreshing={isLoading}
-                                onRefresh={this.props.getPayslips}
+                                onRefresh={this.getThis}
                             />
                         }
                     />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <View>
                         <Text style={styles.error}>No payslips found</Text>
-                        <TouchableOpacity onPress={this.props.getPayslips}>
+                        <TouchableOpacity onPress={this.getThis}>
                             <Text style={{ color: SECONDARY_COLOR, textAlign: 'center' }}>Tap to refresh</Text>
                         </TouchableOpacity>
                     </View>}

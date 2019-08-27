@@ -3,6 +3,7 @@ import RNSecureKeyStore from 'react-native-secure-key-store';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { authAutoSignIn, getUser, authSetToken } from '../../store/actions';
+import { isAdmin } from '../../utility/helpers';
 
 class AuthLoadingScreen extends PureComponent {
     componentDidMount = async () => {
@@ -12,8 +13,13 @@ class AuthLoadingScreen extends PureComponent {
             const id = parseInt(userId, 10);
             if (token && id) {
                 await this.props.authSetToken(token, id);
+                console.warn(id);
                 await this.props.getUser();
-                this.props.navigation.navigate('DashboardScreen');
+                if (isAdmin(this.props.user.role)) {
+                    this.props.navigation.navigate('MemberNavigator');
+                } else {
+                    this.props.navigation.navigate('EmployeeMainNavigator');
+                }
             } else {
                 this.props.navigation.navigate('AuthScreen');
             }
@@ -29,10 +35,15 @@ class AuthLoadingScreen extends PureComponent {
     }
 }
 
+const mapStateToProps = (state) => ({
+    employee: state.user.employee,
+    user: state.user.user,
+});
+
 const mapDispatchToProps = dispatch => ({
     onAutoSignIn: () => dispatch(authAutoSignIn()),
     authSetToken: (token, id) => dispatch(authSetToken(token, id)),
     getUser: () => dispatch(getUser()),
 });
 
-export default connect(null, mapDispatchToProps)(AuthLoadingScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(AuthLoadingScreen);

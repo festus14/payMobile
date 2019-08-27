@@ -28,8 +28,10 @@ export const resetApp = () => {
     return async (dispatch) => {
         await RNSecureKeyStore.remove('token');
         await RNSecureKeyStore.remove('userId');
-        return ({
-            type: 'RESET_APP',
-        });
+        dispatch(reset());
     };
 };
+
+const reset = () => ({
+    type: 'RESET_APP',
+});
