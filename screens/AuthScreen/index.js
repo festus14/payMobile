@@ -113,9 +113,9 @@ class AuthScreen extends Component {
         return (
             <DismissKeyboard>
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={{ flex: 1 }}>
-                    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={{ height: SCREEN_HEIGHT }}>
+                    <View style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={{ height: SCREEN_HEIGHT }}>
                         <View style={styles.image}>
-                            <Image style={{ width: '40%', height: '40%' }} resizeMode="contain" source={logo} />
+                            <Image style={{ width: '60%', height: '60%' }} resizeMode="contain" source={logo} />
                             <Text style={styles.headText}>Sign in to account</Text>
                         </View>
                         <View style={styles.form}>
@@ -163,7 +163,8 @@ class AuthScreen extends Component {
                             />
                             <TouchableOpacity style={styles.forgot}><Text style={styles.forgotText}>Forgot Password?</Text></TouchableOpacity>
                         </View>
-                    </ScrollView>
+                        <View style={{ justifyContent: 'flex-end', alignItems: 'center', padding: 30,  }}><Text style={styles.vText}>v1.0</Text></View>
+                    </View>
                 </KeyboardAvoidingView>
             </DismissKeyboard>
         )

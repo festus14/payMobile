@@ -112,8 +112,7 @@ export default class PayslipItem extends Component {
             <title>PAYSLIP </title>
             <style>
                 html {
-                    margin: 5px auto;
-                    clear: both;
+                    width: 100%;
                 }
         
                 @page {
@@ -122,28 +121,25 @@ export default class PayslipItem extends Component {
         
                 body {
                     margin: 0px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                 }
         
-                #data {10px
+                #data { 
                     background-color: #fff;
-                    font-size: ;
-                    display: inline-block;
-                    padding-left: 40px;
-                    margin-left: 120px;
-                    padding-right: 40px;
-                    padding-bottom: 40px;
-                    width: 500px;
+                    width: 90vw;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                     border: 1px solid black;
+                    border-radius: 10px;
                     border-top-left-radius: 100px;
-                    border-top-right-radius: 10px;
-                    border-bottom-left-radius: 10px;
-                    /*border-bottom-right-radius: 100px;*/
-                    border-radus: 10px;
                 }
         
                 table tr td {
                     padding-bottom: 2px !important;
-                    font-size: 10px;
+                    font-size: 22px;
                     margin-bottom: 1px !important;
                 }
             </style>
@@ -152,57 +148,57 @@ export default class PayslipItem extends Component {
         <body>
             <div id="data">
                 <br>
-                <table border=0 width='500px'>
+                <table border=0 width='80%'>
                     <tr>
-                        <td colspan="8" style="padding:1px;text-align:center;font-weight:bold;font-size:16px;">
-                            <h3>${item.company.company_name}</h3>
+                        <td colspan="8" style="padding:1px;text-align:center;font-weight:bold;font-size:28px;">
+                            <h3>${item.company.company_name || ''}</h3>
                         </td>
                     </tr>
                     <tr>
                         ${item.company.logo_position === 'top_left' ? `<td>
-                            <img src=${COMPANY_PHOTO_URL + item.company.logo} style="max-height: 80px; max-width: 100px" />
+                            <img src="${COMPANY_PHOTO_URL + item.company.logo}" style="max-height: 80px; max-width: 100px" />
                         </td>` : ''}
                         <td colspan="${item.company.logo_position === 'top_left' || item.company.logo_position === 'top_right' ? '6' : '8'}">
-                            <span style='font-weight:bold;font-size:12px;padding-right: 260px'>PAYSLIP</span>
-                            <span style='font-size:11px;font-weight:bold;padding-right: 260px'> ${item.date}</span>
+                            <span style='font-weight:bold;font-size:24px;padding-right: 260px'>PAYSLIP</span>
+                            <span style='font-size:21px;font-weight:bold;padding-right: 260px'> ${item.date}</span>
                             <br />
                         </td>
                         ${item.company.logo_position === 'top_right' ? `<td>
-                            <img src=${COMPANY_PHOTO_URL + item.company.logo} style="max-height: 80px; max-width: 100px; float: right" />
+                            <img src="${COMPANY_PHOTO_URL + item.company.logo}" style="max-height: 80px; max-width: 100px; float: right" />
                         </td>` : ''}
                     </tr>
                     <tr>
                         <td colspan='8'>
-                            <table style="font-size:11px;">
+                            <table style="font-size:21px;">
                                 <tr>
                                     <td><b> Employee:</b></td>
                                     <td colspan="6">
-                                        <b style="text-transform: uppercase; font-size: 13px">${item.info.employee.firstname} ${item.info.employee.middlename} ${item.info.employee.lastname}</b>
+                                        <b style="text-transform: uppercase; font-size: 23px">${item.info.employee.firstname || ''} ${item.info.employee.middlename || ''} ${item.info.employee.lastname || ''}</b>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Position:</td>
-                                    <td colspan="3"> ${item.info.employee.position}</td>
+                                    <td colspan="3"> ${item.info.employee.position || ''}</td>
                                 </tr>
                                 <tr>
                                     <td>Department:</td>
-                                    <td colspan="3">${item.info.department}</td>
+                                    <td colspan="3">${item.info.department || ''}</td>
                                 </tr>
                                 <tr>
                                     <td>Location:</td>
-                                    <td>${item.info.location}</td>
+                                    <td>${item.info.location || ''}</td>
                                     <td>Staff Code:</td>
-                                    <td> ${item.info.employee.staff_no}</td>
+                                    <td> ${item.info.employee.staff_no || ''}</td>
                                 </tr>
                                 <div style="clear: both"></div>
                                 <div class="row" style="padding-bottom: 20px">
-                                    <table style="font-size:9pt; float: left" width='500px' style='margin-left: 25px;' border=0>
+                                    <table style="font-size:11pt; float: left" width='100%' style='margin-left: 25px;' border=0>
                                         <tr>
                                             <td>&nbsp;</td>
-                                            <td align='right' style="font-size: 12px;">
+                                            <td align='right' style="font-size: 23px;">
                                                 <h5>Current ${item.currency ? item.currency.name : 'NGN'}</h5>
                                             </td>
-                                            <td align='right' style="font-size: 12px;">
+                                            <td align='right' style="font-size: 23px;">
                                                 <h5>YTD ${item.currency ? item.currency.name : 'NGN'}</h5>
                                             </td>
                                         </tr>
@@ -362,9 +358,9 @@ export default class PayslipItem extends Component {
                                                     <td align='right'>____________</td>
                                                 </tr>
                                                 <tr>
-                                                    <th style="font-size: 9px">Details</th>
+                                                    <th style="font-size: 20px">Details</th>
                                                     <th align='right'>Rate(NGN)</th>
-                                                    <th style="font-size: 9px">NGN(equ)</th>
+                                                    <th style="font-size: 20px">NGN(equ)</th>
                                                 </tr>
                                                 <tr>
                                                     ${Object.keys(item.disbursement_variance[key].details).map(details =>
@@ -401,7 +397,7 @@ export default class PayslipItem extends Component {
                                     <br/><br/><br/>
                                     <div style="clear: both"></div>
                                     ${item.company.logo_position === 'bottom_left' || item.company.logo_position === 'bottom_right' ? `<div style="float: right; width: 500px">
-                                        <img src=${COMPANY_PHOTO_URL + item.company.logo}
+                                        <img src="${COMPANY_PHOTO_URL + item.company.logo}"
                                             style="max-height: 80px; float: ${item.company.logo_position === 'bottom_right' ? 'right' : 'left'}; max-width: 100px">
                                     </div>` : ''}
                                 </div>
@@ -410,7 +406,7 @@ export default class PayslipItem extends Component {
                     </tr>
                 </table>
             </div>
-            <a href="#" style='font-size:8px;font-weight:bold; color: red; position: fixed; bottom: 10px; left: 40px;'>Generated  at ${new Date(Date.now())}</a>
+            <a href="#" style='font-size:15px;font-weight:bold; color: red; position: fixed; bottom: 10px; left: 40px;'>Generated  at ${new Date(Date.now())}</a>
         </body>
         </html>
         `);

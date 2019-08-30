@@ -1,4 +1,5 @@
 import RNSecureKeyStore from 'react-native-secure-key-store';
+import NavigationService from '../../NavigationService';
 
 // ui actions
 export { uiStartLoading, uiStopLoading, payrollsUiStartLoading, payrollsUiStopLoading, reportsUiStartLoading, reportsUiStopLoading, userUiStartLoading, userUiStopLoading, employeesUiStartLoading, employeesUiStopLoading, payslipsUiStartLoading, payslipsUiStopLoading, absenteeismUiStartLoading, absenteeismUiStopLoading, arrearsUiStartLoading, arrearsUiStopLoading } from './ui';
@@ -29,6 +30,7 @@ export const resetApp = () => {
         await RNSecureKeyStore.remove('token');
         await RNSecureKeyStore.remove('userId');
         dispatch(reset());
+        NavigationService.navigate("AuthScreen")
     };
 };
 

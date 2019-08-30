@@ -1,33 +1,38 @@
 import {
     StyleSheet,
-    Platform
-} from 'react-native'
+    Platform,
+} from 'react-native';
 import {
     SCREEN_HEIGHT,
-    SCREEN_WIDTH
-} from '../../utility/constants'
+} from '../../utility/constants';
 
-import { GREY, MAIN_COLOR } from '../../utility/colors'
+import { GREY, MAIN_COLOR, LIGHT_GREY } from '../../utility/colors';
 
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        justifyContent: 'space-around'
     },
     image: {
         width: '100%',
-        height: SCREEN_HEIGHT * 0.35,
+        height: SCREEN_HEIGHT * 0.20,
         justifyContent: 'space-around',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     headText: {
         fontSize: 20,
         fontFamily: 'Poppins-Bold',
-        color: GREY
+        color: GREY,
+    },
+    vText: {
+        color: LIGHT_GREY,
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
     form: {
-        padding: 30,
-        height: SCREEN_HEIGHT * 0.55,
+        padding: 20,
+        height: SCREEN_HEIGHT * 0.45,
         marginHorizontal: 20,
         ...Platform.select({
             ios: {
@@ -35,42 +40,42 @@ export const styles = StyleSheet.create({
                 shadowOpacity: 0.09,
                 shadowOffset: {
                     width: 0,
-                    height: 2
+                    height: 2,
                 },
             },
             android: {
-                elevation: 4
-            }
+                elevation: 2,
+            },
         }),
         borderRadius: 10,
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
     },
     error: {
         color: '#f00',
         fontSize: 12,
         alignSelf: 'center',
-        fontFamily: 'Poppins-Regular'
+        fontFamily: 'Poppins-Regular',
     },
     remember: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     rememberText: {
         color: GREY,
-        fontSize: 12
+        fontSize: 12,
     },
     btn: {
         width: '50%',
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-end',
     },
     btnText: {
         fontWeight: 'normal',
         fontSize: 16,
-        fontFamily: 'Poppins-Regular'
+        fontFamily: 'Poppins-Regular',
     },
     forgotText: {
         color: MAIN_COLOR,
-        alignSelf: 'flex-end'
-    }
-})
+        alignSelf: 'flex-end',
+    },
+});

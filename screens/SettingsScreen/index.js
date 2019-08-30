@@ -25,10 +25,6 @@ class SettingsScreen extends Component {
         };
     }
 
-    componentDidMount() {
-        console.warn(this.props.notifications)
-    }
-
 
     onPressItem = title => {
         switch (title) {
@@ -46,7 +42,6 @@ class SettingsScreen extends Component {
 
     changePassword = () => {
         Linking.canOpenURL(url).then(supported => {
-            console.warn(url)
             if (supported) {
                 Linking.openURL(url);
             } else {
@@ -70,10 +65,7 @@ class SettingsScreen extends Component {
             [
                 {
                     text: 'Yes', onPress: async () => {
-                        let done = await this.props.onLogOut();
-                        if (done) {
-                            this.props.navigation.navigate('AuthScreen');
-                        }
+                        await this.props.onLogOut();
                     },
                 },
                 {
