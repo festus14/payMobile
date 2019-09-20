@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import {
     SET_PAYROLLS, SET_PAYROLL_DETAILS,
 } from './actionTypes';
@@ -9,6 +8,7 @@ import {
     payrollsUiStartLoading,
     payrollsUiStopLoading,
     resetApp,
+    getAuthToken,
 } from './';
 
 export const setPayrolls = payrolls => {
@@ -29,7 +29,7 @@ export const getPayrolls = () => {
     return async (dispatch, getState) => {
         dispatch(payrollsUiStartLoading());
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             let res = await fetch(`${API_URL}payroll_approvals`, {
                 method: 'GET',
@@ -65,7 +65,7 @@ export const getPayrolls = () => {
 export const sendPayrolls = (month, year, group_id, company_id) => {
     return async (dispatch, getState) => {
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             let body = JSON.stringify({
                 month,
@@ -110,7 +110,7 @@ export const getPayrollDetails = (month, year, group_id) => {
     return async (dispatch, getState) => {
         dispatch(payrollsUiStartLoading());
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             let body = month ? JSON.stringify({
                 month,

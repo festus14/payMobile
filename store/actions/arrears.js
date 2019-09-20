@@ -8,6 +8,7 @@ import {
     arrearsUiStartLoading,
     arrearsUiStopLoading,
     resetApp,
+    getAuthToken,
 } from './';
 
 export const setArrears = arrears => {
@@ -21,7 +22,7 @@ export const getArrears = (id) => {
     return async (dispatch, getState) => {
         dispatch(arrearsUiStartLoading());
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             let res = await fetch(`${API_URL}employeeareas/employee/${id}`, {
                 method: 'GET',

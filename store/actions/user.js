@@ -1,6 +1,5 @@
 import {
     SET_USER,
-    RESET_USER,
     SET_EMPLOYEE,
 } from './actionTypes';
 import {
@@ -10,8 +9,10 @@ import {
     userUiStartLoading,
     userUiStopLoading,
     resetApp,
+    getAuthToken,
 } from './';
 import { setNotifications } from './employees';
+import RNSecureKeyStore from 'react-native-secure-key-store';
 
 export const setUser = (user) => {
     return {
@@ -27,29 +28,18 @@ export const setEmployee = (employee) => {
     };
 };
 
-export const resetUser = (user) => {
-    return {
-        type: RESET_USER,
-    };
-};
-
 export const getUserId = () => {
     return async (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
+        try {
             let userId = await getState().auth.userId;
-
             if (!userId) {
-                try {
-                    userId = await getState().auth.userId;
-
-                    resolve(parseInt(userId));
-                } catch (error) {
-                    reject(error);
-                }
-            } else {
-                resolve(userId);
+                userId = await RNSecureKeyStore.get('userId');
             }
-        });
+            return userId;
+        } catch (error) {
+            console.warn(error);
+            return false;
+        }
     };
 };
 
@@ -60,7 +50,7 @@ export const getUser = () => {
             let userData = await getState().user.user;
 
             if (!userData.email) {
-                let token = getState().auth.token;
+                let token = await dispatch(getAuthToken());
                 let userId = await dispatch(getUserId());
 
                 let res = await fetch(`${API_URL}users/${userId}`, {
@@ -103,11 +93,13 @@ export const getEmployee = () => {
     return async (dispatch, getState) => {
         dispatch(userUiStartLoading());
         try {
-            let userData = await getState().user.employee;
+            let userData = getState().user.employee;
 
             if (!userData.first_name) {
-                let token = await getState().auth.token;
+                let token = await dispatch(getAuthToken());
                 let userId = await dispatch(getUserId());
+
+                console.warn(token);
 
                 let res = await fetch(`${API_URL}employees/${userId}`, {
                     method: 'GET',
@@ -118,7 +110,6 @@ export const getEmployee = () => {
                     },
                 });
                 let resJson = await res.json();
-
                 console.warn(resJson);
 
                 await dispatch(userUiStopLoading());

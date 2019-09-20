@@ -15,7 +15,7 @@ export const getMonth = (val) => {
 export const reformatDate = (date) => {
     date = date.split('-');
     return new Date(date[2], date[1] - 1, date[0]);
-}
+};
 
 export function isAdmin(roles) {
     if (!roles || roles.length < 1) {return false;}
@@ -24,4 +24,16 @@ export function isAdmin(roles) {
     }
 
     return false;
+}
+
+export async function sendRequest(url, method = 'GET', body, headers = {}, token) {
+    return await fetch(url, {
+        method: method,
+        body: JSON.stringify(body),
+        headers: {
+            'Content-Type': headers.contentType || 'application/json',
+            'Accept': headers.accept || 'application/json',
+            'Authorization': 'Bearer ' + token,
+        },
+    });
 }

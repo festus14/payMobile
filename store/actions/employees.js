@@ -9,6 +9,7 @@ import {
     employeesUiStartLoading,
     employeesUiStopLoading,
     resetApp,
+    getAuthToken,
 } from './';
 
 export const setEmployees = employees => {
@@ -29,7 +30,7 @@ export const getEmployees = () => {
     return async (dispatch, getState) => {
         dispatch(employeesUiStartLoading());
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             let res = await fetch(`${API_URL}employees`, {
                 method: 'GET',
@@ -65,7 +66,7 @@ export const getEmployees = () => {
 export const updateNotifications = (notifications, notificationId) => {
     return async (dispatch, getState) => {
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
             let company_id = getState().user.employee.company_id;
 
             console.warn(notificationId);

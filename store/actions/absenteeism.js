@@ -8,6 +8,7 @@ import {
     absenteeismUiStartLoading,
     absenteeismUiStopLoading,
     resetApp,
+    getAuthToken,
 } from './';
 
 export const setAbsenteeism = absenteeism => {
@@ -21,7 +22,7 @@ export const getAbsenteeism = (id) => {
     return async (dispatch, getState) => {
         dispatch(absenteeismUiStartLoading());
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             let res = await fetch(`${API_URL}employeeabsents/employee/${id}`, {
                 method: 'GET',

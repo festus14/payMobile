@@ -1,31 +1,28 @@
-import React, { Component } from 'react'
-import { Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { connect } from 'react-redux';
 import { logIn, authError } from '../../store/actions';
-import { GREY } from '../../utility/colors'
-import validate from '../../utility/validation'
+import { GREY } from '../../utility/colors';
+import validate from '../../utility/validation';
 import { styles } from './style';
-import InputText from '../../components/InputText'
-import Checkbox from '../../components/Checkbox'
-import Button from '../../components/Button'
-import DismissKeyboard from '../../components/DismissKeyboard'
-import logo from '../../assets/images/logo.jpg'
+import InputText from '../../components/InputText';
+import Button from '../../components/Button';
+import DismissKeyboard from '../../components/DismissKeyboard';
+import logo from '../../assets/images/logo.jpg';
 import { SCREEN_HEIGHT } from '../../utility/constants';
-import { isAdmin } from '../../utility/helpers';
 
 class AuthScreen extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isChecked: false,
             password: {
                 field: 'Password',
                 value: '',
                 error: undefined,
                 validationRules: {
-                    minLength: 4
-                }
+                    minLength: 4,
+                },
             },
             email: {
                 field: 'Email',
@@ -33,15 +30,21 @@ class AuthScreen extends Component {
                 error: undefined,
                 validationRules: {
                     isEmail: true,
-                    minLength: 5
-                }
+                    minLength: 5,
+                },
             },
-            error: ''
-        }
+            error: '',
+        };
     }
 
-    toggleCheck = () => {
-        this.setState({ isChecked: !this.state.isChecked })
+    validateUser = () => {
+        const { email, password } = this.state;
+        let error = '';
+        error = validate(email.value, email.validationRules, email.field);
+        if (error) { return error; }
+        error = validate(password.value, password.validationRules, password.field);
+        if (error) { return error; }
+        return '';
     }
 
     loginHandler = async () => {
@@ -51,68 +54,48 @@ class AuthScreen extends Component {
                     ...prevState,
                     email: {
                         ...prevState.email,
-                        error: validate(prevState.email.value, prevState.email.validationRules, prevState.email.field)
+                        error: validate(prevState.email.value, prevState.email.validationRules, prevState.email.field),
                     },
                     password: {
                         ...prevState.password,
-                        error: validate(prevState.password.value, prevState.password.validationRules, prevState.password.field)
+                        error: validate(prevState.password.value, prevState.password.validationRules, prevState.password.field),
                     },
-                }))
+                }));
 
-                console.warn(this.state.email);
+                let error = this.validateUser();
 
-                if (this.state.email.error !== undefined) {
-                    await this.props.authError(this.state.email.error)
-                } else if (this.state.password.error !== undefined) {
-                    await this.props.authError(this.state.password.error)
-                } else {
-                    this.props.authError('')
+                if (error) { this.showError(error); }
+                else {
                     const authData = {
                         email: this.state.email.value.toLowerCase(),
                         password: this.state.password.value,
-                    }
-                    await this.props.onLogIn(authData)
+                    };
+
+                    error = await this.props.onLogIn(authData);
                 }
             } catch (error) {
-                console.warn(error)
-            }
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps !== this.props) {
-            if (!this.props.isLoading) {
-                if (this.props.error !== '') {
-                    this.showError(this.props.error);
-                }
-                if (this.props.isDoneLoading && this.props.user && this.props.user.email && this.props.user.employee_id && this.props.error === '') {
-                    if (isAdmin(this.props.user.role)) {
-                        this.props.navigation.navigate('MemberNavigator');
-                    } else {
-                        this.props.navigation.navigate('EmployeeMainNavigator');
-                    }
-                }
+                console.warn(error);
             }
         }
     }
 
     showError = (error) => {
-        this.setState({ error })
+        this.setState({ error });
     }
 
     onChangeText = (input, type) => {
         this.setState({
             [type]: {
                 ...this.state[type],
-                value: input
-            }
-        })
+                value: input,
+            },
+        });
     }
 
     render() {
         return (
             <DismissKeyboard>
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={{ flex: 1 }}>
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{ flex: 1 }}>
                     <View style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={{ height: SCREEN_HEIGHT }}>
                         <View style={styles.image}>
                             <Image style={{ width: '60%', height: '60%' }} resizeMode="contain" source={logo} />
@@ -127,7 +110,7 @@ class AuthScreen extends Component {
                                 iconSize={16}
                                 iconColor={GREY}
                                 value={this.state.email.value}
-                                onSubmitEditing={() => { this.password.focus() }}
+                                onSubmitEditing={() => { this.password.focus(); }}
                                 onChangeText={input => this.onChangeText(input, 'email')}
                                 autoCapitalize="none"
                                 returnKeyType="next"
@@ -140,20 +123,12 @@ class AuthScreen extends Component {
                                 iconSize={16}
                                 iconColor={GREY}
                                 value={this.state.password.value}
-                                getRef={input => { this.password = input }}
+                                getRef={input => { this.password = input; }}
                                 onChangeText={input => this.onChangeText(input, 'password')}
                                 autoCapitalize="none"
                                 returnKeyTpe="go"
                                 onSubmitEditing={this.loginHandler}
                             />
-                            <View style={styles.remember}>
-                                <Checkbox
-                                    isChecked={this.state.isChecked}
-                                    onPress={this.toggleCheck}
-                                    containerStyle={{ marginRight: 8, width: 14, height: 14 }}
-                                />
-                                <Text style={styles.rememberText}>Remember Me?</Text>
-                            </View>
                             <Button
                                 text="Sign In"
                                 style={styles.btn}
@@ -163,11 +138,11 @@ class AuthScreen extends Component {
                             />
                             <TouchableOpacity style={styles.forgot}><Text style={styles.forgotText}>Forgot Password?</Text></TouchableOpacity>
                         </View>
-                        <View style={{ justifyContent: 'flex-end', alignItems: 'center', padding: 30,  }}><Text style={styles.vText}>v1.0</Text></View>
+                        <View style={{ justifyContent: 'flex-end', alignItems: 'center', padding: 30  }}><Text style={styles.vText}>v1.0</Text></View>
                     </View>
                 </KeyboardAvoidingView>
             </DismissKeyboard>
-        )
+        );
     }
 }
 
@@ -175,12 +150,12 @@ const mapStateToProps = state => ({
     error: state.auth.error,
     isLoading: state.ui.isLoading,
     isDoneLoading: state.ui.isDoneLoading,
-    user: state.user.user
-})
+    user: state.user.user,
+});
 
 const mapDispatchToProps = dispatch => ({
     onLogIn: (authData) => dispatch(logIn(authData)),
-    authError: (error) => dispatch(authError(error))
-})
+    authError: (error) => dispatch(authError(error)),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(AuthScreen);

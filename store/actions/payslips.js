@@ -3,7 +3,7 @@ import {
     SET_PAYMENTS,
     SET_RECURRENT_PAYMENTS,
     SET_DEDUCTIONS,
-    SET_RECURRENT_DEDUCTIONS
+    SET_RECURRENT_DEDUCTIONS,
 } from './actionTypes';
 import {
     API_URL,
@@ -12,6 +12,7 @@ import {
     payslipsUiStartLoading,
     payslipsUiStopLoading,
     resetApp,
+    getAuthToken,
 } from './';
 
 export const setPayslips = payslips => {
@@ -53,8 +54,7 @@ export const getPayslips = (userId) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
-            let token = getState().auth.token;
-            console.warn(userId)
+            let token = await dispatch(getAuthToken());
 
             let res = await fetch(`${API_URL}payrolls/payslips/${userId}`, {
                 method: 'POST',
@@ -94,7 +94,7 @@ export const getPayments = (id) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             let res = await fetch(`${API_URL}employee_payments/employee/${id}`, {
                 method: 'GET',
@@ -131,7 +131,7 @@ export const getDeductions = (id) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             let res = await fetch(`${API_URL}employee_deductions/employee/${id}`, {
                 method: 'GET',
@@ -169,7 +169,7 @@ export const getRecurrentPayments = (id) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             let res = await fetch(`${API_URL}employee_recurrent_payments/employee/${id}`, {
                 method: 'GET',
@@ -206,7 +206,7 @@ export const getRecurrentDeductions = (id) => {
     return async (dispatch, getState) => {
         dispatch(payslipsUiStartLoading());
         try {
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             let res = await fetch(`${API_URL}employee_recurrent_deductions/employee/${id}`, {
                 method: 'GET',
