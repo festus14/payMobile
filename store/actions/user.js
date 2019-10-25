@@ -97,11 +97,11 @@ export const getEmployee = () => {
 
             if (!userData.first_name) {
                 let token = await dispatch(getAuthToken());
-                let userId = await dispatch(getUserId());
+                let employeeId = getState().user.user.employee_id;
 
                 console.warn(token);
 
-                let res = await fetch(`${API_URL}employees/${userId}`, {
+                let res = await fetch(`${API_URL}employees/${employeeId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

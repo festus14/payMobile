@@ -139,7 +139,7 @@ export const logout = () => {
         try {
             dispatch(uiStartLoading());
 
-            let token = getState().auth.token;
+            let token = await dispatch(getAuthToken());
 
             setTimeout(() => {
                 if (!res) {

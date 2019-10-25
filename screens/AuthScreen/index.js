@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Platform, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { logIn, authError } from '../../store/actions';
 import { GREY } from '../../utility/colors';
@@ -10,6 +10,8 @@ import Button from '../../components/Button';
 import DismissKeyboard from '../../components/DismissKeyboard';
 import logo from '../../assets/images/logo.jpg';
 import { SCREEN_HEIGHT } from '../../utility/constants';
+
+const url = 'https://portal.ipaysuite.com/password/reset';
 
 class AuthScreen extends Component {
     constructor(props) {
@@ -72,6 +74,7 @@ class AuthScreen extends Component {
                     };
 
                     error = await this.props.onLogIn(authData);
+                    if (error) { this.showError(error); }
                 }
             } catch (error) {
                 console.warn(error);
@@ -91,6 +94,16 @@ class AuthScreen extends Component {
             },
         });
     }
+
+    changePassword = () => {
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.warn("Don't know how to open URI: " + url);
+            }
+        });
+    };
 
     render() {
         return (
@@ -136,7 +149,7 @@ class AuthScreen extends Component {
                                 isLoading={this.props.isLoading}
                                 onPress={this.loginHandler}
                             />
-                            <TouchableOpacity style={styles.forgot}><Text style={styles.forgotText}>Forgot Password?</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={this.changePassword} style={styles.forgot}><Text style={styles.forgotText}>Forgot Password?</Text></TouchableOpacity>
                         </View>
                         <View style={{ justifyContent: 'flex-end', alignItems: 'center', padding: 30  }}><Text style={styles.vText}>v1.0</Text></View>
                     </View>

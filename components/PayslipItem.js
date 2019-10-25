@@ -23,14 +23,16 @@ export default class PayslipItem extends Component {
 
     createPdf = async () => {
         await this.requestExternalWritePermission();
-        let options = {
-            html: this.html(),
-            fileName: `payslip-${this.props.item.info.employee.staff_no}(${this.props.item.date})`,
-            directory: 'Documents',
-        };
+        if (this.state.isPermitted) {
+            let options = {
+                html: this.html(),
+                fileName: `payslip-${this.props.item.info.employee.staff_no}(${this.props.item.date})`,
+                directory: 'Documents',
+            };
 
-        let file = await RNHTMLtoPDF.convert(options);
-        alert('Saved at: ' + file.filePath);
+            let file = await RNHTMLtoPDF.convert(options);
+            alert('Saved at: ' + file.filePath);
+        }
     }
 
     async requestExternalWritePermission() {
@@ -38,7 +40,7 @@ export default class PayslipItem extends Component {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
                 {
-                    title: 'iPyaSuite External Storage Write Permission',
+                    title: 'iPaySuite External Storage Write Permission',
                     message:
                         'iPaySuite needs access to Storage data in your SD Card ',
                 }
@@ -78,7 +80,7 @@ export default class PayslipItem extends Component {
                     </View>
                 </Modal>
                 <View style={styles.top}>
-                    {item.info && <Text style={[styles.topText, { color: DARK_GREEN, }]}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.info.employee.lastname.toUpperCase()}</Text>, {item.info.employee.firstname}</Text>}
+                    {item.info && <Text style={[styles.topText, { color: DARK_GREEN }]}><Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.info.employee.lastname.toUpperCase()}</Text>, {item.info.employee.firstname}</Text>}
                     <Text style={styles.topText}>{item.date}</Text>
                 </View>
                 {item.info && <View style={styles.middle}>
