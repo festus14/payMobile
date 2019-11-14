@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, ActivityIndicator } from 'react-native';
+import { Text, View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import { connect } from 'react-redux';
 import ReportsItem from '../../components/ReportsItem';
 import { getPayrolls } from '../../store/actions';
+import { SECONDARY_COLOR } from '../../utility/colors';
 
 const data = [
     'Master',
@@ -40,7 +41,11 @@ class ReportsScreen extends Component {
                     <ScrollView>
                     {payrolls.length > 0 && !isLoading ? data.map((item, id) => (
                         <ReportsItem navigation={navigation} item={item} key={id} payroll={payrolls[0]} />
-                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No payrolls found</Text>}
+                    )) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> :
+                    <View style={styles.error}>
+                        <Text style={styles.errorText}>No payrolls found</Text>
+                        <TouchableOpacity onPress={this.props.getPayrolls}><Text style={[styles.errorText, { color: SECONDARY_COLOR }]}>Tap to refresh</Text></TouchableOpacity>
+                    </View>}
                     </ScrollView>
                 </View>
             </View>

@@ -6,11 +6,16 @@ export const styles = StyleSheet.create({
         flex: 1,
     },
     error: {
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        flexDirection: 'column',
+    },
+    errorText: {
         color: GREY,
-        alignSelf: 'center',
         fontSize: 16,
         fontFamily: 'Poppins-SemiBold',
         textAlign: 'center',
-        marginTop: 10,
     },
 });

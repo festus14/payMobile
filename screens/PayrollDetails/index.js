@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, ActivityIndicator, Text, RefreshControl, FlatList } from 'react-native';
+import { View, ActivityIndicator, Text, RefreshControl, FlatList, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import { styles } from './style';
 import PayslipItem from '../../components/PayslipItem';
 import { connect } from 'react-redux';
 import { getPayrollDetails } from '../../store/actions';
+import { SECONDARY_COLOR } from '../../utility/colors';
 
 
 class PayrollDetails extends Component {
@@ -13,6 +14,10 @@ class PayrollDetails extends Component {
     }
 
     componentDidMount() {
+        this.getThis();
+    }
+
+    getThis = () => {
         const item = this.props.navigation.getParam('item', {});
         this.props.getPayrollDetails(item.month, item.year, item.group_id);
     }
@@ -41,10 +46,14 @@ class PayrollDetails extends Component {
                         refreshControl={
                             <RefreshControl
                                 refreshing={isLoading}
-                                onRefresh={this.props.getPayrollDetails}
+                                onRefresh={this.getThis}
                             />
                         }
-                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No payslips found</Text>}
+                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> :
+                    <View style={styles.error}>
+                        <Text style={styles.errorText}>No payslip found</Text>
+                        <TouchableOpacity onPress={this.getThis}><Text style={[styles.errorText, { color: SECONDARY_COLOR }]}>Tap to refresh</Text></TouchableOpacity>
+                    </View>}
                 </View>
             </View>
         );

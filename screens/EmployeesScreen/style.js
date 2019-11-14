@@ -1,20 +1,25 @@
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet, Platform } from 'react-native';
 import { GREY, ALMOST_BLACK, LIGHT_GREY } from '../../utility/colors';
 
 export const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
     data: {
         flex: 1,
     },
     error: {
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        flexDirection: 'column',
+    },
+    errorText: {
         color: GREY,
-        alignSelf: 'center',
         fontSize: 16,
         fontFamily: 'Poppins-SemiBold',
         textAlign: 'center',
-        marginTop: 10,
     },
     item: {
         margin: 10,
@@ -28,24 +33,24 @@ export const styles = StyleSheet.create({
                 shadowOpacity: 0.09,
                 shadowOffset: {
                     width: 0,
-                    height: 2
+                    height: 2,
                 },
             },
             android: {
-                elevation: 4
-            }
+                elevation: 4,
+            },
         }),
-        backgroundColor: '#f6f6f6'
+        backgroundColor: '#f6f6f6',
     },
     image: {
         height: 60,
         width: 60,
-        borderRadius: 1000
+        borderRadius: 1000,
     },
     top: {
         width: '100%',
         paddingHorizontal: 10,
-        paddingTop: 10
+        paddingTop: 10,
     },
     topText: {
         fontWeight: 'bold',
@@ -60,16 +65,16 @@ export const styles = StyleSheet.create({
     name: {
         color: ALMOST_BLACK,
         fontSize: 15,
-        fontWeight: '200'
+        fontWeight: '200',
     },
     staffId: {
         fontSize: 12,
         color: LIGHT_GREY,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     net: {
         fontSize: 20,
-        marginTop: 5
+        marginTop: 5,
     },
     bottom: {
         backgroundColor: '#fff',
@@ -78,10 +83,10 @@ export const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 10,
         height: '25%',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     bottomText: {
         color: GREY,
         fontSize: 15,
-    }
-})
+    },
+});

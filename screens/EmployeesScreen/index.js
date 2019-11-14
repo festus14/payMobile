@@ -8,6 +8,7 @@ import defaultImage from '../../assets/images/myAvatar.png';
 import { PHOTO_URL } from '../../utility/constants';
 import MyImage from '../../components/MyImage';
 import { getPercentage } from '../../utility/helpers';
+import { SECONDARY_COLOR } from '../../utility/colors';
 
 class EmployeesScreen extends Component {
     static navigationOptions = {
@@ -57,7 +58,11 @@ class EmployeesScreen extends Component {
                             />
                         }
                     />)
-                        : (isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No employees found</Text>)}
+                        : (isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> :
+                            <View style={styles.error}>
+                                <Text style={styles.errorText}>No employee found</Text>
+                                <TouchableOpacity onPress={this.props.getEmployees}><Text style={[styles.errorText, { color: SECONDARY_COLOR }]}>Tap to refresh</Text></TouchableOpacity>
+                            </View>)}
                 </View>
             </View>
         );

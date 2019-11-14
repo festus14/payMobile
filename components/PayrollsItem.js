@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Platform, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, Platform, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { DARK_GREEN, LIGHTER_GREY } from '../utility/colors';
 import { getMonth } from '../utility/helpers';
 import EmployeeItem from './EmployeeItem';
@@ -34,6 +34,24 @@ export default class PayslipItem extends Component {
         } catch (e) {
             this.setState({ isSending: false });
         }
+    }
+
+    onSendPayrolls = () => {
+        Alert.alert(
+            'Send Payslips to employees',
+            'Are you sure you want to send all payslips in this payroll?',
+            [
+                {
+                    text: 'Yes', onPress: this.sendPayrolls,
+                },
+                {
+                    text: 'No',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+            ],
+            { cancelable: false },
+        );
     }
 
     // function that downloads payroll payslips
@@ -85,6 +103,7 @@ export default class PayslipItem extends Component {
 
     render() {
         const { item, navigation } = this.props;
+        console.log(item)
 
         return (
             <View style={[styles.section, { backgroundColor: item.supervisor_approval.toLowerCase() === 'approved' ? DARK_GREEN : '#a00' }]}>
@@ -104,7 +123,7 @@ export default class PayslipItem extends Component {
                             <Icon name="ios-download" size={25} color="#FFF" />
                         </TouchableOpacity>} */}
                     {this.state.isSending ?
-                        <ActivityIndicator color="#fff" size={25} /> : <TouchableOpacity disabled={this.state.isSending} onPress={this.sendPayrolls}>
+                        <ActivityIndicator color="#fff" size={25} /> : <TouchableOpacity disabled={this.state.isSending} onPress={this.onSendPayrolls}>
                             <Icon name="ios-send" size={25} color="#FFF" />
                         </TouchableOpacity>}
                 </View>

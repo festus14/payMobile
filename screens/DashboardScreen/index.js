@@ -15,7 +15,7 @@ class DashboardScreen extends PureComponent {
     }
 
     componentDidMount() {
-        if (!this.props.employee.firstname) {
+        if (!this.props.employee.firstname && this.props.user.employee_id) {
             this.props.getEmployee();
         }
     }
@@ -32,15 +32,15 @@ class DashboardScreen extends PureComponent {
                 <View style={styles.imageContainer}><MyImage resizeMode="contain" style={styles.image} source={user ? [{ uri: PHOTO_URL + user.picture }, defaultImage] : [defaultImage]} /></View>
                 <Text style={styles.name}>{user.name || 'Moore Dagogo-Hart'}</Text>
                 <Text style={styles.email}>{user.email || 'mail@domain.com'}</Text>
-                <Text style={styles.company}>{employee.company ? employee.company.name : ''}</Text>
+                <Text style={styles.company}>{employee.company ? employee.company.name : 'Not an employee'}</Text>
                 <Text style={styles.staffId}>{employee.department ? employee.department.name : ''}</Text>
                 <Text style={styles.staffId}>{employee.location ? employee.location.name : ''}</Text>
                 <Text style={styles.staffId}>{employee.firstname ? employee.staff_no : ''}</Text>
-                <Button
+                {employee.firstname && <Button
                     text="Details"
                     style={{ backgroundColor: DARK_GREEN, marginTop: 20 }}
                     onPress={() => this.props.navigation.navigate('EmployeeDetailsDashboard', { employee: { ...employee, users: employee.users || user } })}
-                />
+                />}
             </SafeAreaView>
         );
     }

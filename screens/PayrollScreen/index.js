@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, ActivityIndicator, FlatList, RefreshControl } from 'react-native';
+import { Text, View, ActivityIndicator, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { getPayrolls, sendPayrolls } from '../../store/actions';
 import PayrollsItem from '../../components/PayrollsItem';
 import Header from '../../components/Header';
 import { styles } from './style.js';
+import { SECONDARY_COLOR } from '../../utility/colors';
 
 class PayrollScreen extends Component {
     static navigationOptions = {
@@ -36,7 +37,11 @@ class PayrollScreen extends Component {
                                 onRefresh={this.props.getPayrolls}
                             />
                         }
-                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> : <Text style={styles.error}>No payrolls found</Text>}
+                    />) : isLoading ? <ActivityIndicator style={{ marginTop: 10 }} /> :
+                    <View style={styles.error}>
+                        <Text style={styles.errorText}>No payrolls found</Text>
+                        <TouchableOpacity onPress={this.props.getPayrolls}><Text style={[styles.errorText, { color: SECONDARY_COLOR }]}>Tap to refresh</Text></TouchableOpacity>
+                    </View>}
                 </View>
             </View>
         );
