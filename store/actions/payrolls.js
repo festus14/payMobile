@@ -104,8 +104,6 @@ export const sendPayrolls = (month, year, group_id, company_id) => {
     };
 };
 
-
-
 export const getPayrollDetails = (month, year, group_id) => {
     return async (dispatch, getState) => {
         dispatch(payrollsUiStartLoading());

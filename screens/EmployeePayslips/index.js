@@ -47,7 +47,7 @@ class EmployeePayslips extends PureComponent {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                    {payslips.length > 0 && !isLoading ? (<FlatList
+                    {payslips && payslips.length > 0 && !isLoading ? (<FlatList
                         removeClippedSubviews
                         data={payslips}
                         keyExtractor={(item, index) => `${index}`}

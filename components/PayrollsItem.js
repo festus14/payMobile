@@ -4,8 +4,8 @@ import { DARK_GREEN, LIGHTER_GREY } from '../utility/colors';
 import { getMonth } from '../utility/helpers';
 import EmployeeItem from './EmployeeItem';
 import Icon from 'react-native-vector-icons/Ionicons';
-// import RNFetchBlob from 'rn-fetch-blob';
-
+import downloadManager from 'react-native-simple-download-manager';
+import { API_URL } from '../utility/constants';
 
 export default class PayslipItem extends Component {
     constructor(props) {
@@ -54,56 +54,62 @@ export default class PayslipItem extends Component {
         );
     }
 
-    // function that downloads payroll payslips
-    // downloadPayrolls = async () => {
-    //     try {
-    //         console.warn("object");
-    //         const { item, downloadPayrolls, token } = this.props;
-    //         await this.setState({
-    //             isDownloading: true,
-    //         });
+    downloadPayrolls = async () => {
+        try {
+            const { item, getToken } = this.props;
+            const token = await getToken();
+            console.warn(token);
+            await this.setState({
+                isDownloading: true,
+            });
 
-    //         let resJson = await downloadPayrolls(item.month, item.year, item.group_id, item.company_id);
+            let filename = `payroll-${item.group_id}.zip`;
 
-    //         if (!resJson) { throw new Error(); }
+            const config = {
+                downloadTitle: 'iPaySuite',
+                downloadDescription: `Downloading payslip (${filename})`,
+                saveAsName: filename,
+                allowedInRoaming: true,
+                allowedInMetered: true,
+                showInDownloads: true,
+                external: false,
+            };
 
-    //         let dirs = RNFetchBlob.fs.dirs;
+            let file = await downloadManager.download(`${API_URL}download_all_payslip?month=${item.month}&year=${item.year}&unique_id=${item.group_id}`, { 'Authorization': 'Bearer ' + token, 'Accept': 'application/zip' }, config);
+            console.warn(file);
 
-    //         console.warn(dirs);
+            alert('Payroll saved successfully');
 
-    //         let filename = `payroll-${item.group_id}.zip`;
+            await this.setState({
+                isDownloading: false,
+            });
+        } catch (e) {
+            await this.setState({ isDownloading: false });
+            alert('Download failed, please try again');
+            console.warn(e);
+        }
+    }
 
-    //         let file = await RNFetchBlob.config({
-    //             addAndroidDownloads: {
-    //                 useDownloadManager: true,
-    //                 notification: false,
-    //                 description: 'Zip file of Payslips',
-    //                 mime : 'application/octet-stream',
-    //                 title : filename,
-    //                 path: dirs.DCIMDir + `/${filename}`,
-    //             },
-    //             path: dirs.DocumentDir + `/${filename}`,
-
-    //         })
-    //         .fetch('GET', resJson.url, {
-    //             'Authorization': 'Bearer ' + token,
-    //         });
-
-    //         console.warn(file);
-
-    //         alert('The file was saved to ' + file.path());
-
-    //         await this.setState({
-    //             isDownloading: false,
-    //         });
-    //     } catch (e) {
-    //         await this.setState({ isDownloading: false });
-    //     }
-    // }
+    onClickDownload = () => {
+        Alert.alert(
+            'Download Payroll',
+            'Are you sure you want to download this payroll?',
+            [
+                {
+                    text: 'Yes', onPress: this.downloadPayrolls,
+                },
+                {
+                    text: 'No',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+            ],
+            { cancelable: false },
+        );
+    }
 
     render() {
         const { item, navigation } = this.props;
-        console.log(item)
 
         return (
             <View style={[styles.section, { backgroundColor: item.supervisor_approval.toLowerCase() === 'approved' ? DARK_GREEN : '#a00' }]}>
@@ -117,11 +123,11 @@ export default class PayslipItem extends Component {
                     <TouchableOpacity onPress={() => navigation.navigate('PayrollDetails', { item })}>
                         <Icon name="ios-eye" size={25} color="#FFF" />
                     </TouchableOpacity>
-                    {/* // Might use in the future for downloading payroll payslips
                     {this.state.isDownloading ?
-                        <ActivityIndicator color="#fff" size={25} /> : <TouchableOpacity disabled={this.state.isDownloading} onPress={this.downloadPayrolls}>
+                        <ActivityIndicator color="#fff" size={25} /> : <TouchableOpacity disabled={this.state.isDownloading} onPress={this.onClickDownload}>
                             <Icon name="ios-download" size={25} color="#FFF" />
-                        </TouchableOpacity>} */}
+                        </TouchableOpacity>
+                    }
                     {this.state.isSending ?
                         <ActivityIndicator color="#fff" size={25} /> : <TouchableOpacity disabled={this.state.isSending} onPress={this.onSendPayrolls}>
                             <Icon name="ios-send" size={25} color="#FFF" />

@@ -47,7 +47,7 @@ class EmployeeDeductions extends PureComponent {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                    {deductions.length > 0 && !isLoading ? (<FlatList
+                    {deductions && deductions.length > 0 && !isLoading ? (<FlatList
                         removeClippedSubviews
                         data={deductions}
                         keyExtractor={(item, index) => `${index}`}

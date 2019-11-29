@@ -46,7 +46,7 @@ class EmployeeAbsenteeism extends PureComponent {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                        {absenteeism.length > 0 && !isLoading ? (<FlatList
+                        {absenteeism && absenteeism.length > 0 && !isLoading ? (<FlatList
                             removeClippedSubviews
                             data={absenteeism}
                             keyExtractor={(item, index) => `${index}`}

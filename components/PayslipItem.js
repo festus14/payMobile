@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Platform, Modal, Alert, PermissionsAndroid } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Platform, Modal, Alert, PermissionsAndroid, ActivityIndicator } from 'react-native';
 import { ALMOST_BLACK, DARK_GREEN, LIGHT_GREY } from '../utility/colors';
 import { getPercentage } from '../utility/helpers';
+import { connect } from 'react-redux';
 import WebView from 'react-native-webview';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import downloadManager from 'react-native-simple-download-manager';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { bottomRight, bottomLeft, topRight, topLeft } from './html';
+import { getAuthToken } from '../store/actions';
+import { API_URL } from '../utility/constants';
 
-export default class PayslipItem extends Component {
+class PayslipItem extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             isModalOpen: false,
             isPermitted: false,
+            isDownloading: false,
         };
     }
 
@@ -30,16 +35,34 @@ export default class PayslipItem extends Component {
     }
 
     createPdf = async () => {
-        await this.requestExternalWritePermission();
-        if (this.state.isPermitted) {
-            let options = {
-                html: this.html(),
-                fileName: `payslip-${this.props.item.info.employee.staff_no}(${this.props.item.date})`,
-                directory: 'Documents',
-            };
+        try {
+            await this.requestExternalWritePermission();
+            if (this.state.isPermitted) {
+                let { item, getToken } = this.props;
+                let fileName = `payslip-${item.info.employee.staff_no}(${item.date}).pdf`;
 
-            let file = await RNHTMLtoPDF.convert(options);
-            alert('Saved at: ' + file.filePath);
+                const config = {
+                    downloadTitle: 'iPaySuite',
+                    downloadDescription: `Downloading payslip (${fileName})`,
+                    saveAsName: fileName,
+                    allowedInRoaming: true,
+                    allowedInMetered: true,
+                    showInDownloads: true,
+                    external: false,
+                };
+
+                const token = await getToken();
+
+                this.setState({ isDownloading: true });
+                let response = await downloadManager.download(`${API_URL}download_payslip?id=${item.details.id}&month=${item.details.month}&year=${item.details.year}&unique_id=${item.details.group_id}&employee=${item.details.employee_id}`, { Authorization: 'Bearer ' + token, 'Accept': 'application/pdf' }, config);
+                this.setState({ isDownloading: false });
+                console.warn(response);
+                alert('Payslip saved successfully');
+            }
+        } catch (error) {
+            this.setState({ isDownloading: false });
+            alert('Download failed.');
+            console.warn('error', error);
         }
     }
 
@@ -86,6 +109,7 @@ export default class PayslipItem extends Component {
 
     render() {
         const { item } = this.props;
+        const { isDownloading } = this.state;
         return (
             <View style={styles.item}>
                 <Modal
@@ -119,7 +143,7 @@ export default class PayslipItem extends Component {
                 </View>}
                 <View style={styles.bottom}>
                     <TouchableOpacity style={styles.btn} onPress={this.toggleModal}><Icon name="ios-eye" color={'#FFF'} size={24} /></TouchableOpacity>
-                    <TouchableOpacity style={[styles.btn, { alignItems: 'flex-end' }]} onPress={this.onClickCreate}><Icon name="ios-download" color={'#FFF'} size={24} /></TouchableOpacity>
+                    <TouchableOpacity disabled={isDownloading} style={[styles.btn, { alignItems: 'flex-end' }]} onPress={this.onClickCreate}>{isDownloading ? <ActivityIndicator color="#fff" size={25} />  : <Icon name="ios-download" color={'#FFF'} size={24} />}</TouchableOpacity>
                 </View>
             </View>
         );
@@ -201,3 +225,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
 });
+
+const mapDispatchToProps = dispatch => ({
+    getToken: () => dispatch(getAuthToken()),
+});
+
+
+
+export default connect(null, mapDispatchToProps)(PayslipItem);

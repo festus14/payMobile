@@ -47,7 +47,7 @@ class EmployeeRecurrentPayments extends Component {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                    {recurrentPayments.length > 0 && !isLoading ? (<FlatList
+                    {recurrentPayments && recurrentPayments.length > 0 && !isLoading ? (<FlatList
                         removeClippedSubviews
                         data={recurrentPayments}
                         keyExtractor={(item, index) => `${index}`}

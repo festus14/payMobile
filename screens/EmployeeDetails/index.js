@@ -71,9 +71,9 @@ export default class EmployeeDetails extends PureComponent {
                                 <EmployeeItem title="Gender" value={employee.gender} />
                                 <EmployeeItem title="DOB" value={employee.dob} />
                                 <EmployeeItem title="DOE" value={employee.date_of_employment} />
-                                {employee.country && <EmployeeItem title="Country" value={employee.country.name} />}
+                                {employee.country && <EmployeeItem title="Nationality" value={employee.country.shortcode} />}
                                 {employee.state && <EmployeeItem title="Residence State" value={employee.state.name} />}
-                                {employee.origin && <EmployeeItem title="State of Origin" value={employee.origin.name} />}
+                                {/** employee.origin && <EmployeeItem title="State of Origin" value={employee.origin.name} /> **/}
                                 <EmployeeItem title="Position" value={employee.position} />
                                 {employee.department && <EmployeeItem title="Department" value={employee.department.name} />}
                                 {employee.stafftype && <EmployeeItem title="Staff Type" value={employee.stafftype && employee.stafftype.name} />}

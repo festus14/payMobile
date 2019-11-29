@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, ActivityIndicator, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { getPayrolls, sendPayrolls } from '../../store/actions';
+import { getPayrolls, sendPayrolls, getAuthToken } from '../../store/actions';
 import PayrollsItem from '../../components/PayrollsItem';
 import Header from '../../components/Header';
 import { styles } from './style.js';
@@ -17,7 +17,7 @@ class PayrollScreen extends Component {
     }
 
     render() {
-        const { isLoading, payrolls, navigation, token } = this.props;
+        const { isLoading, payrolls, navigation, getToken } = this.props;
         return (
             <View style={styles.container}>
                 <Header
@@ -29,7 +29,7 @@ class PayrollScreen extends Component {
                         data={payrolls}
                         keyExtractor={(item, index) => `${index}`}
                         renderItem={({ item, index }) => (
-                            <PayrollsItem token={token} downloadPayrolls={this.props.downloadPayrolls} sendPayrolls={this.props.sendPayrolls} navigation={navigation} item={item} />
+                            <PayrollsItem getToken={getToken} sendPayrolls={this.props.sendPayrolls} navigation={navigation} item={item} />
                         )}
                         refreshControl={
                             <RefreshControl
@@ -50,13 +50,13 @@ class PayrollScreen extends Component {
 
 const mapStateToProps = (state) => ({
     payrolls: state.payrolls.payrolls,
-    token: state.auth.token,
     isLoading: state.ui.isPayrollsLoading,
 });
 
 const mapDispatchToProps = dispatch => ({
     getPayrolls: () => dispatch(getPayrolls()),
     sendPayrolls: (month, year, group_id, company_id) => dispatch(sendPayrolls(month, year, group_id, company_id)),
+    getToken: () => dispatch(getAuthToken()),
 });
 
 

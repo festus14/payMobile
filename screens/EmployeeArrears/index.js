@@ -47,7 +47,7 @@ class EmployeeArrears extends PureComponent {
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>
-                    {arrears.length > 0 && !isLoading ? (<FlatList
+                    {arrears && arrears.length > 0 && !isLoading ? (<FlatList
                         removeClippedSubviews
                         data={arrears}
                         keyExtractor={(item, index) => `${index}`}

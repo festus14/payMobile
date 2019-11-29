@@ -29,7 +29,7 @@ class EmployeesScreen extends Component {
                     title="Employees"
                 />
                 <View style={{ flex: 1, backgroundColor: '#fff' }}>
-                    {employees.length > 0 && !isLoading ? (<FlatList
+                    {employees && employees.length > 0 && !isLoading ? (<FlatList
                         removeClippedSubviews
                         data={employees}
                         keyExtractor={(item, index) => `${index}`}
