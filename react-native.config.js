@@ -11,5 +11,8 @@ module.exports = {
     'rn-fetch-blob': {
       root: NODE_MODULES_PATH + '/rn-fetch-blob',
     },
+    'react-native-view-pdf': {
+      root: NODE_MODULES_PATH + '/react-native-view-pdf',
+    },
   },
 };

@@ -14,7 +14,7 @@ export { logIn, authRemoveToken, authError, authSetToken, logout, authRemoveAsyn
 export { setEmployees, getEmployees, setNotifications, updateNotifications } from './employees';
 
 // payslips actions
-export { getPayslips, getDeductions, getPayments, getRecurrentDeductions, getRecurrentPayments } from './payslips';
+export { getPayslips, showPayslips, sendPayslips, getDeductions, getPayments, getRecurrentDeductions, getRecurrentPayments } from './payslips';
 
 // absenteeism actions
 export { getAbsenteeism } from './absenteeism';

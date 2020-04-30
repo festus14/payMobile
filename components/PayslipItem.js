@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Platform, Modal, Alert, PermissionsAndroid, ActivityIndicator } from 'react-native';
-import { ALMOST_BLACK, DARK_GREEN, LIGHT_GREY } from '../utility/colors';
+import { ALMOST_BLACK, DARK_GREEN, LIGHT_GREY, GREY } from '../utility/colors';
 import { getPercentage } from '../utility/helpers';
 import { connect } from 'react-redux';
 import WebView from 'react-native-webview';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import downloadManager from 'react-native-simple-download-manager';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { bottomRight, bottomLeft, topRight, topLeft } from './html';
-import { getAuthToken } from '../store/actions';
+import { getAuthToken, showPayslips, sendPayslips } from '../store/actions';
 import { API_URL } from '../utility/constants';
+import InputText from './InputText';
+import Button from './Button';
 
 class PayslipItem extends Component {
     constructor(props) {
@@ -17,8 +17,11 @@ class PayslipItem extends Component {
 
         this.state = {
             isModalOpen: false,
+            isEmailModalOpen: false,
             isPermitted: false,
             isDownloading: false,
+            html: '',
+            email: '',
         };
     }
 
@@ -30,8 +33,21 @@ class PayslipItem extends Component {
         return false;
     }
 
-    toggleModal = () => {
+    toggleModal = async () => {
+        const { item: { details }, showSlip } = this.props;
         this.setState({ isModalOpen: !this.state.isModalOpen });
+        const html = await showSlip({ ...details, unique_id: details.group_id });
+        this.setState({ html });
+    }
+
+    sendPayslip = async () => {
+        const { item: { details }, sendSlip } = this.props;
+        const email = await sendSlip({ ...details, unique_id: details.group_id, email: this.state.email });
+        this.setState({ email });
+    }
+
+    toggleEmail = () => {
+        this.setState({ isEmailModalOpen: !this.state.isEmailModalOpen, email: '' });
     }
 
     createPdf = async () => {
@@ -108,12 +124,12 @@ class PayslipItem extends Component {
     }
 
     render() {
-        const { item } = this.props;
-        const { isDownloading } = this.state;
+        const { item, isLoading } = this.props;
+        const { isDownloading, html, isEmailModalOpen, isModalOpen, email } = this.state;
         return (
             <View style={styles.item}>
                 <Modal
-                    visible={this.state.isModalOpen}
+                    visible={isModalOpen}
                     onRequestClose={() => { }}
                     animationType="fade"
                     transparent
@@ -124,9 +140,40 @@ class PayslipItem extends Component {
                             originWhitelist={['*']}
                             style={{ flex: 1 }}
                             source={{
-                                html: this.html(),
+                                html,
                             }}
                         />
+                    </View>
+                </Modal>
+                <Modal
+                    visible={isEmailModalOpen}
+                    onRequestClose={() => { }}
+                    animationType="fade"
+                    transparent
+                >
+                    <View style={styles.emailModal}>
+                        <View style={{ width: '90%', padding: 20, backgroundColor: '#fff' }}>
+                        <TouchableOpacity onPress={this.toggleEmail}><Text style={styles.city}>Close</Text></TouchableOpacity>
+                        <InputText
+                            icon="envelope"
+                            placeholder="Email"
+                            autoCorrect={false}
+                            iconSize={16}
+                            iconColor={GREY}
+                            value={email}
+                            onSubmitEditing={() => { this.password.focus(); }}
+                            onChangeText={input => this.setState({ email: input })}
+                            autoCapitalize="none"
+                            returnKeyType="go"
+                            keyboardType="email-address"
+                        />
+                        <Button
+                            isLoading={isLoading}
+                            text="Send"
+                            style={{ alignSelf: 'center', marginVertical: 10 }}
+                            onPress={this.sendPayslip}
+                        />
+                        </View>
                     </View>
                 </Modal>
                 <View style={styles.top}>
@@ -144,27 +191,20 @@ class PayslipItem extends Component {
                 <View style={styles.bottom}>
                     <TouchableOpacity style={styles.btn} onPress={this.toggleModal}><Icon name="ios-eye" color={'#FFF'} size={24} /></TouchableOpacity>
                     <TouchableOpacity disabled={isDownloading} style={[styles.btn, { alignItems: 'flex-end' }]} onPress={this.onClickCreate}>{isDownloading ? <ActivityIndicator color="#fff" size={25} />  : <Icon name="ios-download" color={'#FFF'} size={24} />}</TouchableOpacity>
+                    <TouchableOpacity style={styles.btn} onPress={this.toggleEmail}><Icon name="ios-send" color={'#FFF'} size={24} /></TouchableOpacity>
                 </View>
             </View>
         );
     }
-
-    html = () => {
-        const { item } = this.props;
-        const pos = item.company.logo_position;
-        if (pos === 'bottom_left') {
-            return bottomLeft(item);
-        } if (pos === 'bottom_right') {
-            return bottomRight(item);
-        } if (pos === 'top_left') {
-            return topLeft(item);
-        } if (pos === 'top_right') {
-            return topRight(item);
-        }
-    }
 }
 
 const styles = StyleSheet.create({
+    emailModal: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     item: {
         ...Platform.select({
             ios: {
@@ -228,8 +268,12 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => ({
     getToken: () => dispatch(getAuthToken()),
+    showSlip: (data) => dispatch(showPayslips(data)),
+    sendSlip: (data) => dispatch(sendPayslips(data)),
 });
 
+const mapStateToProps = state => ({
+    isLoading: state.ui.isPayslipsLoading,
+});
 
-
-export default connect(null, mapDispatchToProps)(PayslipItem);
+export default connect(mapStateToProps, mapDispatchToProps)(PayslipItem);
