@@ -29,7 +29,7 @@ class DashboardScreen extends PureComponent {
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.rando} />
-                <View style={styles.imageContainer}><MyImage resizeMode="contain" style={styles.image} source={user ? [{ uri: PHOTO_URL + user.picture }, defaultImage] : [defaultImage]} /></View>
+                <View style={styles.imageContainer}><MyImage resizeMode="contain" style={styles.image} source={user ? [{ uri: user.image_url }, defaultImage] : [defaultImage]} /></View>
                 <Text style={styles.name}>{user.name || 'Moore Dagogo-Hart'}</Text>
                 <Text style={styles.email}>{user.email || 'mail@domain.com'}</Text>
                 <Text style={styles.company}>{employee.company ? employee.company.name : 'Not an employee'}</Text>
