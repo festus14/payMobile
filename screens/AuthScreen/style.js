@@ -78,4 +78,8 @@ export const styles = StyleSheet.create({
         color: MAIN_COLOR,
         alignSelf: 'flex-end',
     },
+    warnText: {
+        color: 'red',
+        marginTop: -45,
+    },
 });
