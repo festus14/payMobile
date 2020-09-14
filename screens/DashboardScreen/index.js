@@ -6,7 +6,6 @@ import { styles } from './style';
 import Button from '../../components/Button';
 import { DARK_GREEN } from '../../utility/colors';
 import { getEmployee } from '../../store/actions';
-import { PHOTO_URL } from '../../utility/constants';
 import MyImage from '../../components/MyImage';
 
 class DashboardScreen extends PureComponent {

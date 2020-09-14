@@ -8,7 +8,7 @@ export { uiStartLoading, uiStopLoading, payrollsUiStartLoading, payrollsUiStopLo
 export { setUser, getUser, getUserId, getEmployee } from './user';
 
 // auth actions
-export { logIn, authRemoveToken, authError, authSetToken, logout, authRemoveAsyncData, authStoreAsyncData, getAuthToken } from './auth';
+export { logIn, authRemoveToken, authError, authSetToken, logout, authRemoveAsyncData, authStoreAsyncData, getAuthToken, forgotPassword, resetPassword } from './auth';
 
 // employees actions
 export { setEmployees, getEmployees, setNotifications, updateNotifications } from './employees';
