@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, TextInput, StyleSheet, Text } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { SCREEN_HEIGHT } from '../utility/constants';
 import { GREY } from '../utility/colors';
 
