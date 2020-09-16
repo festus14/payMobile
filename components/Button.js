@@ -5,9 +5,9 @@ import { MAIN_COLOR } from '../utility/colors'
 
 export default class Button extends Component {
     render() {
-        const { icon, style = {}, iconSize, iconColor, isLoading, text, loading = { size: 16, color: "#fff" }, textStyle = {} } = this.props
+        const { icon, style = {}, iconSize, iconColor, isLoading, text, loading = { size: 16, color: "#fff" }, textStyle = {}, disabled } = this.props
         return (
-            <TouchableOpacity disabled={isLoading} {...this.props} style={[styles.container, style]}>
+            <TouchableOpacity disabled={isLoading || disabled} {...this.props} style={[styles.container, style]}>
                 {icon &&
                     <Icon
                         name={icon}

@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: '#fff',
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
     },
     iconContainer: {

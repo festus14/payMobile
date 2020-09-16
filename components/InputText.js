@@ -7,7 +7,7 @@ import { GREY } from '../utility/colors';
 export default class InputText extends Component {
   render() {
     return (
-      <View style={[styles.container, this.props.containerStyle || {}]}>
+      <View style={{...styles.container, ...this.props.containerStyle} || {}}>
         {this.props.icon && (
           <Icon
             name={this.props.icon}

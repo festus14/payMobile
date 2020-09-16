@@ -22,19 +22,12 @@ import InputText from '../../components/InputText';
 import Button from '../../components/Button';
 import DismissKeyboard from '../../components/DismissKeyboard';
 import logo from '../../assets/images/logo.jpg';
-import { SCREEN_HEIGHT } from '../../utility/constants';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
-
-const strongRegex = new RegExp(
-  '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
-);
-const mediumRegex = new RegExp(
-  '^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})'
-);
+  SCREEN_HEIGHT,
+  strongRegex,
+  mediumRegex,
+} from '../../utility/constants';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class AuthScreen extends Component {
   constructor(props) {
@@ -85,7 +78,7 @@ class AuthScreen extends Component {
       },
       error: '',
       authState: 'login',
-      passwordStength: {
+      passwordStrength: {
         color: 'white',
         strength: '',
       },
@@ -176,24 +169,24 @@ class AuthScreen extends Component {
     if (type === 'password') {
       if (strongRegex.test(this.state[type].value)) {
         this.setState({
-          passwordStength: {
-            ...this.state.passwordStength,
+          passwordStrength: {
+            ...this.state.passwordStrength,
             color: 'green',
             strength: 'strong',
           },
         });
       } else if (mediumRegex.test(this.state[type].value)) {
         this.setState({
-          passwordStength: {
-            ...this.state.passwordStength,
+          passwordStrength: {
+            ...this.state.passwordStrength,
             color: 'orange',
             strength: 'medium',
           },
         });
       } else {
         this.setState({
-          passwordStength: {
-            ...this.state.passwordStength,
+          passwordStrength: {
+            ...this.state.passwordStrength,
             color: 'red',
             strength: 'weak',
           },
@@ -326,43 +319,39 @@ class AuthScreen extends Component {
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={{ flex: 1 }}
         >
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={this.state.passwordInfoModal}
-              onRequestClose={() => {}}
-            >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <Text style={styles.warnHead}>
-                    Password requirements are:
-                  </Text>
-                  <Text style={styles.warnTxts}>
-                    {'\u25CF'} At least one upper case letter
-                  </Text>
-                  <Text style={styles.warnTxts}>
-                    {'\u25CF'} At least one lower case letter
-                  </Text>
-                  <Text style={styles.warnTxts}>
-                    {'\u25CF'} At least one symbol
-                  </Text>
-                  <Text style={styles.warnTxts}>
-                    {'\u25CF'} At least one number
-                  </Text>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={this.state.passwordInfoModal}
+            onRequestClose={() => {}}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.warnHead}>Password requirements are:</Text>
+                <Text style={styles.warnTxts}>
+                  {'\u25CF'} At least one upper case letter
+                </Text>
+                <Text style={styles.warnTxts}>
+                  {'\u25CF'} At least one lower case letter
+                </Text>
+                <Text style={styles.warnTxts}>
+                  {'\u25CF'} At least one symbol
+                </Text>
+                <Text style={styles.warnTxts}>
+                  {'\u25CF'} At least one number
+                </Text>
 
-                  <TouchableOpacity
-                    style={{ ...styles.openButton }}
-                    onPress={() => {
-                      this.setPasswordInfoVisible(
-                        !this.state.passwordInfoModal
-                      );
-                    }}
-                  >
-                    <Text style={styles.textStyle}>Close</Text>
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                  style={{ ...styles.openButton }}
+                  onPress={() => {
+                    this.setPasswordInfoVisible(!this.state.passwordInfoModal);
+                  }}
+                >
+                  <Text style={styles.textStyle}>Close</Text>
+                </TouchableOpacity>
               </View>
-            </Modal>
+            </View>
+          </Modal>
 
           <View
             style={styles.container}
@@ -416,7 +405,7 @@ class AuthScreen extends Component {
                       this.onChangeText(input, 'loginPassword')
                     }
                     autoCapitalize="none"
-                    returnKeyTpe="go"
+                    returnKeyType="go"
                     onSubmitEditing={this.loginHandler}
                   />
                   <Button
@@ -446,13 +435,11 @@ class AuthScreen extends Component {
                   iconSize={16}
                   iconColor={GREY}
                   value={this.state.email.value}
-                  onSubmitEditing={() => {
-                    this.password.focus();
-                  }}
                   onChangeText={(input) => this.onChangeText(input, 'email')}
                   autoCapitalize="none"
-                  returnKeyType="next"
+                  returnKeyType="go"
                   keyboardType="email-address"
+                  onSubmitEditing={this.forgotPasswordHandler}
                 />
                 <Button
                   text="Submit"
@@ -480,12 +467,14 @@ class AuthScreen extends Component {
                   iconColor={GREY}
                   value={this.state.token.value}
                   getRef={(input) => {
-                    this.password = input;
+                    this.token = input;
                   }}
                   onChangeText={(input) => this.onChangeText(input, 'token')}
                   autoCapitalize="none"
-                  returnKeyTpe="go"
-                  onSubmitEditing={this.loginHandler}
+                  returnKeyType="next"
+                  onSubmitEditing={() => {
+                    this.password.focus();
+                  }}
                 />
                 <InputText
                   icon="lock"
@@ -499,15 +488,13 @@ class AuthScreen extends Component {
                   }}
                   onChangeText={(input) => this.onChangeText(input, 'password')}
                   autoCapitalize="none"
-                  returnKeyTpe="go"
-                  onSubmitEditing={this.loginHandler}
-                />
-                <View
-                  style={{
-                    ...styles.warnView,
+                  returnKeyType="next"
+                  onSubmitEditing={() => {
+                    this.confirmPassword.focus();
                   }}
-                >
-                  {this.state.passwordStength.color !== 'white' && (
+                />
+                <View style={styles.warnView}>
+                  {this.state.passwordStrength.color !== 'white' && (
                     <TouchableOpacity
                       onPress={() =>
                         this.setPasswordInfoVisible(
@@ -517,19 +504,18 @@ class AuthScreen extends Component {
                     >
                       <Icon
                         name="info-circle"
-                        // style={[styles.icon, this.props.iconStyle || {}]}
                         size={18}
-                        color={this.state.passwordStength.color}
+                        color={this.state.passwordStrength.color}
                       />
                     </TouchableOpacity>
                   )}
                   <Text
                     style={{
                       ...styles.warnText,
-                      color: this.state.passwordStength.color,
+                      color: this.state.passwordStrength.color,
                     }}
                   >
-                    {this.state.passwordStength.strength}
+                    {this.state.passwordStrength.strength}
                   </Text>
                 </View>
                 <InputText
@@ -546,8 +532,8 @@ class AuthScreen extends Component {
                     this.onChangeText(input, 'confirmPassword')
                   }
                   autoCapitalize="none"
-                  returnKeyTpe="go"
-                  onSubmitEditing={this.loginHandler}
+                  returnKeyType="go"
+                  onSubmitEditing={this.resetPasswordHandler}
                 />
                 <Button
                   text="Submit"
