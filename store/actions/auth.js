@@ -83,7 +83,7 @@ export const logIn = (authData, noNavigate) => {
       });
 
       let resJson = await res.json();
-      console.warn(resJson);
+      // console.warn(resJson);
 
       await dispatch(uiStopLoading());
       if (resJson.error || resJson.message === 'Unauthenticated.') {
@@ -110,7 +110,7 @@ export const logIn = (authData, noNavigate) => {
       }
     } catch (error) {
       dispatch(uiStopLoading());
-      console.warn(error);
+      // console.warn(error);
       return 'Authentication failed, please check your internet connection and try again';
     }
   };
@@ -143,7 +143,7 @@ export const getAuthToken = () => {
         }
       } catch (error) {
         await dispatch(resetApp());
-        console.warn(error);
+        // console.warn(error);
         return '';
       }
     } else {
@@ -175,7 +175,7 @@ export const logout = () => {
       );
 
       let resJson = await res.json();
-      console.warn(resJson);
+      // console.warn(resJson);
 
       if (resJson.error || resJson.message === 'Unauthenticated.') {
         alert('Logout failed, please try again');
@@ -197,7 +197,6 @@ export const logout = () => {
 };
 
 export const forgotPassword = (email) => {
-  // console.warn('clicked on forgot password', email);
   return async (dispatch, getState) => {
     try {
       dispatch(uiStartLoading());
@@ -222,7 +221,7 @@ export const forgotPassword = (email) => {
       return '';
     } catch (error) {
       dispatch(uiStopLoading());
-      console.warn('In catch', error);
+      // console.warn('In catch', error);
       return 'Please check your internet connection and try again';
     }
   };
@@ -236,7 +235,7 @@ export const resetPassword = (resetData) => {
         ...resetData,
       });
 
-      console.warn('res', res);
+      // console.warn('res', res);
       setTimeout(() => {
         if (!res) {
           dispatch(uiStopLoading());
@@ -254,7 +253,50 @@ export const resetPassword = (resetData) => {
       return '';
     } catch (error) {
       dispatch(uiStopLoading());
-      console.warn('In catch', error);
+      // console.warn('In catch', error);
+      return 'Please check your internet connection and try again';
+    }
+  };
+};
+
+export const changePassword = (passwordData) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(uiStartLoading());
+
+      let token = await dispatch(getAuthToken());
+
+      let res = await sendRequest(
+        `${API_URL}password/change_password`,
+        'POST',
+        {
+          ...passwordData,
+        },
+        {},
+        token
+      );
+
+      setTimeout(() => {
+        if (!res) {
+          dispatch(uiStopLoading());
+          return 'Please check your internet connection';
+        }
+      }, 15000);
+
+      let resJson = await res.json();
+      await dispatch(uiStopLoading());
+
+      if (resJson.error || resJson.message === 'Unauthenticated.') {
+        return resJson.error === 'Unauthorised'
+          ? 'Please log out and log in again'
+          : resJson.error;
+      }
+
+      // await logout();
+      return '';
+    } catch (error) {
+      dispatch(uiStopLoading());
+      // console.warn('In catch', error);
       return 'Please check your internet connection and try again';
     }
   };

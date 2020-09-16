@@ -41,13 +41,14 @@ class SettingsScreen extends Component {
     }
 
     changePassword = () => {
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                Linking.openURL(url);
-            } else {
-                console.warn("Don't know how to open URI: " + url);
-            }
-        });
+        // Linking.canOpenURL(url).then(supported => {
+        //     if (supported) {
+        //         Linking.openURL(url);
+        //     } else {
+        //         console.warn("Don't know how to open URI: " + url);
+        //     }
+        // });
+        this.props.navigation.navigate('ChangePasswordScreen');
     };
 
 

@@ -1,5 +1,5 @@
 import {
-    createStackNavigator
+    createStackNavigator,
 } from 'react-navigation';
 import PayrollScreen from '../screens/PayrollScreen';
 import PayrollDetails from '../screens/PayrollDetails';
@@ -11,5 +11,5 @@ const PayrollNavigator = createStackNavigator({
     PayrollDetails,
 }, {
     initialRouteName: 'PayrollScreen',
-})
+});
 export default PayrollNavigator;
