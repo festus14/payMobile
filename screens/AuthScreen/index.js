@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  Linking,
+  Modal,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -23,8 +23,18 @@ import Button from '../../components/Button';
 import DismissKeyboard from '../../components/DismissKeyboard';
 import logo from '../../assets/images/logo.jpg';
 import { SCREEN_HEIGHT } from '../../utility/constants';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 
-const url = 'https://portal.ipaysuite.com/password/reset';
+const strongRegex = new RegExp(
+  '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
+);
+const mediumRegex = new RegExp(
+  '^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})'
+);
 
 class AuthScreen extends Component {
   constructor(props) {
@@ -74,7 +84,12 @@ class AuthScreen extends Component {
         },
       },
       error: '',
-      authState: 'resetPassword',
+      authState: 'login',
+      passwordStength: {
+        color: 'white',
+        strength: '',
+      },
+      passwordInfoModal: false,
     };
   }
 
@@ -85,7 +100,11 @@ class AuthScreen extends Component {
     if (error) {
       return error;
     }
-    error = validate(loginPassword.value, loginPassword.validationRules, loginPassword.field);
+    error = validate(
+      loginPassword.value,
+      loginPassword.validationRules,
+      loginPassword.field
+    );
     if (error) {
       return error;
     }
@@ -93,7 +112,10 @@ class AuthScreen extends Component {
   };
 
   loginHandler = async () => {
-    if (this.state.email.value !== '' && this.state.loginPassword.value !== '') {
+    if (
+      this.state.email.value !== '' &&
+      this.state.loginPassword.value !== ''
+    ) {
       try {
         await this.setState((prevState) => ({
           ...prevState,
@@ -150,16 +172,34 @@ class AuthScreen extends Component {
         value: input,
       },
     });
-  };
 
-  changePassword = () => {
-    Linking.canOpenURL(url).then((supported) => {
-      if (supported) {
-        Linking.openURL(url);
+    if (type === 'password') {
+      if (strongRegex.test(this.state[type].value)) {
+        this.setState({
+          passwordStength: {
+            ...this.state.passwordStength,
+            color: 'green',
+            strength: 'strong',
+          },
+        });
+      } else if (mediumRegex.test(this.state[type].value)) {
+        this.setState({
+          passwordStength: {
+            ...this.state.passwordStength,
+            color: 'orange',
+            strength: 'medium',
+          },
+        });
       } else {
-        console.warn("Don't know how to open URI: " + url);
+        this.setState({
+          passwordStength: {
+            ...this.state.passwordStength,
+            color: 'red',
+            strength: 'weak',
+          },
+        });
       }
-    });
+    }
   };
 
   forgotPasswordHandler = async () => {
@@ -207,7 +247,10 @@ class AuthScreen extends Component {
     if (error) {
       return error;
     }
-    error = password.value !== confirmPassword.value ? 'Password do not match' : false;
+    error =
+      password.value !== confirmPassword.value
+        ? 'Password do not match'
+        : false;
     if (error) {
       return error;
     }
@@ -263,14 +306,17 @@ class AuthScreen extends Component {
           if (error) {
             this.showError(error);
           } else {
-            console.warn('Successfully changed');
-            this.setState({ authState: 'resetPassword' });
+            this.setState({ authState: 'login' });
           }
         }
       } catch (err) {
         console.warn(err);
       }
     }
+  };
+
+  setPasswordInfoVisible = (visible) => {
+    this.setState({ passwordInfoModal: visible });
   };
 
   render() {
@@ -280,6 +326,44 @@ class AuthScreen extends Component {
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={{ flex: 1 }}
         >
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={this.state.passwordInfoModal}
+              onRequestClose={() => {}}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <Text style={styles.warnHead}>
+                    Password requirements are:
+                  </Text>
+                  <Text style={styles.warnTxts}>
+                    {'\u25CF'} At least one upper case letter
+                  </Text>
+                  <Text style={styles.warnTxts}>
+                    {'\u25CF'} At least one lower case letter
+                  </Text>
+                  <Text style={styles.warnTxts}>
+                    {'\u25CF'} At least one symbol
+                  </Text>
+                  <Text style={styles.warnTxts}>
+                    {'\u25CF'} At least one number
+                  </Text>
+
+                  <TouchableOpacity
+                    style={{ ...styles.openButton }}
+                    onPress={() => {
+                      this.setPasswordInfoVisible(
+                        !this.state.passwordInfoModal
+                      );
+                    }}
+                  >
+                    <Text style={styles.textStyle}>Close</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+
           <View
             style={styles.container}
             showsVerticalScrollIndicator={false}
@@ -387,7 +471,7 @@ class AuthScreen extends Component {
                 </TouchableOpacity>
               </View>
             ) : (
-              <View style={{ ...styles.form, height: SCREEN_HEIGHT * 0.6 }}>
+              <View style={{ ...styles.form, height: SCREEN_HEIGHT * 0.54 }}>
                 <Text style={styles.error}>{this.state.error}</Text>
                 <InputText
                   icon="lock"
@@ -418,6 +502,36 @@ class AuthScreen extends Component {
                   returnKeyTpe="go"
                   onSubmitEditing={this.loginHandler}
                 />
+                <View
+                  style={{
+                    ...styles.warnView,
+                  }}
+                >
+                  {this.state.passwordStength.color !== 'white' && (
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.setPasswordInfoVisible(
+                          !this.state.passwordInfoModal
+                        )
+                      }
+                    >
+                      <Icon
+                        name="info-circle"
+                        // style={[styles.icon, this.props.iconStyle || {}]}
+                        size={18}
+                        color={this.state.passwordStength.color}
+                      />
+                    </TouchableOpacity>
+                  )}
+                  <Text
+                    style={{
+                      ...styles.warnText,
+                      color: this.state.passwordStength.color,
+                    }}
+                  >
+                    {this.state.passwordStength.strength}
+                  </Text>
+                </View>
                 <InputText
                   icon="lock"
                   placeholder="Confirm Password"
@@ -435,7 +549,6 @@ class AuthScreen extends Component {
                   returnKeyTpe="go"
                   onSubmitEditing={this.loginHandler}
                 />
-                <Text style={styles.warnText}>e.g I@mTrue2020</Text>
                 <Button
                   text="Submit"
                   style={styles.btn}
