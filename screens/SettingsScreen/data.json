@@ -1,5 +1,21 @@
 [
     {
+        "name": "ACCOUNT",
+        "type": "header"
+    },
+    {
+        "name": "Change profile picture",
+        "type": "item"
+    },
+    {
+        "name": "Change password",
+        "type": "item"
+    },
+    {
+        "name": "Log Out",
+        "type": "item"
+    },
+    {
         "name": "NOTIFICATIONS",
         "type": "header"
     },
@@ -10,17 +26,5 @@
     {
         "name": "SMS notifications",
         "type": "switch"
-    },
-    {
-        "name": "ACCOUNT",
-        "type": "header"
-    },
-    {
-        "name": "Change password",
-        "type": "item"
-    },
-    {
-        "name": "Log Out",
-        "type": "item"
     }
 ]

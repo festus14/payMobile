@@ -301,26 +301,15 @@ class ChangePasswordScreen extends Component {
                 text="Submit"
                 style={{
                   ...styles.btn,
-                  backgroundColor:
-                    this.validatePasswordChange() ||
-                    validate(
-                      currentPassword.value,
-                      currentPassword.validationRules,
-                      currentPassword.field
-                    )
-                      ? LIGHTER_GREY
-                      : MAIN_COLOR,
+                  backgroundColor: this.validatePasswordChange()
+                    ? LIGHTER_GREY
+                    : MAIN_COLOR,
                 }}
                 textStyle={styles.btnText}
                 isLoading={this.props.isLoading}
                 onPress={this.changePasswordHandler}
                 disabled={
-                  this.validatePasswordChange() ||
-                  validate(
-                    currentPassword.value,
-                    currentPassword.validationRules,
-                    currentPassword.field
-                  )
+                  this.validatePasswordChange()
                 }
               />
             </View>

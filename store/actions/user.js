@@ -43,13 +43,13 @@ export const getUserId = () => {
     };
 };
 
-export const getUser = () => {
+export const getUser = (params) => {
     return async (dispatch, getState) => {
         dispatch(userUiStartLoading());
         try {
             let userData = await getState().user.user;
 
-            if (!userData.email) {
+            if (!userData.email || params.needRefresh) {
                 let token = await dispatch(getAuthToken());
                 let userId = await dispatch(getUserId());
 

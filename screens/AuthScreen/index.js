@@ -15,7 +15,7 @@ import {
   forgotPassword,
   resetPassword,
 } from '../../store/actions';
-import { GREY } from '../../utility/colors';
+import { GREY, LIGHTER_GREY, MAIN_COLOR } from '../../utility/colors';
 import validate from '../../utility/validation';
 import { styles } from './style';
 import InputText from '../../components/InputText';
@@ -28,6 +28,7 @@ import {
   mediumRegex,
 } from '../../utility/constants';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MyModal from '../../components/MyModal';
 
 class AuthScreen extends Component {
   constructor(props) {
@@ -77,12 +78,15 @@ class AuthScreen extends Component {
         },
       },
       error: '',
+      message: '',
       authState: 'login',
       passwordStrength: {
         color: 'white',
         strength: '',
       },
       passwordInfoModal: false,
+      messageModal: false,
+      resetSuccess: false,
     };
   }
 
@@ -220,7 +224,14 @@ class AuthScreen extends Component {
           if (error) {
             this.showError(error);
           } else {
-            this.setState({ authState: 'resetPassword' });
+            this.setState({
+              authState: 'resetPassword',
+              messageModal: true,
+              message: 'Kindly check your mail for the verify token',
+            });
+            setTimeout(() => {
+              this.setState({ error: '', messageModal: false });
+            }, 5000);
           }
         }
       } catch (err) {
@@ -299,7 +310,10 @@ class AuthScreen extends Component {
           if (error) {
             this.showError(error);
           } else {
-            this.setState({ authState: 'login' });
+            this.setState({ authState: 'login', resetSuccess: true });
+            setTimeout(() => {
+              this.setState({ error: '', resetSuccess: false });
+            }, 5000);
           }
         }
       } catch (err) {
@@ -312,6 +326,14 @@ class AuthScreen extends Component {
     this.setState({ passwordInfoModal: visible });
   };
 
+  setMessageVisible = (visible) => {
+    this.setState({ messageModal: visible });
+  };
+
+  setResetSuccessVisible = (visible) => {
+    this.setState({ resetSuccess: visible });
+  };
+
   render() {
     return (
       <DismissKeyboard>
@@ -319,40 +341,109 @@ class AuthScreen extends Component {
           behavior={Platform.OS === 'ios' ? 'padding' : null}
           style={{ flex: 1 }}
         >
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={this.state.passwordInfoModal}
-            onRequestClose={() => {}}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.warnHead}>Password requirements are:</Text>
-                <Text style={styles.warnTxts}>
-                  {'\u25CF'} At least one upper case letter
-                </Text>
-                <Text style={styles.warnTxts}>
-                  {'\u25CF'} At least one lower case letter
-                </Text>
-                <Text style={styles.warnTxts}>
-                  {'\u25CF'} At least one symbol
-                </Text>
-                <Text style={styles.warnTxts}>
-                  {'\u25CF'} At least one number
-                </Text>
+          {this.state.messageModal && (
+            <MyModal
+              visible={this.state.messageModal}
+              onPress={() => this.setMessageVisible(!this.state.messageModal)}
+              btnTxt="Close"
+            >
+              <Text style={styles.modalHead}>Info</Text>
+              <Text style={styles.modalText}>
+                Kindly check your mail for the verify token
+              </Text>
+            </MyModal>
+          )}
 
-                <TouchableOpacity
-                  style={{ ...styles.openButton }}
-                  onPress={() => {
-                    this.setPasswordInfoVisible(!this.state.passwordInfoModal);
-                  }}
-                >
-                  <Text style={styles.textStyle}>Close</Text>
-                </TouchableOpacity>
+          {this.state.resetSuccess && (
+            <MyModal
+              visible={this.state.resetSuccess}
+              onPress={() => this.setResetSuccessVisible(!this.state.resetSuccess)}
+              btnTxt="Close"
+            >
+              <Text style={styles.modalHead}>Info</Text>
+              <Text style={styles.modalText}>Password has been reset.</Text>
+            </MyModal>
+          )}
+
+          {this.state.passwordInfoModal && (
+            <MyModal
+              visible={this.state.passwordInfoModal}
+              onPress={() =>
+                this.setPasswordInfoVisible(!this.state.passwordInfoModal)
+              }
+              btnTxt="Close"
+            >
+              <Text style={styles.modalHead}>Password requirements are:</Text>
+              <Text style={styles.modalText}>
+                {'\u25CF'} At least one upper case letter
+              </Text>
+              <Text style={styles.modalText}>
+                {'\u25CF'} At least one lower case letter
+              </Text>
+              <Text style={styles.modalText}>
+                {'\u25CF'} At least one symbol
+              </Text>
+              <Text style={styles.modalText}>
+                {'\u25CF'} At least one number
+              </Text>
+            </MyModal>
+          )}
+          {/* {(this.state.passwordInfoModal || this.state.messageModal) && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={this.state.passwordInfoModal || this.state.messageModal}
+              onRequestClose={() => {}}
+            >
+              <View style={styles.centeredView}>
+                <View style={this.state.passwordInfoModal ? styles.modalView : { ...styles.modalView, alignItems: 'center' }}>
+                  {this.state.passwordInfoModal ? (
+                    <>
+                      <Text style={styles.warnHead}>
+                        Password requirements are:
+                      </Text>
+                      <Text style={styles.modalText}>
+                        {'\u25CF'} At least one upper case letter
+                      </Text>
+                      <Text style={styles.modalText}>
+                        {'\u25CF'} At least one lower case letter
+                      </Text>
+                      <Text style={styles.modalText}>
+                        {'\u25CF'} At least one symbol
+                      </Text>
+                      <Text style={styles.modalText}>
+                        {'\u25CF'} At least one number
+                      </Text>
+                      <TouchableOpacity
+                        style={{ ...styles.openButton }}
+                        onPress={() => {
+                          this.setPasswordInfoVisible(
+                            !this.state.passwordInfoModal
+                          );
+                        }}
+                      >
+                        <Text style={styles.textStyle}>Close</Text>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <>
+                      <Text>Kindly check your mail for the verify token</Text>
+                      <TouchableOpacity
+                        style={{ ...styles.openButton }}
+                        onPress={() => {
+                          this.setMessageVisible(
+                            !this.state.messageModal
+                          );
+                        }}
+                      >
+                        <Text style={styles.textStyle}>Close</Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
+                </View>
               </View>
-            </View>
-          </Modal>
-
+            </Modal>
+          )} */}
           <View
             style={styles.container}
             showsVerticalScrollIndicator={false}
@@ -443,10 +534,24 @@ class AuthScreen extends Component {
                 />
                 <Button
                   text="Submit"
-                  style={styles.btn}
+                  style={{
+                    ...styles.btn,
+                    backgroundColor: validate(
+                      this.state.email.value,
+                      this.state.email.validationRules,
+                      this.state.email.field
+                    )
+                      ? LIGHTER_GREY
+                      : MAIN_COLOR,
+                  }}
                   textStyle={styles.btnText}
                   isLoading={this.props.isLoading}
                   onPress={this.forgotPasswordHandler}
+                  disabled={validate(
+                    this.state.email.value,
+                    this.state.email.validationRules,
+                    this.state.email.field
+                  )}
                 />
                 <TouchableOpacity
                   onPress={() => this.setState({ authState: 'login' })}
@@ -459,7 +564,9 @@ class AuthScreen extends Component {
               </View>
             ) : (
               <View style={{ ...styles.form, height: SCREEN_HEIGHT * 0.54 }}>
-                <Text style={styles.error}>{this.state.error}</Text>
+                <Text style={styles.error}>
+                  {this.state.error || this.state.message}
+                </Text>
                 <InputText
                   icon="lock"
                   placeholder="Verify Token"
@@ -537,9 +644,15 @@ class AuthScreen extends Component {
                 />
                 <Button
                   text="Submit"
-                  style={styles.btn}
+                  style={{
+                    ...styles.btn,
+                    backgroundColor: this.validateResetPassword()
+                      ? LIGHTER_GREY
+                      : MAIN_COLOR,
+                  }}
                   textStyle={styles.btnText}
                   isLoading={this.props.isLoading}
+                  disabled={this.validateResetPassword()}
                   onPress={this.resetPasswordHandler}
                 />
                 <TouchableOpacity
