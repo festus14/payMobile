@@ -37,3 +37,13 @@ export async function sendRequest(url, method = 'GET', body, headers = {}, token
         },
     });
 }
+
+export async function sendPictureRequest(url, method = 'GET', body, headers = {}, token) {
+    return await fetch(url, {
+        method: method,
+        body: body,
+        headers: {
+            'Authorization': 'Bearer ' + token,
+        },
+    });
+}

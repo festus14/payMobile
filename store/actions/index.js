@@ -19,6 +19,8 @@ export {
   absenteeismUiStopLoading,
   arrearsUiStartLoading,
   arrearsUiStopLoading,
+  pictureUiStartLoading,
+  pictureUiStopLoading,
 } from './ui';
 
 // user actions
@@ -37,6 +39,7 @@ export {
   forgotPassword,
   resetPassword,
   changePassword,
+  changeProfilePicture,
 } from './auth';
 
 // employees actions

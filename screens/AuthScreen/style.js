@@ -83,52 +83,21 @@ export const styles = StyleSheet.create({
   warnText: {
     color: 'white',
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'flex-start',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  warnTxts: {
+  modalText: {
     fontSize: 12,
     // display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     textAlign: 'left',
   },
-  warnHead: {
+  modalHead: {
     fontSize: 14,
     display: 'flex',
     alignItems: 'center',
     textAlign: 'center',
+    justifyContent: 'center',
     marginBottom: 10,
-  },
-  openButton: {
-    backgroundColor: MAIN_COLOR,
-    borderRadius: 10,
-    padding: 10,
-    elevation: 2,
-    marginTop: 20,
-    width: 200,
-  },
-  textStyle: {
-    color: 'white',
+    textDecorationStyle: 'solid',
     fontWeight: 'bold',
-    textAlign: 'center',
   },
 });

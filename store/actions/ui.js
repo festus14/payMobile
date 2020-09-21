@@ -13,6 +13,8 @@ import {
     ARREARS_UI_START_LOADING,
     PAYSLIPS_UI_STOP_LOADING,
     PAYSLIPS_UI_START_LOADING,
+    PICTURE_UI_STOP_LOADING,
+    PICTURE_UI_START_LOADING,
 } from './actionTypes';
 
 export const uiStartLoading = () =>  {
@@ -84,6 +86,18 @@ export const payrollsUiStartLoading = () =>  {
 export const payrollsUiStopLoading = () => {
     return {
         type: PAYROLLS_UI_STOP_LOADING,
+    };
+};
+
+export const pictureUiStartLoading = () =>  {
+    return {
+        type: PICTURE_UI_START_LOADING,
+    };
+};
+
+export const pictureUiStopLoading = () => {
+    return {
+        type: PICTURE_UI_STOP_LOADING,
     };
 };
 

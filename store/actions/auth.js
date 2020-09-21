@@ -1,10 +1,18 @@
 import { AUTH_REMOVE_TOKEN, AUTH_SET_TOKEN } from './actionTypes';
 import RNSecureKeyStore, { ACCESSIBLE } from 'react-native-secure-key-store';
-import { uiStartLoading, uiStopLoading, setUser, resetApp } from './';
+import {
+  uiStartLoading,
+  uiStopLoading,
+  setUser,
+  resetApp,
+  pictureUiStartLoading,
+  pictureUiStopLoading,
+} from './';
 import { API_URL } from '../../utility/constants';
 import NavigationService from '../../NavigationService';
-import { isAdmin, sendRequest } from '../../utility/helpers';
+import { isAdmin, sendRequest, sendPictureRequest } from '../../utility/helpers';
 import moment from 'moment';
+import { getUser } from './user';
 
 export const authSetToken = (token, userId, expiry) => {
   return {
@@ -297,6 +305,51 @@ export const changePassword = (passwordData) => {
     } catch (error) {
       dispatch(uiStopLoading());
       // console.warn('In catch', error);
+      return 'Please check your internet connection and try again';
+    }
+  };
+};
+
+export const changeProfilePicture = (picture) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(pictureUiStartLoading());
+
+      let token = await dispatch(getAuthToken());
+
+      const formData = new FormData();
+
+      formData.append('picture', {
+        uri : picture.uri,
+        type: picture.type,
+        name: picture.name,
+       });
+
+      let res = await sendPictureRequest(`${API_URL}password/change_profile_pics`, 'POST', formData, {}, token);
+
+      setTimeout(() => {
+        if (!res) {
+          dispatch(pictureUiStartLoading());
+          return 'Please check your internet connection';
+        }
+      }, 15000);
+
+      let resJson = await res.json();
+      await dispatch(pictureUiStopLoading());
+      console.warn('resJson...', resJson);
+
+      if (resJson.error || resJson.message === 'Unauthenticated.') {
+        return resJson.error === 'Unauthorised'
+          ? 'Please log out and log in again'
+          : resJson.error.picture[0];
+      } else {
+        console.warn('here........');
+        let newUser = await dispatch(getUser({needRefresh: true}));
+        console.warn('New User....', newUser);
+      }
+      return '';
+    } catch (error) {
+      dispatch(pictureUiStopLoading());
       return 'Please check your internet connection and try again';
     }
   };
