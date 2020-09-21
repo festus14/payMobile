@@ -41,9 +41,9 @@ class EmployeeDeductions extends PureComponent {
             <View style={styles.container}>
                 <Header
                     title="Deductions"
-                    leftIcon="md-arrow-back"
+                    leftIcon="arrow-left"
                     onLeftPress={this.goBack}
-                    rightIcon="ios-menu"
+                    rightIcon="menu"
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>

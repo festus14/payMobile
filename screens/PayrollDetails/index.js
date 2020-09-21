@@ -32,7 +32,7 @@ class PayrollDetails extends Component {
             <View style={styles.container}>
                 <Header
                     title="Payroll Details"
-                    leftIcon="md-arrow-back"
+                    leftIcon="arrow-left"
                     onLeftPress={this.goBack}
                 />
                 <View style={styles.data}>

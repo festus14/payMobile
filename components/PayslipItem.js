@@ -5,7 +5,7 @@ import { getPercentage } from '../utility/helpers';
 import { connect } from 'react-redux';
 import WebView from 'react-native-webview';
 import downloadManager from 'react-native-simple-download-manager';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import { getAuthToken, showPayslips, sendPayslips } from '../store/actions';
 import { API_URL } from '../utility/constants';
 import InputText from './InputText';
@@ -189,9 +189,9 @@ class PayslipItem extends Component {
 
                 </View>}
                 <View style={styles.bottom}>
-                    <TouchableOpacity style={styles.btn} onPress={this.toggleModal}><Icon name="ios-eye" color={'#FFF'} size={24} /></TouchableOpacity>
-                    <TouchableOpacity disabled={isDownloading} style={[styles.btn, { alignItems: 'flex-end' }]} onPress={this.onClickCreate}>{isDownloading ? <ActivityIndicator color="#fff" size={25} />  : <Icon name="ios-download" color={'#FFF'} size={24} />}</TouchableOpacity>
-                    <TouchableOpacity style={styles.btn} onPress={this.toggleEmail}><Icon name="ios-send" color={'#FFF'} size={24} /></TouchableOpacity>
+                    <TouchableOpacity style={styles.btn} onPress={this.toggleModal}><Icon name="eye" color={'#FFF'} size={24} /></TouchableOpacity>
+                    <TouchableOpacity disabled={isDownloading} style={[styles.btn, { alignItems: 'flex-end' }]} onPress={this.onClickCreate}>{isDownloading ? <ActivityIndicator color="#fff" size={25} />  : <Icon name="file-download" color={'#FFF'} size={24} />}</TouchableOpacity>
+                    <TouchableOpacity style={styles.btn} onPress={this.toggleEmail}><Icon name="paper-plane" color={'#FFF'} size={24} /></TouchableOpacity>
                 </View>
             </View>
         );
