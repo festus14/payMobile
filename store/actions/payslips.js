@@ -94,22 +94,6 @@ export const showPayslips = ({ unique_id, employee_id, month, year }) => {
     try {
       let token = await dispatch(getAuthToken());
 
-      // let res = await fetch(`${API_URL}show_single_payslip`, {
-      //     method: 'POST',
-      //     headers: {
-      //         'Content-Type': 'application/json',
-      //         'Authorization': 'Bearer ' + token,
-      //         'Accept': 'application/json',
-
-      //     },
-      //     body: JSON.stringify({
-      //         unique_id,
-      //         employee_id,
-      //         month,
-      //         year,
-      //     }),
-      // });
-
       let res = await sendRequest(
         `${API_URL}show_single_payslip`,
         'POST',

@@ -16,7 +16,12 @@ import { connect } from 'react-redux';
 import WebView from 'react-native-webview';
 import downloadManager from 'react-native-simple-download-manager';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { getAuthToken, showPayslips, sendPayslips } from '../store/actions';
+import {
+  getAuthToken,
+  showPayslips,
+  sendPayslips,
+  resetApp,
+} from '../store/actions';
 import { API_URL } from '../utility/constants';
 import InputText from './InputText';
 import Button from './Button';
@@ -32,6 +37,7 @@ class PayslipItem extends Component {
       isEmailModalOpen: false,
       isPermitted: false,
       isDownloading: false,
+      isViewing: false,
       html: '',
       email: '',
       messageModal: false,
@@ -44,47 +50,44 @@ class PayslipItem extends Component {
   };
 
   showSlipHandler = async () => {
+    this.setState({ isViewing: true });
     const {
       item: { details },
-      showSlip,
+      getToken,
+      onResetApp,
     } = this.props;
-    const html = await showSlip({
-      ...details,
-      unique_id: details.group_id,
-    });
-    if (html) {
-      this.setState({ html });
-      // console.warn('My state....', html);
-
-      // console.warn('object', this.state.html);
-      await this.toggleModal();
-    }
-  };
-
-  toggleModal = async () => {
-    // const {
-    //   item: { details },
-    // } = this.props;
-    // const new_html = await this.showSlipHandler({
-    //   ...details,
-    //   unique_id: details.group_id,
-    // });
-    // if (new_html) {
-    //   this.setState((prevState) => ({
-    //     ...prevState,
-    //     isModalOpen: !this.state.isModalOpen,
-    //     html: new_html,
-    //   }));
-    //   // console.warn('await ', this.state.isModalOpen, this.state.html);
-    // }
     try {
-      console.warn('try');
-      await this.setState({ isModalOpen: true });
-    } catch (error) {
-      console.warn('set state error', error);
-    }
+      let token = await getToken();
+      const body = { ...details, unique_id: details.group_id };
+      let res = await fetch(`${API_URL}show_single_payslip`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
 
-    console.warn('hererererer', this.state.isModalOpen);
+      this.setState({ isViewing: false });
+      let resJson = await res.json();
+
+      if (resJson.error || resJson.message === 'Unauthenticated.') {
+        if (resJson.message === 'Unauthenticated.') {
+          await onResetApp();
+        }
+        alert(
+          'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in'
+        );
+      } else {
+        this.setState({ isModalOpen: true, html: resJson.successful });
+      }
+    } catch (error) {
+      this.setState({ isViewing: false, isModalOpen: false });
+      alert(
+        'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in'
+      );
+    }
   };
 
   showError = (error) => {
@@ -232,6 +235,7 @@ class PayslipItem extends Component {
       email,
       error,
       html,
+      isViewing,
     } = this.state;
     // console.warn('html...', html);
     return (
@@ -313,9 +317,14 @@ class PayslipItem extends Component {
           </View>
         )}
         <View style={styles.bottom}>
-          <TouchableOpacity style={styles.btn} onPress={this.showSlipHandler}>
-            <Icon name="eye" color={'#FFF'} size={24} />
+          <TouchableOpacity disabled={isViewing} style={styles.btn} onPress={this.showSlipHandler}>
+            {isViewing ? (
+              <ActivityIndicator color="#fff" size={25} />
+            ) : (
+              <Icon name="eye" color={'#FFF'} size={24} />
+            )}
           </TouchableOpacity>
+
           <TouchableOpacity
             disabled={isDownloading}
             style={[styles.btn, { alignItems: 'flex-end' }]}
@@ -414,6 +423,7 @@ const mapDispatchToProps = (dispatch) => ({
   getToken: () => dispatch(getAuthToken()),
   showSlip: (data) => dispatch(showPayslips(data)),
   sendSlip: (data) => dispatch(sendPayslips(data)),
+  onResetApp: () => dispatch(resetApp()),
 });
 
 const mapStateToProps = (state) => ({

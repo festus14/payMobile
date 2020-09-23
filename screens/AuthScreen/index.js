@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  Modal,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
