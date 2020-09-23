@@ -1,325 +1,365 @@
 import {
-    SET_PAYSLIPS,
-    SET_PAYMENTS,
-    SET_RECURRENT_PAYMENTS,
-    SET_DEDUCTIONS,
-    SET_RECURRENT_DEDUCTIONS,
+  SET_PAYSLIPS,
+  SET_PAYMENTS,
+  SET_RECURRENT_PAYMENTS,
+  SET_DEDUCTIONS,
+  SET_RECURRENT_DEDUCTIONS,
 } from './actionTypes';
+import { API_URL } from '../../utility/constants';
 import {
-    API_URL,
-} from '../../utility/constants';
-import {
-    payslipsUiStartLoading,
-    payslipsUiStopLoading,
-    resetApp,
-    getAuthToken,
+  payslipsUiStartLoading,
+  payslipsUiStopLoading,
+  resetApp,
+  getAuthToken,
 } from './';
+import { sendRequest } from '../../utility/helpers';
 
-export const setPayslips = payslips => {
-    return {
-        type: SET_PAYSLIPS,
-        payslips,
-    };
+export const setPayslips = (payslips) => {
+  return {
+    type: SET_PAYSLIPS,
+    payslips,
+  };
 };
 
-export const setPayments = payments => {
-    return {
-        type: SET_PAYMENTS,
-        payments,
-    };
+export const setPayments = (payments) => {
+  return {
+    type: SET_PAYMENTS,
+    payments,
+  };
 };
 
-export const setDeductions = deductions => {
-    return {
-        type: SET_DEDUCTIONS,
-        deductions,
-    };
+export const setDeductions = (deductions) => {
+  return {
+    type: SET_DEDUCTIONS,
+    deductions,
+  };
 };
 
-export const setRecurrentPayments = recurrentPayments => {
-    return {
-        type: SET_RECURRENT_PAYMENTS,
-        recurrentPayments,
-    };
+export const setRecurrentPayments = (recurrentPayments) => {
+  return {
+    type: SET_RECURRENT_PAYMENTS,
+    recurrentPayments,
+  };
 };
 
-export const setRecurrentDeductions = recurrentDeductions => {
-    return {
-        type: SET_RECURRENT_DEDUCTIONS,
-        recurrentDeductions,
-    };
+export const setRecurrentDeductions = (recurrentDeductions) => {
+  return {
+    type: SET_RECURRENT_DEDUCTIONS,
+    recurrentDeductions,
+  };
 };
 
 export const getPayslips = (userId) => {
-    return async (dispatch, getState) => {
-        dispatch(payslipsUiStartLoading());
-        try {
-            let token = await dispatch(getAuthToken());
+  return async (dispatch, getState) => {
+    dispatch(payslipsUiStartLoading());
+    try {
+      let token = await dispatch(getAuthToken());
 
-            let res = await fetch(`${API_URL}payrolls/payslips/${userId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': 'application/json',
+      let res = await fetch(`${API_URL}payrolls/payslips/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+          Accept: 'application/json',
+        },
+      });
+      let resJson = await res.json();
 
-                },
-            });
-            let resJson = await res.json();
+      console.warn(resJson);
 
-            console.warn(resJson);
-
-            await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message === 'Unauthenticated.') {
-                if (resJson.message === 'Unauthenticated.') {
-                    dispatch(resetApp());
-                }
-                alert(resJson.error || 'Something went wrong, pls try again');
-                return false;
-            } else {
-                dispatch(setPayslips(resJson.success));
-                return resJson;
-            }
-        } catch (e) {
-            dispatch(payslipsUiStopLoading());
-            alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
-            return false;
+      await dispatch(payslipsUiStopLoading());
+      if (resJson.error || resJson.message === 'Unauthenticated.') {
+        if (resJson.message === 'Unauthenticated.') {
+          dispatch(resetApp());
         }
-    };
+        alert(resJson.error || 'Something went wrong, pls try again');
+        return false;
+      } else {
+        dispatch(setPayslips(resJson.success));
+        return resJson;
+      }
+    } catch (e) {
+      dispatch(payslipsUiStopLoading());
+      alert(
+        'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in'
+      );
+      return false;
+    }
+  };
 };
 
 export const showPayslips = ({ unique_id, employee_id, month, year }) => {
-    return async (dispatch, getState) => {
-        dispatch(payslipsUiStartLoading());
-        try {
-            let token = await dispatch(getAuthToken());
+  return async (dispatch, getState) => {
+    dispatch(payslipsUiStartLoading());
+    try {
+      let token = await dispatch(getAuthToken());
 
-            let res = await fetch(`${API_URL}show_single_payslip`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': 'application/json',
+      // let res = await fetch(`${API_URL}show_single_payslip`, {
+      //     method: 'POST',
+      //     headers: {
+      //         'Content-Type': 'application/json',
+      //         'Authorization': 'Bearer ' + token,
+      //         'Accept': 'application/json',
 
-                },
-                body: JSON.stringify({
-                    unique_id,
-                    employee_id,
-                    month,
-                    year,
-                }),
-            });
-            let resJson = await res.json();
+      //     },
+      //     body: JSON.stringify({
+      //         unique_id,
+      //         employee_id,
+      //         month,
+      //         year,
+      //     }),
+      // });
 
-            console.warn(resJson);
+      let res = await sendRequest(
+        `${API_URL}show_single_payslip`,
+        'POST',
+        {
+          unique_id,
+          employee_id,
+          month,
+          year,
+        },
+        {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+          Accept: 'application/json',
+        },
+        token
+      );
 
-            await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message === 'Unauthenticated.') {
-                if (resJson.message === 'Unauthenticated.') {
-                    dispatch(resetApp());
-                }
-                alert(resJson.error || 'Something went wrong, pls try again');
-                return false;
-            } else {
-                return resJson.successful;
-            }
-        } catch (e) {
-            dispatch(payslipsUiStopLoading());
-            alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
-            return false;
+      let resJson = await res.json();
+
+    //   console.warn('resJson...', resJson);
+
+      await dispatch(payslipsUiStopLoading());
+      if (resJson.error || resJson.message === 'Unauthenticated.') {
+        if (resJson.message === 'Unauthenticated.') {
+          dispatch(resetApp());
         }
-    };
+        console.warn('In error', resJson.error);
+        return false;
+      } else {
+        return resJson.successful;
+      }
+    } catch (e) {
+      dispatch(payslipsUiStopLoading());
+      alert(
+        'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in'
+      );
+      return false;
+    }
+  };
 };
 
-export const sendPayslips = ({ unique_id, employee_id, month, year, email }) => {
-    return async (dispatch, getState) => {
-        dispatch(payslipsUiStartLoading());
-        try {
-            let token = await dispatch(getAuthToken());
+export const sendPayslips = ({
+  unique_id,
+  employee_id,
+  month,
+  year,
+  email,
+}) => {
+  return async (dispatch, getState) => {
+    dispatch(payslipsUiStartLoading());
+    try {
+      let token = await dispatch(getAuthToken());
 
-            let res = await fetch(`${API_URL}send_single_payslip`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': 'application/json',
+      let res = await fetch(`${API_URL}send_single_payslip`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          unique_id,
+          employee_id,
+          month,
+          year,
+          email,
+        }),
+      });
+      let resJson = await res.json();
 
-                },
-                body: JSON.stringify({
-                    unique_id,
-                    employee_id,
-                    month,
-                    year,
-                    email,
-                }),
-            });
-            let resJson = await res.json();
+      console.warn('resJson..... ', resJson);
 
-            console.warn(resJson);
-
-            await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message === 'Unauthenticated.') {
-                if (resJson.message === 'Unauthenticated.') {
-                    dispatch(resetApp());
-                }
-                alert(resJson.error || 'Something went wrong, pls try again');
-                return false;
-            } else {
-                return resJson.message;
-            }
-        } catch (e) {
-            dispatch(payslipsUiStopLoading());
-            alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
-            return false;
+      await dispatch(payslipsUiStopLoading());
+      if (resJson.error || resJson.message === 'Unauthenticated.') {
+        if (resJson.message === 'Unauthenticated.') {
+          dispatch(resetApp());
         }
-    };
+        alert(resJson.error || 'Something went wrong, pls try again');
+        return false;
+      } else {
+        return resJson.message;
+      }
+    } catch (e) {
+      dispatch(payslipsUiStopLoading());
+      alert(
+        'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in'
+      );
+      return false;
+    }
+  };
 };
 
 export const getPayments = (id) => {
-    return async (dispatch, getState) => {
-        dispatch(payslipsUiStartLoading());
-        try {
-            let token = await dispatch(getAuthToken());
+  return async (dispatch, getState) => {
+    dispatch(payslipsUiStartLoading());
+    try {
+      let token = await dispatch(getAuthToken());
 
-            let res = await fetch(`${API_URL}employee_payments/employee/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': 'application/json',
-                },
-            });
-            let resJson = await res.json();
+      let res = await fetch(`${API_URL}employee_payments/employee/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+          Accept: 'application/json',
+        },
+      });
+      let resJson = await res.json();
 
-            console.warn(resJson);
+      console.warn(resJson);
 
-            await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message === 'Unauthenticated.') {
-                if (resJson.message === 'Unauthenticated.') {
-                    dispatch(resetApp());
-                }
-                alert(resJson.error || 'Something went wrong, pls try again');
-                return false;
-            } else {
-                dispatch(setPayments(resJson.success));
-                return resJson;
-            }
-        } catch (e) {
-            dispatch(payslipsUiStopLoading());
-            alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
-            return false;
+      await dispatch(payslipsUiStopLoading());
+      if (resJson.error || resJson.message === 'Unauthenticated.') {
+        if (resJson.message === 'Unauthenticated.') {
+          dispatch(resetApp());
         }
-    };
+        alert(resJson.error || 'Something went wrong, pls try again');
+        return false;
+      } else {
+        dispatch(setPayments(resJson.success));
+        return resJson;
+      }
+    } catch (e) {
+      dispatch(payslipsUiStopLoading());
+      alert(
+        'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in'
+      );
+      return false;
+    }
+  };
 };
 
 export const getDeductions = (id) => {
-    return async (dispatch, getState) => {
-        dispatch(payslipsUiStartLoading());
-        try {
-            let token = await dispatch(getAuthToken());
+  return async (dispatch, getState) => {
+    dispatch(payslipsUiStartLoading());
+    try {
+      let token = await dispatch(getAuthToken());
 
-            let res = await fetch(`${API_URL}employee_deductions/employee/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': 'application/json',
-                },
-            });
-            let resJson = await res.json();
+      let res = await fetch(`${API_URL}employee_deductions/employee/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+          Accept: 'application/json',
+        },
+      });
+      let resJson = await res.json();
 
-            console.warn(resJson);
+      console.warn(resJson);
 
-            await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message === 'Unauthenticated.') {
-                if (resJson.message === 'Unauthenticated.') {
-                    dispatch(resetApp());
-                }
-                alert(resJson.error || 'Something went wrong, pls try again');
-                return false;
-            } else {
-                dispatch(setDeductions(resJson.success));
-                return resJson;
-            }
-        } catch (e) {
-            dispatch(payslipsUiStopLoading());
-            alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
-            return false;
+      await dispatch(payslipsUiStopLoading());
+      if (resJson.error || resJson.message === 'Unauthenticated.') {
+        if (resJson.message === 'Unauthenticated.') {
+          dispatch(resetApp());
         }
-    };
+        alert(resJson.error || 'Something went wrong, pls try again');
+        return false;
+      } else {
+        dispatch(setDeductions(resJson.success));
+        return resJson;
+      }
+    } catch (e) {
+      dispatch(payslipsUiStopLoading());
+      alert(
+        'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in'
+      );
+      return false;
+    }
+  };
 };
 
-
 export const getRecurrentPayments = (id) => {
-    return async (dispatch, getState) => {
-        dispatch(payslipsUiStartLoading());
-        try {
-            let token = await dispatch(getAuthToken());
+  return async (dispatch, getState) => {
+    dispatch(payslipsUiStartLoading());
+    try {
+      let token = await dispatch(getAuthToken());
 
-            let res = await fetch(`${API_URL}employee_recurrent_payments/employee/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': 'application/json',
-                },
-            });
-            let resJson = await res.json();
-
-            console.warn(resJson);
-
-            await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message === 'Unauthenticated.') {
-                if (resJson.message === 'Unauthenticated.') {
-                    dispatch(resetApp());
-                }
-                alert(resJson.error || 'Something went wrong, pls try again');
-                return false;
-            } else {
-                dispatch(setRecurrentPayments(resJson.success));
-                return resJson;
-            }
-        } catch (e) {
-            dispatch(payslipsUiStopLoading());
-            alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
-            return false;
+      let res = await fetch(
+        `${API_URL}employee_recurrent_payments/employee/${id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+            Accept: 'application/json',
+          },
         }
-    };
+      );
+      let resJson = await res.json();
+
+      console.warn(resJson);
+
+      await dispatch(payslipsUiStopLoading());
+      if (resJson.error || resJson.message === 'Unauthenticated.') {
+        if (resJson.message === 'Unauthenticated.') {
+          dispatch(resetApp());
+        }
+        alert(resJson.error || 'Something went wrong, pls try again');
+        return false;
+      } else {
+        dispatch(setRecurrentPayments(resJson.success));
+        return resJson;
+      }
+    } catch (e) {
+      dispatch(payslipsUiStopLoading());
+      alert(
+        'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in'
+      );
+      return false;
+    }
+  };
 };
 
 export const getRecurrentDeductions = (id) => {
-    return async (dispatch, getState) => {
-        dispatch(payslipsUiStartLoading());
-        try {
-            let token = await dispatch(getAuthToken());
+  return async (dispatch, getState) => {
+    dispatch(payslipsUiStartLoading());
+    try {
+      let token = await dispatch(getAuthToken());
 
-            let res = await fetch(`${API_URL}employee_recurrent_deductions/employee/${id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                    'Accept': 'application/json',
-                },
-            });
-            let resJson = await res.json();
-
-            console.warn(resJson);
-
-            await dispatch(payslipsUiStopLoading());
-            if (resJson.error || resJson.message === 'Unauthenticated.') {
-                if (resJson.message === 'Unauthenticated.') {
-                    dispatch(resetApp());
-                }
-                alert(resJson.error || 'Something went wrong, pls try again');
-                return false;
-            } else {
-                dispatch(setRecurrentDeductions(resJson.success));
-                return resJson;
-            }
-        } catch (e) {
-            dispatch(payslipsUiStopLoading());
-            alert('Something went wrong, please check your internet connection and try again. If this persists then you are not logged in');
-            return false;
+      let res = await fetch(
+        `${API_URL}employee_recurrent_deductions/employee/${id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+            Accept: 'application/json',
+          },
         }
-    };
+      );
+      let resJson = await res.json();
+
+      console.warn(resJson);
+
+      await dispatch(payslipsUiStopLoading());
+      if (resJson.error || resJson.message === 'Unauthenticated.') {
+        if (resJson.message === 'Unauthenticated.') {
+          dispatch(resetApp());
+        }
+        alert(resJson.error || 'Something went wrong, pls try again');
+        return false;
+      } else {
+        dispatch(setRecurrentDeductions(resJson.success));
+        return resJson;
+      }
+    } catch (e) {
+      dispatch(payslipsUiStopLoading());
+      alert(
+        'Something went wrong, please check your internet connection and try again. If this persists then you are not logged in'
+      );
+      return false;
+    }
+  };
 };

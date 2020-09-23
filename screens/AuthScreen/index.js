@@ -114,7 +114,7 @@ class AuthScreen extends Component {
       this.state.loginPassword.value !== ''
     ) {
       try {
-        await this.setState((prevState) => ({
+        this.setState((prevState) => ({
           ...prevState,
           email: {
             ...prevState.email,
@@ -203,7 +203,7 @@ class AuthScreen extends Component {
     const { email } = this.state;
     if (email.value !== '') {
       try {
-        await this.setState((prevState) => ({
+        this.setState((prevState) => ({
           ...prevState,
           email: {
             ...prevState.email,
@@ -266,7 +266,7 @@ class AuthScreen extends Component {
 
     if (token.value !== '' && password.value !== '' && confirmPassword !== '') {
       try {
-        await this.setState((prevState) => ({
+        this.setState((prevState) => ({
           ...prevState,
           password: {
             ...prevState.password,
