@@ -5,11 +5,11 @@ import { styles } from './style';
 import { changePassword } from '../../store/actions';
 import InputText from '../../components/InputText';
 import Button from '../../components/Button';
+import MyModal from '../../components/MyModal';
 import DismissKeyboard from '../../components/DismissKeyboard';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   KeyboardAvoidingView,
-  Modal,
   Platform,
   Text,
   TouchableOpacity,
@@ -308,47 +308,29 @@ class ChangePasswordScreen extends Component {
                 textStyle={styles.btnText}
                 isLoading={this.props.isLoading}
                 onPress={this.changePasswordHandler}
-                disabled={
-                  this.validatePasswordChange()
-                }
+                disabled={this.validatePasswordChange()}
               />
             </View>
           </KeyboardAvoidingView>
         </DismissKeyboard>
         {this.state.passwordInfoModal && (
-          <Modal
-            animationType="slide"
-            transparent={true}
+          <MyModal
             visible={this.state.passwordInfoModal}
-            onRequestClose={() => {}}
+            onPress={() =>
+              this.setPasswordInfoVisible(!this.state.passwordInfoModal)
+            }
+            btnTxt="Close"
           >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.warnHead}>Password requirements are:</Text>
-                <Text style={styles.warnTxts}>
-                  {'\u25CF'} At least one upper case letter
-                </Text>
-                <Text style={styles.warnTxts}>
-                  {'\u25CF'} At least one lower case letter
-                </Text>
-                <Text style={styles.warnTxts}>
-                  {'\u25CF'} At least one symbol
-                </Text>
-                <Text style={styles.warnTxts}>
-                  {'\u25CF'} At least one number
-                </Text>
-
-                <TouchableOpacity
-                  style={{ ...styles.openButton }}
-                  onPress={() => {
-                    this.setPasswordInfoVisible(!this.state.passwordInfoModal);
-                  }}
-                >
-                  <Text style={styles.textStyle}>Close</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+            <Text style={styles.modalHead}>Password requirements are:</Text>
+            <Text style={styles.modalText}>
+              {'\u25CF'} At least one upper case letter
+            </Text>
+            <Text style={styles.modalText}>
+              {'\u25CF'} At least one lower case letter
+            </Text>
+            <Text style={styles.modalText}>{'\u25CF'} At least one symbol</Text>
+            <Text style={styles.modalText}>{'\u25CF'} At least one number</Text>
+          </MyModal>
         )}
       </View>
     );

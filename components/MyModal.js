@@ -14,6 +14,10 @@ export default class MyModal extends Component {
       btnTxtStyle = {},
       btnStyle = {},
       onPress = () => {},
+      btnTwo,
+      onPressTwo,
+      errText,
+      errStyle,
     } = this.props;
     return (
       <Modal
@@ -24,14 +28,26 @@ export default class MyModal extends Component {
       >
         <View style={[styles.centeredView, modalStyle]}>
           <View style={[styles.modalView, contentStyle]}>
-            <View style={styles.children}>{children}</View>
+            <View style={styles.children}>
+              <Text style={errStyle}>{errText || ''}</Text>
+              {children}
+            </View>
             <View style={styles.horizontalLine} />
-            <TouchableOpacity
-              style={[styles.openButton, btnStyle]}
-              onPress={onPress}
-            >
-              <Text style={[styles.textStyle, btnTxtStyle]}>{btnTxt}</Text>
-            </TouchableOpacity>
+            <View style={styles.btns}>
+              <TouchableOpacity
+                style={[{...styles.openButton, width: btnTwo ? 140 : 280}, btnStyle]}
+                onPress={onPress}
+              >
+                <Text style={[styles.textStyle, btnTxtStyle]}>{btnTxt}</Text>
+              </TouchableOpacity>
+
+              {btnTwo && <TouchableOpacity
+                style={[{...styles.openButton, width: btnTwo ? 140 : 280}, btnStyle]}
+                onPress={onPressTwo}
+              >
+                <Text style={[styles.textStyle, btnTxtStyle]}>{btnTwo}</Text>
+              </TouchableOpacity>}
+            </View>
           </View>
         </View>
       </Modal>
@@ -87,4 +103,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center',
   },
+  btns: {
+    display: 'flex',
+    flexDirection: 'row',
+
+  }
 });

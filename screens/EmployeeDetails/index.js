@@ -33,9 +33,9 @@ export default class EmployeeDetails extends PureComponent {
             <View style={styles.container}>
                 <Header
                     title={`${employee.firstname} ${employee.lastname}` || 'Unknown Unknown'}
-                    leftIcon="md-arrow-back"
+                    leftIcon="arrow-left"
                     onLeftPress={() => navigation.goBack(null)}
-                    rightIcon="ios-menu"
+                    rightIcon="menu"
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>

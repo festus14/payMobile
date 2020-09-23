@@ -41,9 +41,9 @@ class EmployeePayments extends PureComponent {
             <View style={styles.container}>
                 <Header
                     title="Payments"
-                    leftIcon="md-arrow-back"
+                    leftIcon="arrow-left"
                     onLeftPress={this.goBack}
-                    rightIcon="ios-menu"
+                    rightIcon="menu"
                     onRightPress={this.openDrawer}
                 />
                 <View style={styles.data}>

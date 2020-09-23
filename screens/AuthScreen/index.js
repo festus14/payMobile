@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  Modal,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -114,7 +113,7 @@ class AuthScreen extends Component {
       this.state.loginPassword.value !== ''
     ) {
       try {
-        await this.setState((prevState) => ({
+        this.setState((prevState) => ({
           ...prevState,
           email: {
             ...prevState.email,
@@ -203,7 +202,7 @@ class AuthScreen extends Component {
     const { email } = this.state;
     if (email.value !== '') {
       try {
-        await this.setState((prevState) => ({
+        this.setState((prevState) => ({
           ...prevState,
           email: {
             ...prevState.email,
@@ -266,7 +265,7 @@ class AuthScreen extends Component {
 
     if (token.value !== '' && password.value !== '' && confirmPassword !== '') {
       try {
-        await this.setState((prevState) => ({
+        this.setState((prevState) => ({
           ...prevState,
           password: {
             ...prevState.password,
@@ -388,62 +387,6 @@ class AuthScreen extends Component {
               </Text>
             </MyModal>
           )}
-          {/* {(this.state.passwordInfoModal || this.state.messageModal) && (
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={this.state.passwordInfoModal || this.state.messageModal}
-              onRequestClose={() => {}}
-            >
-              <View style={styles.centeredView}>
-                <View style={this.state.passwordInfoModal ? styles.modalView : { ...styles.modalView, alignItems: 'center' }}>
-                  {this.state.passwordInfoModal ? (
-                    <>
-                      <Text style={styles.warnHead}>
-                        Password requirements are:
-                      </Text>
-                      <Text style={styles.modalText}>
-                        {'\u25CF'} At least one upper case letter
-                      </Text>
-                      <Text style={styles.modalText}>
-                        {'\u25CF'} At least one lower case letter
-                      </Text>
-                      <Text style={styles.modalText}>
-                        {'\u25CF'} At least one symbol
-                      </Text>
-                      <Text style={styles.modalText}>
-                        {'\u25CF'} At least one number
-                      </Text>
-                      <TouchableOpacity
-                        style={{ ...styles.openButton }}
-                        onPress={() => {
-                          this.setPasswordInfoVisible(
-                            !this.state.passwordInfoModal
-                          );
-                        }}
-                      >
-                        <Text style={styles.textStyle}>Close</Text>
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <>
-                      <Text>Kindly check your mail for the verify token</Text>
-                      <TouchableOpacity
-                        style={{ ...styles.openButton }}
-                        onPress={() => {
-                          this.setMessageVisible(
-                            !this.state.messageModal
-                          );
-                        }}
-                      >
-                        <Text style={styles.textStyle}>Close</Text>
-                      </TouchableOpacity>
-                    </>
-                  )}
-                </View>
-              </View>
-            </Modal>
-          )} */}
           <View
             style={styles.container}
             showsVerticalScrollIndicator={false}
