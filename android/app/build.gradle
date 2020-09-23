@@ -115,10 +115,10 @@ android {
 
     defaultConfig {
         applicationId "com.ipaysuite"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
-        versionName "1.04.1"
+        minSdkVersion 23
+        targetSdkVersion 29
+        versionCode 16
+        versionName "1.04.2"
         multiDexEnabled true
     }
     splits {
